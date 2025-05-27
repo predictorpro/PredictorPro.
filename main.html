@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ar-DZ" class="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>PredictorPro – الصفحة الرئيسية</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // تفعيل الوضع الداكن عبر الكلاس
+    tailwind.config = { darkMode: 'class' };
+  </script>
+</head>
+<body class="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white px-4 transition-colors relative">
+  <!-- الشعار -->
+  <div class="absolute top-4 left-4 z-20">
+    <a href="index.html">
+      <img
+        src="images/PredictorPro.jpg"
+        alt="PredictorPro"
+        class="w-48 h-48 rounded-full border-4 border-green-700"
+      />
+    </a>
+  </div>
+
+  <!-- مفتاح تغيير الوضع -->
+  <div class="absolute top-4 right-4 z-20">
+    <button
+      id="themeToggle"
+      class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 shadow transition-colors"
+      onclick="toggleTheme()"
+      aria-label="تغيير المظهر"
+    >🌞</button>
+  </div>
+
+  <main class="flex flex-col items-center pt-56 sm:pt-28 pb-24">
+    <div class="w-full max-w-[58rem]">
+      <!-- شبكة أزرار الألعاب -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-24">
+        <!-- طيار -->
+        <div class="flex flex-col items-center">
+          <a href="aviator.html"
+             class="w-full sm:w-40 aspect-square bg-black rounded-2xl flex items-center justify-center overflow-hidden border-2 border-green-700 transition-colors z-10">
+            <img src="images/awiator-1win.png" alt="طيار" class="w-full h-full object-contain"/>
+          </a>
+          <span class="mt-2 text-lg font-semibold text-black dark:text-white">طيار</span>
+        </div>
+        <!-- ركلات الجزاء -->
+        <div class="flex flex-col items-center">
+          <a href="penalty.html"
+             class="w-full sm:w-40 aspect-square bg-blue-200 rounded-2xl flex items-center justify-center overflow-hidden border-2 border-green-700 transition-colors">
+            <img src="images/penaltyshootoutstreet_logo.png" alt="ركلات الجزاء" class="w-full h-full object-contain"/>
+          </a>
+          <span class="mt-2 text-lg font-semibold text-black dark:text-white">ركلات الجزاء</span>
+        </div>
+        <!-- الألغام -->
+        <div class="flex flex-col items-center">
+          <a href="mines.html"
+             class="w-full sm:w-40 aspect-square bg-white rounded-2xl flex items-center justify-center overflow-hidden border-2 border-green-700 transition-colors">
+            <img src="images/images.jpg" alt="الألغام" class="w-full h-full object-cover"/>
+          </a>
+          <span class="mt-2 text-lg font-semibold text-black dark:text-white">الألغام</span>
+        </div>
+        <!-- تفاح الحظ -->
+        <div class="flex flex-col items-center">
+          <a href="apple-of-fortune.html"
+             class="w-full sm:w-40 aspect-square bg-white rounded-2xl flex items-center justify-center overflow-hidden border-2 border-green-700 transition-colors">
+            <img src="images/unnamed.png" alt="تفاح الحظ" class="w-full h-full object-contain"/>
+          </a>
+          <span class="mt-2 text-lg font-semibold text-black dark:text-white">تفاح الحظ</span>
+        </div>
+      </div>
+
+      <!-- أخبار المشروع -->
+      <h2 class="mt-16 text-xl font-semibold text-center text-black dark:text-white">
+        أخبار المشروع
+      </h2>
+      <div class="mt-6 space-y-6">
+        <!-- Noticia nueva: Hack histórico de Penalty -->
+<div>
+  <button class="w-full py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-6 
+                 border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
+    اختراق تاريخي لقواعد بيانات لعبة ركلات الجزاء من قبل أفضل القراصنة لدينا!
+  </button>
+  <p class="mt-1 ml-6 text-sm text-gray-600 dark:text-gray-400">27.05.2025</p>
+  <div class="mt-2 px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
+    <p class="mb-2">
+      بفعل عبقرية فريق القراصنة الرائد لدينا، تمكنا من الوصول إلى قواعد بيانات لعبة ركلات الجزاء واستخراج الخوارزميات السرية وراء كل رمية.
+    </p>
+    <p>
+      الآن بإمكانكم الحصول على توقعات مثالية ومضمونة لكل ركلة—ارفعوا نسبة أرباحكم إلى أقصى حد واستمتعوا بقوة التوقعات الدقيقة!
+    </p>
+  </div>
+</div>
+
+        <!-- خبر 0: انتصار تاريخي لجورج رييس -->
+        <!-- Noticia 0: انتصار تاريخي لتلميذي عبدو من الجزائر -->
+<!-- Noticia 0: انتصار تاريخي لتلميذي عبدو من وهران! -->
+<div>
+  <button class="w-full py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-6 
+                 border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
+    انتصار تاريخي لتلميذي عبدو من وهران!
+  </button>
+  <p class="mt-1 ml-6 text-sm text-gray-600 dark:text-gray-400">16.05.2025</p>
+  <div class="mt-2 px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
+    <img src="images/vot8fd10b8.png" alt="عبدو يحتفل بجائزته" class="w-full mb-4 rounded" />
+    <p class="mb-2">
+      يا إخوتي! اليوم أحتفل من كل قلبي بنجاح تلميذي عبدو من وهران، الذي فاز لتوه بـ 5 000 000 دينار جزائري في PredictorPro. 😱💰
+    </p>
+    <p class="mb-2">
+      بدأ عبدو بدون خبرة، متابعًا كل إشارة ومتعلّمًا بصبر. لقد مكنه جهده وانضباطه من تحقيق هذا النصر المذهل.
+    </p>
+    <p class="mb-2">
+      🎁 وبهذا الفوز العظيم، أهدّيته سيارة جديدة كعربون محبة وفخر!
+    </p>
+    <p class="mb-2">
+      🎉 أنا فخور بك جدًا يا أخي. يثبت هذا الفوز أنه بالعمل الجاد والإيمان، كل شيء ممكن!
+    </p>
+    <p>
+      ليكن هذا النجاح مصدر إلهام لجميع أفراد المجتمع: استمروا في المثابرة، اتبعوا الإشارات، وآمنوا بقدراتكم.
+    </p>
+  </div>
+</div>
+
+
+        <!-- خبر 1: ذكرى تأسيس مشروع PredictorPro -->
+        <div>
+          <button class="w-full py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-6 
+                         border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
+            ذكرى تأسيس مشروع PredictorPro
+          </button>
+          <p class="mt-1 ml-6 text-sm text-gray-600 dark:text-gray-400">10.05.2025</p>
+          <div class="mt-2 px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
+            <p class="mb-2">
+              يكتمل عام على إطلاق مشروع PredictorPro! خلال هذه الفترة، حقق مئات المشاركين نتائج استثنائية وغيروا حياتهم وبدأوا يجنون مبالغ مهمة. شكرًا لكم على دعمكم—نحن الآن عائلة كبيرة تتطلع لمزيد من الإنجازات. احتفاءً بهذه المناسبة، سيكون PredictorPro مجانيًا لمدة شهر كامل. حظًا سعيدًا!
+            </p>
+          </div>
+        </div>
+        <!-- خبر 2: تحديث لعبة «الألغام» -->
+        <div>
+          <button class="w-full py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-6 
+                         border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
+            تحديث لعبة «الألغام»
+          </button>
+          <p class="mt-1 ml-6 text-sm text-gray-600 dark:text-gray-400">08.05.2025</p>
+          <div class="mt-2 px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
+            <p>
+              قمنا بتحسين نظام التنبؤات للعبة «الألغام» بشكل كبير. بفضل تحليل البيانات العميق، وصلت دقتنا إلى 97%! جربها الآن!
+            </p>
+          </div>
+        </div>
+        <!-- خبر 3: إعلان ميزة «سجل الرهانات» -->
+        <div>
+          <button class="w-full py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-6 
+                         border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
+            إعلان ميزة «سجل الرهانات»
+          </button>
+          <p class="mt-1 ml-6 text-sm text-gray-600 dark:text-gray-400">06.05.2025</p>
+          <div class="mt-2 px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
+            <p>
+              أطلقنا ميزة «سجل الرهانات»: يمكنك الآن مراجعة وتحليل كل تنبؤاتك من كل جلسة في مكان واحد.
+            </p>
+          </div>
+        </div>
+        <!-- خبر 4: تطوير تطبيق PredictorPro للهواتف -->
+        <div>
+          <button class="w-full py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-6 
+                         border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
+            تطوير تطبيق PredictorPro للهواتف المحمولة
+          </button>
+          <p class="mt-1 ml-6 text-sm text-gray-600 dark:text-gray-400">04.05.2025</p>
+          <div class="mt-2 px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
+            <p>
+              نحن نعمل بنشاط على تطوير تطبيق PredictorPro للهواتف الذكية. من المتوقع الإطلاق في 28 مايو 2025.
+            </p>
+          </div>
+        </div>
+        <!-- خبر 5: تحديث واجهة المستخدم وتجربة المستخدم -->
+        <div>
+          <button class="w-full py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-6 
+                         border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
+            تحديث واجهة المستخدم وتجربة المستخدم: ثيمات تصميم جديدة
+          </button>
+          <p class="mt-1 ml-6 text-sm text-gray-600 dark:text-gray-400">30.04.2025</p>
+          <div class="mt-2 px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
+            <p>
+              قمنا بتجديد الواجهة: أضفنا ثيمات ألوان جديدة، وحسّنا التنقل، وطورنا أدوات التحكم لتجربة أكثر سلاسة.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- زر الدردشة والدعم -->
+  <a href="https://t.me/Aymen_PredictorPro_bot"
+     class="absolute bottom-4 right-4 bg-gray-200 dark:bg-gray-800 p-2 rounded-full border-4 border-green-700 transition-colors z-20"
+     target="_blank" rel="noopener noreferrer">
+    <img
+      src="images/—Pngtree—technical support_3767452.png"
+      alt="الدعم الفني"
+      class="w-16 h-16 filter dark:invert"
+    />
+  </a>
+
+  <script>
+    document.documentElement.classList.add('dark');
+    themeToggle.textContent = '🌞'; // رمز الشمس عند الوضع الداكن افتراضيًا
+
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+      themeToggle.textContent = document.documentElement.classList.contains('dark') ? '🌞' : '🌙';
+    }
+
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.nextElementSibling.nextElementSibling.classList.toggle('hidden');
+      });
+    });
+  </script>
+</body>
+</html>

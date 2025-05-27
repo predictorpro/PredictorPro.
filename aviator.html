@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ar-DZ" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <title>بريديكتور برو – أفياتور</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // تفعيل الوضع الداكن عبر الصنف
+    tailwind.config = { darkMode: 'class' };
+  </script>
+</head>
+<body class="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white px-4 relative">
+
+  <!-- الشعار -->
+  <div class="absolute top-4 left-4 z-20">
+    <a href="main.html">
+      <div class="w-48 h-48 rounded-full border-4 border-green-700 overflow-hidden">
+        <img
+          src="images/PredictorPro.jpg"
+          alt="PredictorPro"
+          class="w-full h-full object-cover"
+        />
+      </div>
+    </a>
+  </div>
+
+  <!-- مفتاح تبديل الوضع -->
+  <div class="absolute top-4 right-4 z-20">
+    <button
+      id="themeToggle"
+      class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 shadow transition-colors"
+      onclick="toggleTheme()"
+      aria-label="تبديل الوضع"
+    >🌞</button>
+  </div>
+
+  <!-- زر الأسئلة المتكررة -->
+  <div
+    id="faqButton"
+    class="fixed right-4 bottom-4 sm:top-1/2 sm:bottom-auto sm:transform sm:-translate-y-1/2
+           flex items-center space-x-2 p-2 bg-gray-200 dark:bg-gray-800 rounded-lg
+           cursor-pointer shadow transition-colors z-20"
+  >
+    <img
+      src="images/311092c3467c45c938fd5b63ac29281a.png"
+      alt="الأسئلة المتكررة"
+      class="w-8 h-8"
+    />
+    <span class="font-semibold text-gray-900 dark:text-white">
+      الأسئلة المتكررة
+    </span>
+  </div>
+
+  <!-- لوحة الأسئلة المتكررة -->
+  <div
+    id="faqPanel"
+    class="fixed right-4 bottom-16 sm:top-1/2 sm:bottom-auto sm:transform sm:-translate-y-1/2
+           w-80 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg p-4 hidden
+           text-gray-900 dark:text-white z-20"
+  >
+    <button
+      id="faqClose"
+      class="absolute top-2 right-2 text-gray-500 dark:text-gray-400 hover:text-gray-700
+             dark:hover:text-gray-200 text-xl leading-none"
+    >&times;</button>
+    <h3 class="text-lg font-semibold mb-2">قوانين لعبة «أفياتور»</h3>
+    <p class="text-sm mb-4">
+      لعبة «أفياتور» توفر توقعات للمعاملات للجولة القادمة.
+      اضغط على «الحصول على التوقع»، انتظر النتائج وضمن أرباحك.
+      كلما استخدمت الأداة أكثر، زادت دقة إشاراتنا.
+    </p>
+  </div>
+
+  <!-- المحتوى الرئيسي -->
+  <main class="flex flex-col items-center pt-56 sm:pt-28 pb-12 space-y-6">
+    <!-- نافذة التوقع -->
+    <div
+      id="forecastWindow"
+      class="bg-gray-100 dark:bg-gray-800 p-8 rounded-2xl shadow-lg
+             border-2 border-green-700 transition-colors max-w-md w-full text-center z-10"
+    >
+      <h2 class="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
+        توقع «أفياتور»
+      </h2>
+      <p id="aviatorForecast" class="text-4xl text-gray-700 dark:text-gray-300">
+        اضغط على الزر للحصول على توقع
+      </p>
+      <p id="recommendation" class="mt-2 text-gray-600 dark:text-gray-400"></p>
+    </div>
+
+    <!-- زر الحصول على التوقع -->
+    <button
+      id="fetchBtn"
+      class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white
+             rounded-2xl font-semibold transition-colors z-10"
+    >
+      الحصول على التوقع
+    </button>
+
+    <!-- سجل التوقعات الأخيرة -->
+    <div id="historyContainer" class="hidden flex flex-col items-center mt-4 w-full max-w-md z-10">
+      <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
+        سجل التوقعات الأخيرة
+      </h3>
+      <ul id="historyList" class="w-full space-y-1 text-gray-700 dark:text-gray-300">
+        <!-- تظهر هنا سجلات التاريخ -->
+      </ul>
+    </div>
+  </main>
+
+  <script>
+    // إعداد الوضع الداكن ابتدائيا
+    document.documentElement.classList.add('dark');
+    themeToggle.textContent = '🌞';
+
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+      themeToggle.textContent = document.documentElement.classList.contains('dark') ? '🌞' : '🌙';
+    }
+
+    // إظهار/إخفاء الأسئلة المتكررة
+    const faqBtn = document.getElementById('faqButton');
+    const faqPanel = document.getElementById('faqPanel');
+    const faqClose = document.getElementById('faqClose');
+    faqBtn.addEventListener('click', () => faqPanel.classList.toggle('hidden'));
+    faqClose.addEventListener('click', () => faqPanel.classList.toggle('hidden'));
+
+    // توصيات
+    const recommendations = [
+      'معامل جيد، يمكنك المراهنة بمبلغ أكبر.',
+      'احتمالية ربح عالية، المخاطرة تستحق ذلك.',
+      'معامل متوسط، تصرف بحذر.',
+      'ربح بسيط، نوصي بتوزيع المراهنات.',
+      'نتيجة ممتازة، ضمن أرباحك.',
+      'احتمالية تفوق 80%، يمكنك زيادة الرهان.',
+      'نوصي بالانتظار قبل الرهان التالي.',
+      'احتمالية خسارة أعلى، كن حذراً.',
+      'الوقت المثالي للدخول، تحرك الآن.',
+      'إشارة متوسطة، من الأفضل عدم المخاطرة.'
+    ];
+
+    // منطق التوقع والسجل
+    const fetchBtn = document.getElementById('fetchBtn');
+    const forecastText = document.getElementById('aviatorForecast');
+    const recommendationEl = document.getElementById('recommendation');
+    const historyContainer = document.getElementById('historyContainer');
+    const historyList = document.getElementById('historyList');
+    const MAX_HISTORY = 10;
+    let history = [];
+
+    fetchBtn.addEventListener('click', () => {
+      fetchBtn.disabled = true;
+      fetchBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      forecastText.textContent = 'انتظر، جلب البيانات للجولة القادمة';
+      recommendationEl.textContent = '';
+
+      setTimeout(() => {
+        // اختيار نطاق المعامل حسب الاحتمالات
+        const r = Math.random();
+        let low, high;
+        if (r < 0.72) { low = 1; high = 2; }
+        else if (r < 0.945) { low = 2; high = 3; }
+        else if (r < 0.995) { low = 3; high = 5; }
+        else if (r < 1.015) { low = 5; high = 10; }
+        else if (r < 1.0199) { low = 10; high = 20; }
+        else { low = 20; high = 50; }
+
+        const coefValue = (Math.random() * (high - low) + low).toFixed(2);
+        const coef = `> ${coefValue}×`;
+        forecastText.textContent = coef;
+
+        // اختيار التوصية
+        const rec = recommendations[Math.floor(Math.random() * recommendations.length)];
+        recommendationEl.textContent = rec;
+
+        // تحديث السجل
+        history.unshift(coef);
+        if (history.length > MAX_HISTORY) history.pop();
+        historyList.innerHTML = '';
+        history.forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = item;
+          li.className = 'px-4 py-1 bg-gray-200 dark:bg-gray-700 rounded';
+          historyList.appendChild(li);
+        });
+        historyContainer.classList.remove('hidden');
+
+        // إعادة تفعيل الزر
+        fetchBtn.disabled = false;
+        fetchBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      }, 3000);
+    });
+  </script>
+</body>
+</html>

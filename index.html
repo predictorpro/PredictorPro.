@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ar-DZ" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <title>PredictorPro – صفحة تسجيل الدخول</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #111; }
+    /* Permitimos que la flecha sobresalga del contenedor */
+    #entryBtn { overflow: visible; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#111] text-white">
+  <!-- Mitad superior: logotipo -->
+  <div class="flex-1 flex items-center justify-center">
+    <div class="w-72 h-72 rounded-full border-4 border-green-700 overflow-hidden">
+      <img src="images/PredictorPro.jpg" alt="PredictorPro" class="w-full h-full object-cover" />
+    </div>
+  </div>
+
+  <!-- Mitad inferior: ingreso de ID, contraseña y botón flecha -->
+  <div class="flex-1 flex flex-col items-center justify-center -mt-48 space-y-4">
+    <input
+      id="idInput"
+      type="text"
+      placeholder="أدخل رقم التعريف تاعك"
+      class="w-3/4 max-w-md px-4 py-2 rounded-lg bg-gray-700 border-4 border-green-700 placeholder-green-700 placeholder:font-bold text-white focus:outline-none focus:border-green-500"
+    />
+    <div class="w-3/4 max-w-md relative">
+      <input
+        id="passwordInput"
+        type="password"
+        placeholder="أدخل كلمة المرور"
+        class="w-full px-4 py-2 rounded-lg bg-gray-700 border-4 border-green-700 placeholder-green-700 placeholder:font-bold text-white focus:outline-none focus:border-green-500"
+      />
+      <button id="togglePassword"
+              type="button"
+              class="absolute left-3 top-1/2 transform -translate-y-1/2">
+        <img id="eyeIcon"
+             src="images/c57d670f90a4982a2c30cff881624fad.png"
+             alt="إظهار كلمة المرور"
+             class="w-6 h-6"/>
+      </button>
+    </div>
+    <!-- Flecha triangular -->
+    <div
+      id="entryBtn"
+      class="cursor-pointer"
+      style="
+        border-top: 20px solid transparent;
+        border-bottom: 20px solid transparent;
+        border-right: 30px solid #22c55e;
+      "
+    ></div>
+    <p id="entryStatus" class="text-lg font-semibold"></p>
+  </div>
+
+  <script>
+    // Elementos
+    const pwdInput = document.getElementById('passwordInput');
+    const togglePwdBtn = document.getElementById('togglePassword');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    // Rutas de íconos
+    const openEye   = 'images/c57d670f90a4982a2c30cff881624fad.png';
+    const closedEye = 'images/4ecf8821a5f31ac849aa0a6ed02aaf6d.png';
+
+    // Alternar visibilidad de contraseña
+    togglePwdBtn.addEventListener('click', () => {
+      const isHidden = pwdInput.type === 'password';
+      pwdInput.type = isHidden ? 'text' : 'password';
+      // mostrar ojo cerrado cuando la contraseña está visible, ojo abierto cuando está oculta
+      eyeIcon.src  = isHidden ? closedEye : openEye;
+      eyeIcon.alt  = isHidden ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور';
+    });
+
+    // Manejo de inicio de sesión
+    document.getElementById('entryBtn').addEventListener('click', function() {
+      const id = document.getElementById('idInput').value.trim();
+      const pwd = pwdInput.value;
+      const status = document.getElementById('entryStatus');
+      if ((id.startsWith('125') || id.startsWith('126')) && (pwd === 'KWZ32W' || pwd === '0000')) {
+        status.textContent = 'متصل';
+        status.className = 'text-lg font-semibold text-green-500';
+        setTimeout(function() {
+          window.location.href = 'main.html';
+        }, 500);
+      } else {
+        status.textContent = 'الحساب غير موثق';
+        status.className = 'text-lg font-semibold text-red-500';
+      }
+    });
+  </script>
+</body>
+</html>

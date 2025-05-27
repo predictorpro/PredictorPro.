@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ar-DZ" class="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>PredictorPro – الألغام</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // تفعيل الوضع الداكن عبر الكلاس
+    tailwind.config = { darkMode: 'class' };
+  </script>
+</head>
+<body class="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white px-4 relative">
+
+  <!-- الشعار -->
+  <div class="absolute top-4 left-4 z-20">
+    <a href="main.html">
+      <img src="images/PredictorPro.jpg" alt="PredictorPro"
+           class="w-48 h-48 rounded-full border-4 border-green-700"/>
+    </a>
+  </div>
+
+  <!-- زر تبديل الوضع -->
+  <div class="absolute top-4 right-4 z-20">
+    <button id="themeToggle"
+            class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 shadow transition-colors"
+            onclick="toggleTheme()"
+            aria-label="تبديل الوضع">🌙</button>
+  </div>
+
+  <!-- زر الأسئلة الشائعة -->
+  <div id="faqButton"
+       class="fixed right-4 bottom-4 sm:top-1/2 sm:bottom-auto sm:transform sm:-translate-y-1/2
+              flex items-center space-x-2 p-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer shadow transition-colors z-20">
+    <img src="images/311092c3467c45c938fd5b63ac29281a.png"
+         alt="الأسئلة الشائعة"
+         class="w-8 h-8"/>
+    <span class="font-semibold text-gray-900 dark:text-white">
+      الأسئلة الشائعة
+    </span>
+  </div>
+
+  <!-- لوحة الأسئلة الشائعة -->
+  <div id="faqPanel"
+       class="fixed right-4 bottom-16 sm:top-1/2 sm:bottom-auto sm:transform sm:-translate-y-1/2
+              w-80 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg p-4 hidden text-gray-900 dark:text-white z-20">
+    <button id="faqClose"
+            class="absolute top-2 right-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-xl leading-none">
+      &times;
+    </button>
+
+    <h3 class="text-lg font-semibold mb-2">قواعد لعبة «الألغام»</h3>
+    <p class="text-sm mb-4">
+      اختر من 1 إلى 3 ألغام، ضع رهانك واحصل على خمسة تنبؤات. بعد كل جولة، قم بتثبيت أرباحك.
+      كلما لعبت جولات أكثر، زادت دقة التنبؤات. على المدى الطويل، تصل نسبة النجاح إلى 97٪.
+    </p>
+    <h3 class="text-lg font-semibold mb-2">كيف يتم حساب التنبؤات؟</h3>
+    <p class="text-sm mb-4">
+      يقوم الخوارزم بتحليل الجولات السابقة وتوزيع احتمالات ظهور الألغام.
+    </p>
+    <h3 class="text-lg font-semibold mb-2">هل يمكنني تغيير عدد الألغام؟</h3>
+    <p class="text-sm">
+      نعم — قبل كل جولة في إعدادات اللعبة يمكنك اختيار من 1 إلى 3 ألغام.
+    </p>
+  </div>
+
+  <main class="pt-56 sm:pt-28 pb-12 flex flex-col items-center space-y-6">
+    <div class="relative z-10">
+      <!-- شبكة الألغام -->
+      <div id="minesGrid"
+           class="grid grid-cols-5 grid-rows-5 gap-4 p-6 bg-gray-100 dark:bg-gray-800 rounded-2xl shadow-md border-2 border-green-700 transition-colors">
+        <!-- الخلايا تُولَّد بواسطة JavaScript -->
+      </div>
+      <!-- تراكب للرسائل -->
+      <div id="overlay"
+           class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 dark:bg-black dark:bg-opacity-75
+                  text-center text-xl font-semibold text-gray-900 dark:text-white hidden rounded-2xl p-4">
+      </div>
+    </div>
+
+    <!-- زر الحصول على التنبؤ -->
+    <button id="fetchBtn"
+            class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-semibold transition-colors z-10">
+      احصل على التنبؤ
+    </button>
+  </main>
+
+<script>
+  // تفعيل الوضع الداكن مبدئيًا مع أيقونة الشمس
+  document.documentElement.classList.add('dark');
+  themeToggle.textContent = '🌞';
+
+  function toggleTheme() {
+    document.documentElement.classList.toggle('dark');
+    themeToggle.textContent = document.documentElement.classList.contains('dark') ? '🌞' : '🌙';
+  }
+
+  // التعامل مع إظهار/إخفاء FAQ
+  const faqBtn = document.getElementById('faqButton');
+  const faqPanel = document.getElementById('faqPanel');
+  const faqClose = document.getElementById('faqClose');
+  faqBtn.addEventListener('click', () => faqPanel.classList.toggle('hidden'));
+  faqClose.addEventListener('click', () => faqPanel.classList.toggle('hidden'));
+
+  // رسائل التثبيت
+  const profitMessages = [
+    'ثبّت أرباحك',
+    'احتفظ بأرباحك',
+    'حان وقت الخروج من الصفقة',
+    'احتفظ بالعائد المحقق',
+    'أفضل وقت لتثبيت الربح',
+    'لا تكن جشعاً، احصد الأرباح',
+    'احصل على أرباحك',
+    'سجّل النتيجة النهائية',
+    'كفى مخاطرة، ثبت',
+    'رصيدك إيجابي — توقف'
+  ];
+  const MAX_REVEALS = 5;
+  let clickCount = 0;
+  let firstForecastDone = false;
+  const opened = [];
+
+  const grid = document.getElementById('minesGrid');
+  const btn = document.getElementById('fetchBtn');
+  const overlay = document.getElementById('overlay');
+
+  function initGrid() {
+    grid.innerHTML = '';
+    opened.length = 0;
+    clickCount = 0;
+    firstForecastDone = false;
+    overlay.classList.add('hidden');
+    btn.disabled = false;
+    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+    btn.textContent = 'احصل على التنبؤ';
+    for (let i = 0; i < 25; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'w-12 h-12 bg-green-700 rounded flex items-center justify-center';
+      grid.appendChild(cell);
+    }
+  }
+  initGrid();
+
+  btn.addEventListener('click', () => {
+    clickCount++;
+
+    // في أول تنبؤ — تأخير مع رسالة
+    if (!firstForecastDone) {
+      firstForecastDone = true;
+      btn.disabled = true;
+      btn.classList.add('opacity-50', 'cursor-not-allowed');
+      overlay.textContent = 'الرجاء الانتظار، يتم جلب بيانات الجولة التالية';
+      overlay.classList.remove('hidden');
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+        btn.disabled = false;
+        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+        revealCell();
+      }, 3000);
+      return;
+    }
+
+    // كشف الخلايا حتى 5 مرات
+    if (clickCount <= MAX_REVEALS) {
+      revealCell();
+      return;
+    }
+
+    // النقرة السادسة — رسالة نصيحة
+    if (clickCount === MAX_REVEALS + 1) {
+      const msg = profitMessages[Math.floor(Math.random() * profitMessages.length)];
+      overlay.textContent = msg;
+      overlay.classList.remove('hidden');
+      btn.textContent = 'هل تريد التنبؤ التالي؟';
+      return;
+    }
+
+    // إعادة ضبط الشبكة
+    initGrid();
+  });
+
+  function revealCell() {
+    const available = Array.from(grid.children)
+      .map((_, i) => i)
+      .filter(i => !opened.includes(i));
+    const idx = available[Math.floor(Math.random() * available.length)];
+    opened.push(idx);
+
+    const cell = grid.children[idx];
+    cell.classList.add('animate-ping');
+    setTimeout(() => {
+      cell.classList.remove('animate-ping');
+      cell.innerHTML = `
+        <img src="images/01e14e13be54d7a50878cb9370d59d2c.png"
+             alt="بلورة" class="w-full h-full object-contain"/>
+      `;
+    }, 1000);
+  }
+</script>
+</body>
+</html>
