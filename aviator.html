@@ -140,7 +140,7 @@
       'إشارة متوسطة، من الأفضل عدم المخاطرة.'
     ];
 
-    // منطق التوقع والسجل بدون أي تأخير ومع معامل دائم >4.20×
+    // منطق التوقع والسجل بدون أي تأخير ومع معامل ثابت >4.20X
     const fetchBtn = document.getElementById('fetchBtn');
     const forecastText = document.getElementById('aviatorForecast');
     const recommendationEl = document.getElementById('recommendation');
@@ -150,15 +150,15 @@
     let history = [];
 
     fetchBtn.addEventListener('click', () => {
+      // تعطيل الزر مؤقتاً
       fetchBtn.disabled = true;
       fetchBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
-      // توليد معامل عشوائي يكون دائماً أكبر من 4.20
-      const coefValue = (Math.random() * (50 - 4.21) + 4.21).toFixed(2);
-      const coef = `> ${coefValue}×`;
+      // دائمًا إظهار الإشارة الثابتة
+      const coef = ">4.20X";
       forecastText.textContent = coef;
 
-      // اختيار التوصية
+      // اختيار التوصية عشوائياً
       const rec = recommendations[Math.floor(Math.random() * recommendations.length)];
       recommendationEl.textContent = rec;
 
