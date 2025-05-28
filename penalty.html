@@ -142,12 +142,14 @@
         <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
         <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
         <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
+        <!-- الصف الثاني -->
         <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
         <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
         <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
         <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
         <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
-<div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
+        <!-- الصف الثالث -->
+        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
         <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
         <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
         <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
@@ -207,57 +209,68 @@
     const MAX_STEPS    = 5;
     let step = 0;
 
-    // دالة الحصول على إشارة بدون تأخير
+    // دالة الحصول على إشارة
+    fetchBtn.addEventListener('click', runStep);
+    // دالة إعادة التعيين
+    resetBtn.addEventListener('click', () => resetCycle());
+
     function runStep() {
       if (step < MAX_STEPS) {
         balls.forEach(b => b.classList.remove('invisible'));
         loadingText.textContent = MSG_ROUND;
         loadingText.classList.add('opacity-100');
+        fetchBtn.disabled = true;
+        fetchBtn.classList.add('opacity-50','cursor-not-allowed');
 
-        // التنفيذ الفوري بدل الانتظار
-        loadingText.classList.remove('opacity-100');
-        const winner = Math.floor(Math.random() * balls.length);
-        balls.forEach((b,i) => { if (i !== winner) b.classList.add('invisible'); });
+        setTimeout(() => {
+          loadingText.classList.remove('opacity-100');
+          const winner = Math.floor(Math.random() * balls.length);
+          balls.forEach((b,i) => { if (i !== winner) b.classList.add('invisible'); });
 
-        step++;
-        const dot = document.getElementById(`dot${step}`);
-        dot.classList.remove('bg-gray-300','dark:bg-gray-700');
-        dot.classList.add('bg-green-700');
-        if (step > 1) {
-          const pct = ((step - 1)/(MAX_STEPS-1))*100;
-          progressFill.style.width = `${pct}%`;
-        }
-        if (step === MAX_STEPS) fetchBtn.textContent = "إعادة تشغيل الإشارات";
+          step++;
+          const dot = document.getElementById(`dot${step}`);
+          dot.classList.remove('bg-gray-300','dark:bg-gray-700');
+          dot.classList.add('bg-green-700');
+          if (step > 1) {
+            const pct = ((step - 1)/(MAX_STEPS-1))*100;
+            progressFill.style.width = `${pct}%`;
+          }
+          if (step === MAX_STEPS) fetchBtn.textContent = "إعادة تشغيل الإشارات";
+
+          fetchBtn.disabled = false;
+          fetchBtn.classList.remove('opacity-50','cursor-not-allowed');
+        }, 3000);
 
       } else {
         resetCycle(true);
       }
     }
 
-    // دالة إعادة التعيين بدون تأخير
     function resetCycle(fromButton = false) {
       loadingText.textContent = MSG_RESET;
       loadingText.classList.add('opacity-100');
+      fetchBtn.disabled = true;
+      fetchBtn.classList.add('opacity-50','cursor-not-allowed');
+      resetBtn.disabled = true;
+      resetBtn.classList.add('opacity-50','cursor-not-allowed');
 
-      loadingText.classList.remove('opacity-100');
-      step = 0;
-      progressFill.style.width = '0%';
-      for (let i = 1; i <= MAX_STEPS; i++) {
-        const resetDot = document.getElementById(`dot${i}`);
-        resetDot.classList.remove('bg-green-700');
-        resetDot.classList.add('bg-gray-300','dark:bg-gray-700');
-      }
-      balls.forEach(b => b.classList.remove('invisible'));
-      fetchBtn.textContent = "احصل على الإشارة";
-      fetchBtn.disabled = false;
-      fetchBtn.classList.remove('opacity-50','cursor-not-allowed');
-      resetBtn.disabled = false;
-      resetBtn.classList.remove('opacity-50','cursor-not-allowed');
+      setTimeout(() => {
+        loadingText.classList.remove('opacity-100');
+        step = 0;
+        progressFill.style.width = '0%';
+        for (let i = 1; i <= MAX_STEPS; i++) {
+          const resetDot = document.getElementById(`dot${i}`);
+          resetDot.classList.remove('bg-green-700');
+          resetDot.classList.add('bg-gray-300','dark:bg-gray-700');
+        }
+        balls.forEach(b => b.classList.remove('invisible'));
+        fetchBtn.textContent = "احصل على الإشارة";
+        fetchBtn.disabled = false;
+        fetchBtn.classList.remove('opacity-50','cursor-not-allowed');
+        resetBtn.disabled = false;
+        resetBtn.classList.remove('opacity-50','cursor-not-allowed');
+      }, 3000);
     }
-
-    // ربط الأزرار
-    fetchBtn.addEventListener('click', runStep);
-    resetBtn.addEventListener('click', () => resetCycle());
   </script>
 </body>
 </html>
