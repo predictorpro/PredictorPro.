@@ -140,7 +140,7 @@
       'إشارة متوسطة، من الأفضل عدم المخاطرة.'
     ];
 
-    // منطق التوقع والسجل
+    // منطق التوقع والسجل بدون أي تأخير
     const fetchBtn = document.getElementById('fetchBtn');
     const forecastText = document.getElementById('aviatorForecast');
     const recommendationEl = document.getElementById('recommendation');
@@ -150,46 +150,43 @@
     let history = [];
 
     fetchBtn.addEventListener('click', () => {
+      // تعطيل الزر مؤقتاً أثناء الحساب
       fetchBtn.disabled = true;
       fetchBtn.classList.add('opacity-50', 'cursor-not-allowed');
-      forecastText.textContent = 'انتظر، جلب البيانات للجولة القادمة';
-      recommendationEl.textContent = '';
 
-      setTimeout(() => {
-        // اختيار نطاق المعامل حسب الاحتمالات
-        const r = Math.random();
-        let low, high;
-        if (r < 0.72) { low = 1; high = 2; }
-        else if (r < 0.945) { low = 2; high = 3; }
-        else if (r < 0.995) { low = 3; high = 5; }
-        else if (r < 1.015) { low = 5; high = 10; }
-        else if (r < 1.0199) { low = 10; high = 20; }
-        else { low = 20; high = 50; }
+      // حساب التوقع فوراً
+      const r = Math.random();
+      let low, high;
+      if (r < 0.72) { low = 1; high = 2; }
+      else if (r < 0.945) { low = 2; high = 3; }
+      else if (r < 0.995) { low = 3; high = 5; }
+      else if (r < 1.015) { low = 5; high = 10; }
+      else if (r < 1.0199) { low = 10; high = 20; }
+      else { low = 20; high = 50; }
 
-        const coefValue = (Math.random() * (high - low) + low).toFixed(2);
-        const coef = `> ${coefValue}×`;
-        forecastText.textContent = coef;
+      const coefValue = (Math.random() * (high - low) + low).toFixed(2);
+      const coef = `> ${coefValue}×`;
+      forecastText.textContent = coef;
 
-        // اختيار التوصية
-        const rec = recommendations[Math.floor(Math.random() * recommendations.length)];
-        recommendationEl.textContent = rec;
+      // اختيار التوصية
+      const rec = recommendations[Math.floor(Math.random() * recommendations.length)];
+      recommendationEl.textContent = rec;
 
-        // تحديث السجل
-        history.unshift(coef);
-        if (history.length > MAX_HISTORY) history.pop();
-        historyList.innerHTML = '';
-        history.forEach(item => {
-          const li = document.createElement('li');
-          li.textContent = item;
-          li.className = 'px-4 py-1 bg-gray-200 dark:bg-gray-700 rounded';
-          historyList.appendChild(li);
-        });
-        historyContainer.classList.remove('hidden');
+      // تحديث السجل
+      history.unshift(coef);
+      if (history.length > MAX_HISTORY) history.pop();
+      historyList.innerHTML = '';
+      history.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        li.className = 'px-4 py-1 bg-gray-200 dark:bg-gray-700 rounded';
+        historyList.appendChild(li);
+      });
+      historyContainer.classList.remove('hidden');
 
-        // إعادة تفعيل الزر
-        fetchBtn.disabled = false;
-        fetchBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-      }, 3000);
+      // إعادة تفعيل الزر
+      fetchBtn.disabled = false;
+      fetchBtn.classList.remove('opacity-50', 'cursor-not-allowed');
     });
   </script>
 </body>
