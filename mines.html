@@ -144,11 +144,19 @@
   btn.addEventListener('click', () => {
     clickCount++;
 
-    // في أول تنبؤ — مباشرة بدون تأخير
+    // في أول تنبؤ — تأخير مع رسالة
     if (!firstForecastDone) {
       firstForecastDone = true;
-      overlay.classList.add('hidden');
-      revealCell();
+      btn.disabled = true;
+      btn.classList.add('opacity-50', 'cursor-not-allowed');
+      overlay.textContent = 'الرجاء الانتظار، يتم جلب بيانات الجولة التالية';
+      overlay.classList.remove('hidden');
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+        btn.disabled = false;
+        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+        revealCell();
+      }, 3000);
       return;
     }
 
