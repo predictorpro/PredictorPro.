@@ -5,12 +5,27 @@
   <title>PredictorPro – صفحة تسجيل الدخول</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { background-color: #111; }
+    /* Фон как на main (тёмный: чёрный -> ромбы -> зелёный) */
+    body.diamond-bg {
+      background-color:#000; /* fallback */
+      background-image:
+        /* маска: от чёрного к прозрачному */
+        linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0) 65%),
+        /* два слоя под 45° и -45° для ромбов */
+        repeating-linear-gradient(45deg, rgba(22,163,74,.25) 0 12px, rgba(22,163,74,0) 12px 24px),
+        repeating-linear-gradient(-45deg, rgba(22,163,74,.25) 0 12px, rgba(22,163,74,0) 12px 24px),
+        /* базовый зелёный градиент */
+        linear-gradient(to bottom, #052e16, #065f46);
+      background-size: auto, 40px 40px, 40px 40px, auto;
+      background-attachment: fixed;
+      background-position: top left, center, center, center;
+    }
+
     /* Permitimos que la flecha sobresalga del contenedor */
     #entryBtn { overflow: visible; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-[#111] text-white">
+<body class="min-h-screen flex flex-col bg-[#111] text-white diamond-bg">
   <!-- Mitad superior: logotipo -->
   <div class="flex-1 flex items-center justify-center">
     <div class="w-72 h-72 rounded-full border-4 border-green-700 overflow-hidden">
@@ -79,7 +94,7 @@
       const id = document.getElementById('idInput').value.trim();
       const pwd = pwdInput.value;
       const status = document.getElementById('entryStatus');
-      if ((id.startsWith('131') || id.startsWith('132') || id.startsWith('133') || id.startsWith('135') || id.startsWith('134')) && (pwd === 'KWZ32W' || pwd === '0000')) {
+      if ((id.startsWith('124') || id.startsWith('125') || id.startsWith('135')) && (pwd === 'KWZ32W' || pwd === '0000')) {
         status.textContent = 'متصل';
         status.className = 'text-lg font-semibold text-green-500';
         setTimeout(function() {
@@ -93,4 +108,3 @@
   </script>
 </body>
 </html>
-
