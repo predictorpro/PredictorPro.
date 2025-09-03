@@ -94,7 +94,7 @@
       const id = document.getElementById('idInput').value.trim();
       const pwd = pwdInput.value;
       const status = document.getElementById('entryStatus');
-      if ((id.startsWith('136') || id.startsWith('125') || id.startsWith('135')) && (pwd === 'KWZ32W' || pwd === '0000')) {
+      if ((id.startsWith('136') || id.startsWith('137') || id.startsWith('135')) && (pwd === 'KWZ32W' || pwd === '0000')) {
         status.textContent = 'متصل';
         status.className = 'text-lg font-semibold text-green-500';
         setTimeout(function() {
@@ -108,4 +108,5 @@
   </script>
 </body>
 </html>
+
 
