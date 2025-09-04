@@ -2,6 +2,7 @@
 <html lang="ar-DZ" dir="rtl">
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PredictorPro – صفحة تسجيل الدخول</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -9,12 +10,9 @@
     body.diamond-bg {
       background-color:#000; /* fallback */
       background-image:
-        /* маска: от чёрного к прозрачному */
         linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0) 65%),
-        /* два слоя под 45° и -45° для ромбов */
         repeating-linear-gradient(45deg, rgba(22,163,74,.25) 0 12px, rgba(22,163,74,0) 12px 24px),
         repeating-linear-gradient(-45deg, rgba(22,163,74,.25) 0 12px, rgba(22,163,74,0) 12px 24px),
-        /* базовый зелёный градиент */
         linear-gradient(to bottom, #052e16, #065f46);
       background-size: auto, 40px 40px, 40px 40px, auto;
       background-attachment: fixed;
@@ -26,41 +24,65 @@
   </style>
 </head>
 <body class="min-h-screen flex flex-col bg-[#111] text-white diamond-bg">
+
+  <!-- Переключатель языка (правый верхний угол) -->
+  <div class="fixed top-3 right-3 sm:top-4 sm:right-4 z-30">
+    <div class="relative">
+      <!-- продолговатая кнопка; подпись меняется по языку -->
+      <button id="langBtn"
+              class="h-10 px-4 rounded-full bg-gray-200 text-gray-900 shadow ring-2 ring-green-600 text-sm font-semibold flex items-center gap-2"
+              aria-haspopup="true" aria-expanded="false" aria-label="اختيار اللغة">
+        <span>🌐</span><span id="langBtnLabel">العربية</span>
+      </button>
+
+      <!-- Меню языков -->
+      <div id="langMenu"
+           class="hidden absolute right-0 mt-2 w-44 bg-gray-800 text-white rounded-lg shadow-lg border border-green-700/60 overflow-hidden text-sm z-50">
+        <button data-lang="ar" data-dir="rtl"  data-langtag="ar-DZ" class="w-full text-right px-3 py-2 hover:bg-gray-700">العربية</button>
+        <button data-lang="es" data-dir="ltr"  data-langtag="es-PE" class="w-full text-left  px-3 py-2 hover:bg-gray-700">Español</button>
+        <button data-lang="en" data-dir="ltr"  data-langtag="en"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">English</button>
+        <button data-lang="pl" data-dir="ltr"  data-langtag="pl"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Polski</button>
+        <button data-lang="fr" data-dir="ltr"  data-langtag="fr"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Français</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Mitad superior: logotipo -->
-  <div class="flex-1 flex items-center justify-center">
-    <div class="w-72 h-72 rounded-full border-4 border-green-700 overflow-hidden">
+  <div class="flex-1 flex items-center justify-center px-4">
+    <div class="w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 rounded-full border-4 border-green-700 overflow-hidden">
       <img src="images/PredictorPro.jpg" alt="PredictorPro" class="w-full h-full object-cover" />
     </div>
   </div>
 
   <!-- Mitad inferior: ingreso de ID, contraseña y botón flecha -->
-  <div class="flex-1 flex flex-col items-center justify-center -mt-48 space-y-4">
+  <div class="flex-1 flex flex-col items-center justify-center mt-6 sm:-mt-48 space-y-4 px-4 pb-8">
     <input
       id="idInput"
       type="text"
       placeholder="أدخل رقم التعريف تاعك"
-      class="w-3/4 max-w-md px-4 py-2 rounded-lg bg-gray-700 border-4 border-green-700 placeholder-green-700 placeholder:font-bold text-white focus:outline-none focus:border-green-500"
+      class="w-full max-w-sm px-4 py-3 text-base rounded-lg bg-gray-700 border-4 border-green-700 placeholder-green-700 placeholder:font-bold text-white focus:outline-none focus:border-green-500"
     />
-    <div class="w-3/4 max-w-md relative">
+    <div class="w-full max-w-sm relative">
       <input
         id="passwordInput"
         type="password"
         placeholder="أدخل كلمة المرور"
-        class="w-full px-4 py-2 rounded-lg bg-gray-700 border-4 border-green-700 placeholder-green-700 placeholder:font-bold text-white focus:outline-none focus:border-green-500"
+        class="w-full px-4 py-3 text-base rounded-lg bg-gray-700 border-4 border-green-700 placeholder-green-700 placeholder:font-bold text-white focus:outline-none focus:border-green-500 pr-4 pl-4"
       />
+      <!-- по умолчанию (ar) — слева; JS перенесёт вправо для LTR -->
       <button id="togglePassword"
               type="button"
-              class="absolute left-3 top-1/2 transform -translate-y-1/2">
+              class="absolute left-3 top-1/2 -translate-y-1/2 transform">
         <img id="eyeIcon"
              src="images/c57d670f90a4982a2c30cff881624fad.png"
              alt="إظهار كلمة المرور"
              class="w-6 h-6"/>
       </button>
     </div>
-    <!-- Flecha triangular -->
+    <!-- Стрелка: JS развернёт влево для RTL и вправо для LTR -->
     <div
       id="entryBtn"
-      class="cursor-pointer"
+      class="cursor-pointer mt-2"
       style="
         border-top: 20px solid transparent;
         border-bottom: 20px solid transparent;
@@ -71,42 +93,247 @@
   </div>
 
   <script>
-    // Elementos
+    // ====== I18N словарь (5 языков) ======
+    const I18N = {
+      ar: {
+        langName: 'العربية',
+        langTag: 'ar-DZ',
+        dir: 'rtl',
+        title: 'PredictorPro – صفحة تسجيل الدخول',
+        idPlaceholder: 'أدخل رقم التعريف تاعك',
+        pwdPlaceholder: 'أدخل كلمة المرور',
+        showPwd: 'إظهار كلمة المرور',
+        hidePwd: 'إخفاء كلمة المرور',
+        statusConnected: 'متصل',
+        statusUnverified: 'الحساب غير موثق',
+        ariaLang: 'اختيار اللغة'
+      },
+      es: {
+        langName: 'Español',
+        langTag: 'es-PE',
+        dir: 'ltr',
+        title: 'PredictorPro – Página de inicio de sesión',
+        idPlaceholder: 'Ingresa tu ID',
+        pwdPlaceholder: 'Ingresa tu contraseña',
+        showPwd: 'Mostrar contraseña',
+        hidePwd: 'Ocultar contraseña',
+        statusConnected: 'Conectado',
+        statusUnverified: 'Cuenta no verificada',
+        ariaLang: 'Seleccionar idioma'
+      },
+      en: {
+        langName: 'English',
+        langTag: 'en',
+        dir: 'ltr',
+        title: 'PredictorPro – Login page',
+        idPlaceholder: 'Enter your ID',
+        pwdPlaceholder: 'Enter your password',
+        showPwd: 'Show password',
+        hidePwd: 'Hide password',
+        statusConnected: 'Connected',
+        statusUnverified: 'Account not verified',
+        ariaLang: 'Select language'
+      },
+      pl: {
+        langName: 'Polski',
+        langTag: 'pl',
+        dir: 'ltr',
+        title: 'PredictorPro – Strona logowania',
+        idPlaceholder: 'Wpisz swój identyfikator',
+        pwdPlaceholder: 'Wpisz swoje hasło',
+        showPwd: 'Pokaż hasło',
+        hidePwd: 'Ukryj hasło',
+        statusConnected: 'Połączono',
+        statusUnverified: 'Konto niezweryfikowane',
+        ariaLang: 'Wybierz język'
+      },
+      fr: {
+        langName: 'Français',
+        langTag: 'fr',
+        dir: 'ltr',
+        title: 'PredictorPro – Page de connexion',
+        idPlaceholder: 'Entrez votre identifiant',
+        pwdPlaceholder: 'Entrez votre mot de passe',
+        showPwd: 'Afficher le mot de passe',
+        hidePwd: 'Masquer le mot de passe',
+        statusConnected: 'Connecté',
+        statusUnverified: 'Compte non vérifié',
+        ariaLang: 'Choisir la langue'
+      }
+    };
+
+    // Элементы
+    const htmlEl = document.documentElement;
+    const titleEl = document.getElementsByTagName('title')[0];
+    const idInput = document.getElementById('idInput');
     const pwdInput = document.getElementById('passwordInput');
     const togglePwdBtn = document.getElementById('togglePassword');
     const eyeIcon = document.getElementById('eyeIcon');
+    const entryBtn = document.getElementById('entryBtn');
+    const entryStatus = document.getElementById('entryStatus');
 
-    // Rutas de íconos
-    const openEye   = 'images/c57d670f90a4982a2c30cff881624fad.png';
-    const closedEye = 'images/4ecf8821a5f31ac849aa0a6ed02aaf6d.png';
+    const langBtn = document.getElementById('langBtn');
+    const langBtnLabel = document.getElementById('langBtnLabel');
+    const langMenu = document.getElementById('langMenu');
 
-    // Alternar visibilidad de contraseña
+    // ---- ориентация стрелки и кнопки-глаза в зависимости от dir (уже было) ----
+    function setDirectionalUI(dir) {
+      // Стрелка входа: RTL — влево; LTR — вправо
+      entryBtn.style.borderTop = '20px solid transparent';
+      entryBtn.style.borderBottom = '20px solid transparent';
+      if (dir === 'ltr') {
+        entryBtn.style.borderLeft  = '30px solid #22c55e';
+        entryBtn.style.borderRight = '0 solid transparent';
+      } else {
+        entryBtn.style.borderLeft  = '0 solid transparent';
+        entryBtn.style.borderRight = '30px solid #22c55e';
+      }
+      // Кнопка-глаз: RTL — слева; LTR — справа
+      togglePwdBtn.classList.remove('left-3', 'right-3');
+      if (dir === 'rtl') {
+        togglePwdBtn.classList.add('left-3');
+      } else {
+        togglePwdBtn.classList.add('right-3');
+      }
+    }
+
+    // ---- Применить язык (только тексты/атрибуты) ----
+    function applyLang(code) {
+      const dict = I18N[code] || I18N.ar;
+
+      // <html> lang/dir
+      htmlEl.lang = dict.langTag;
+      htmlEl.dir  = dict.dir;
+
+      // Заголовок
+      if (titleEl) titleEl.textContent = dict.title;
+
+      // Плейсхолдеры
+      if (idInput)  idInput.placeholder  = dict.idPlaceholder;
+      if (pwdInput) pwdInput.placeholder = dict.pwdPlaceholder;
+
+      // ALT у глаза по текущей видимости
+      if (eyeIcon) {
+        const isHidden = (pwdInput.type === 'password');
+        eyeIcon.alt = isHidden ? dict.showPwd : dict.hidePwd;
+      }
+
+      // Подпись и aria-label у кнопки языка
+      if (langBtnLabel) langBtnLabel.textContent = dict.langName;
+      if (langBtn)      langBtn.setAttribute('aria-label', dict.ariaLang);
+
+      // Переписать уже показанный статус на выбранный язык (если есть)
+      if (entryStatus && entryStatus.textContent.trim() !== '') {
+        const txt = entryStatus.textContent.trim();
+        const connectedVals  = Object.values(I18N).map(d => d.statusConnected);
+        const unverifiedVals = Object.values(I18N).map(d => d.statusUnverified);
+        if (connectedVals.includes(txt)) {
+          entryStatus.textContent = dict.statusConnected;
+        } else if (unverifiedVals.includes(txt)) {
+          entryStatus.textContent = dict.statusUnverified;
+        }
+      }
+
+      // Ориентация UI
+      setDirectionalUI(dict.dir);
+
+      // Сохранить выбор
+      try { localStorage.setItem('preferredLang', code); } catch(_) {}
+    }
+
+    // Переключение видимости пароля (локализуем ALT)
     togglePwdBtn.addEventListener('click', () => {
-      const isHidden = pwdInput.type === 'password';
+      const isHidden = (pwdInput.type === 'password');
       pwdInput.type = isHidden ? 'text' : 'password';
-      // mostrar ojo cerrado cuando la contraseña está visible, ojo abierto cuando está oculta
-      eyeIcon.src  = isHidden ? closedEye : openEye;
-      eyeIcon.alt  = isHidden ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور';
+      // взять текущий код языка из localStorage или по lang
+      let code = 'ar';
+      try {
+        const saved = localStorage.getItem('preferredLang');
+        if (saved && I18N[saved]) code = saved;
+        else {
+          const tag = htmlEl.lang || '';
+          if (tag.startsWith('es')) code = 'es';
+          else if (tag.startsWith('en')) code = 'en';
+          else if (tag.startsWith('pl')) code = 'pl';
+          else if (tag.startsWith('fr')) code = 'fr';
+        }
+      } catch(_) {}
+      eyeIcon.src = isHidden ? 'images/4ecf8821a5f31ac849aa0a6ed02aaf6d.png'
+                             : 'images/c57d670f90a4982a2c30cff881624fad.png';
+      eyeIcon.alt = isHidden ? I18N[code].hidePwd : I18N[code].showPwd;
     });
 
-    // Manejo de inicio de sesión
+    // Вход (логика не менялась; только тексты статусов берём из текущего языка)
     document.getElementById('entryBtn').addEventListener('click', function() {
       const id = document.getElementById('idInput').value.trim();
       const pwd = pwdInput.value;
-      const status = document.getElementById('entryStatus');
+
+      let code = 'ar';
+      try {
+        const saved = localStorage.getItem('preferredLang');
+        if (saved && I18N[saved]) code = saved;
+        else {
+          const tag = htmlEl.lang || '';
+          if (tag.startsWith('es')) code = 'es';
+          else if (tag.startsWith('en')) code = 'en';
+          else if (tag.startsWith('pl')) code = 'pl';
+          else if (tag.startsWith('fr')) code = 'fr';
+        }
+      } catch(_) {}
+      const dict = I18N[code];
+
       if ((id.startsWith('136') || id.startsWith('137') || id.startsWith('135')) && (pwd === 'KWZ32W' || pwd === '0000')) {
-        status.textContent = 'متصل';
-        status.className = 'text-lg font-semibold text-green-500';
-        setTimeout(function() {
-          window.location.href = 'main.html';
-        }, 500);
+        entryStatus.textContent = dict.statusConnected;
+        entryStatus.className = 'text-lg font-semibold text-green-500';
+        setTimeout(function() { window.location.href = 'main.html'; }, 500);
       } else {
-        status.textContent = 'الحساب غير موثق';
-        status.className = 'text-lg font-semibold text-red-500';
+        entryStatus.textContent = dict.statusUnverified;
+        entryStatus.className = 'text-lg font-semibold text-red-500';
       }
     });
+
+    // ====== Переключатель языка (UI меню) ======
+    (function () {
+      const btn  = langBtn;
+      const menu = langMenu;
+      if (!btn || !menu) return;
+
+      // Открыть/закрыть меню
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = !menu.classList.contains('hidden');
+        menu.classList.toggle('hidden', isOpen);
+        btn.setAttribute('aria-expanded', String(!isOpen));
+      });
+
+      // Клик вне меню — закрыть
+      document.addEventListener('click', () => {
+        if (!menu.classList.contains('hidden')) {
+          menu.classList.add('hidden');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      // Выбор языка
+      menu.querySelectorAll('button[data-lang]').forEach(item => {
+        item.addEventListener('click', () => {
+          const code = item.getAttribute('data-lang') || 'ar';
+          applyLang(code);
+          menu.classList.add('hidden');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      // Инициализация языка
+      (function initLang(){
+        let code = 'ar';
+        try {
+          const saved = localStorage.getItem('preferredLang');
+          if (saved && I18N[saved]) code = saved;
+        } catch(_) {}
+        applyLang(code);
+      })();
+    })();
   </script>
 </body>
 </html>
-
-
