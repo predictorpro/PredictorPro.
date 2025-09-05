@@ -1,197 +1,273 @@
-<!DOCTYPE html>
-<html lang="ar-DZ" class="dark">
+<!DOCTYPE html> 
+<html lang="es-PE" class="dark">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>PredictorPro – الصفحة الرئيسية</title>
+  <title id="docTitle">PredictorPro – Página principal</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    // تفعيل الوضع الداكن عبر الكلاس
+    // Activar tema oscuro por clase
     tailwind.config = { darkMode: 'class' };
   </script>
+  <style>
+  /* Переносим фон с body на фиксированный слой, чтобы он не «ездил» на мобилках */
+  body.diamond-bg{
+    background: none !important; /* отключаем прежний фон у body */
+    position: relative;          /* базовый контекст для псевдо-элемента */
+  }
+
+  /* Фон (светлая тема) — фиксированный слой позади контента */
+  body.diamond-bg::before{
+    content:"";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    /* те же слои, что были у светлой темы */
+    background-color:#fff; /* fallback claro */
+    background-image:
+      linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 40%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 65%),
+      repeating-linear-gradient(45deg, rgba(22,163,74,.15) 0 12px, rgba(22,163,74,0) 12px 24px),
+      repeating-linear-gradient(-45deg, rgba(22,163,74,.15) 0 12px, rgba(22,163,74,0) 12px 24px),
+      linear-gradient(to bottom, #ecfdf5, #d1fae5);
+    background-size: auto, 40px 40px, 40px 40px, auto;
+    background-position: top left, center, center, center;
+  }
+
+  /* Фон (тёмная тема) — тот же слой, но с тёмными градиентами */
+  .dark body.diamond-bg::before{
+    background-color:#000; /* fallback oscuro */
+    background-image:
+      linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0) 65%),
+      repeating-linear-gradient(45deg, rgba(22,163,74,.25) 0 12px, rgba(22,163,74,0) 12px 24px),
+      repeating-linear-gradient(-45deg, rgba(22,163,74,.25) 0 12px, rgba(22,163,74,0) 12px 24px),
+      linear-gradient(to bottom, #052e16, #065f46);
+    background-size: auto, 40px 40px, 40px 40px, auto;
+    background-position: top left, center, center, center;
+  }
+</style>
+
 </head>
-<body class="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white px-4 transition-colors relative">
-  <!-- الشعار -->
-  <div class="absolute top-4 left-4 z-20">
-    <a href="index.html">
-      <img
-        src="images/PredictorPro.jpg"
-        alt="PredictorPro"
-        class="w-48 h-48 rounded-full border-4 border-green-700"
-      />
-    </a>
-  </div>
+<body class="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white transition-colors relative diamond-bg">
 
-  <!-- مفتاح تغيير الوضع -->
-  <div class="absolute top-4 right-4 z-20">
-    <button
-      id="themeToggle"
-      class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 shadow transition-colors"
-      onclick="toggleTheme()"
-      aria-label="تغيير المظهر"
-    >🌞</button>
-  </div>
+  <!-- Barra superior fija (логотип + онлайн + tema + idioma) -->
+  <header class="fixed top-0 left-0 right-0 z-30 backdrop-blur-md bg-white/70 dark:bg-black/40 border-b border-green-700/30">
+    <div class="max-w-[74rem] mx-auto px-4 py-2 flex items-center justify-between gap-3">
+      <!-- Logotipo (адаптивные размеры) -->
+      <a href="index.html" class="shrink-0 flex items-center gap-2">
+        <img src="images/PredictorPro.jpg" alt="PredictorPro"
+             class="w-16 h-16 sm:w-24 sm:h-24 lg:w-32 lg:h-32 rounded-full border-4 border-green-700 object-cover"/>
+      </a>
 
-  <main class="flex flex-col items-center pt-56 sm:pt-28 pb-24">
-    <div class="w-full max-w-[58rem]">
-      <!-- شبكة أزرار الألعاب -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-24">
-        <!-- طيار -->
-        <div class="flex flex-col items-center">
-          <a href="aviator.html"
-             class="w-full sm:w-40 aspect-square bg-black rounded-2xl flex items-center justify-center overflow-hidden border-2 border-green-700 transition-colors z-10">
-            <img src="images/awiator-1win.png" alt="طيار" class="w-full h-full object-contain"/>
-          </a>
-          <span class="mt-2 text-lg font-semibold text-black dark:text-white">طيار</span>
+      <div class="flex items-center gap-3 sm:gap-4">
+        <!-- Indicador de usuarios activos -->
+        <div class="flex items-center gap-2 px-2.5 py-1 rounded-full border border-green-600/70 bg-white/60 dark:bg-white/10 shadow-md">
+          <span class="relative flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+          </span>
+          <span id="onlineLabel" class="hidden sm:inline text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">En línea</span>
+          <span id="activeUsersCount" class="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">—</span>
         </div>
-        <!-- ركلات الجزاء -->
-        <div class="flex flex-col items-center">
-          <a href="penalty.html"
-             class="w-full sm:w-40 aspect-square bg-blue-200 rounded-2xl flex items-center justify-center overflow-hidden border-2 border-green-700 transition-colors">
-            <img src="images/penaltyshootoutstreet_logo.png" alt="ركلات الجزاء" class="w-full h-full object-contain"/>
-          </a>
-          <span class="mt-2 text-lg font-semibold text-black dark:text-white">ركلات الجزاء</span>
-        </div>
-        <!-- الألغام -->
-        <div class="flex flex-col items-center">
-          <a href="mines.html"
-             class="w-full sm:w-40 aspect-square bg-white rounded-2xl flex items-center justify-center overflow-hidden border-2 border-green-700 transition-colors">
-            <img src="images/images.jpg" alt="الألغام" class="w-full h-full object-cover"/>
-          </a>
-          <span class="mt-2 text-lg font-semibold text-black dark:text-white">الألغام</span>
-        </div>
-        <!-- تفاح الحظ -->
-        <div class="flex flex-col items-center">
-          <a href="apple-of-fortune.html"
-             class="w-full sm:w-40 aspect-square bg-white rounded-2xl flex items-center justify-center overflow-hidden border-2 border-green-700 transition-colors">
-            <img src="images/unnamed.png" alt="تفاح الحظ" class="w-full h-full object-contain"/>
-          </a>
-          <span class="mt-2 text-lg font-semibold text-black dark:text-white">تفاح الحظ</span>
-        </div>
-      </div>
 
-      <!-- أخبار المشروع -->
-      <h2 class="mt-16 text-xl font-semibold text-center text-black dark:text-white">
-        أخبار المشروع
-      </h2>
-      <div class="mt-6 space-y-6">
-        <!-- خبر 0: انتصار تاريخي لجورج رييس -->
-        <!-- Noticia 0: انتصار تاريخي لتلميذي عبدو من الجزائر -->
-<!-- Noticia 0: انتصار تاريخي لتلميذي عبدو من وهران! -->
-<div>
-  <button class="w-full py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-6 
-                 border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
-    انتصار تاريخي لتلميذي عبدو من وهران!
-  </button>
-  <p class="mt-1 ml-6 text-sm text-gray-600 dark:text-gray-400">16.05.2025</p>
-  <div class="mt-2 px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
-    <img src="images/vot8fd10b8.png" alt="عبدو يحتفل بجائزته" class="w-full mb-4 rounded" />
-    <p class="mb-2">
-      يا إخوتي! اليوم أحتفل من كل قلبي بنجاح تلميذي عبدو من وهران، الذي فاز لتوه بـ 5 000 000 دينار جزائري في PredictorPro. 😱💰
-    </p>
-    <p class="mb-2">
-      بدأ عبدو بدون خبرة، متابعًا كل إشارة ومتعلّمًا بصبر. لقد مكنه جهده وانضباطه من تحقيق هذا النصر المذهل.
-    </p>
-    <p class="mb-2">
-      🎁 وبهذا الفوز العظيم، أهدّيته سيارة جديدة كعربون محبة وفخر!
-    </p>
-    <p class="mb-2">
-      🎉 أنا فخور بك جدًا يا أخي. يثبت هذا الفوز أنه بالعمل الجاد والإيمان، كل شيء ممكن!
-    </p>
-    <p>
-      ليكن هذا النجاح مصدر إلهام لجميع أفراد المجتمع: استمروا في المثابرة، اتبعوا الإشارات، وآمنوا بقدراتكم.
-    </p>
-  </div>
-</div>
+        <!-- Переключатель темы -->
+        <button
+          id="themeToggle"
+          class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 shadow-lg transition-colors ring-2 ring-green-600 ring-offset-2 ring-offset-transparent"
+          onclick="toggleTheme()"
+          aria-label="Cambiar tema"
+        >🌙</button>
 
-
-        <!-- خبر 1: ذكرى تأسيس مشروع PredictorPro -->
-        <div>
-          <button class="w-full py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-6 
-                         border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
-            ذكرى تأسيس مشروع PredictorPro
+        <!-- Переключатель языка (как на index) -->
+        <div class="relative">
+          <button id="langBtn"
+                  class="h-10 px-4 rounded-full bg-gray-200 text-gray-900 shadow ring-2 ring-green-600 text-sm font-semibold flex items-center gap-2"
+                  aria-haspopup="true" aria-expanded="false" aria-label="Select language">
+            <span>🌐</span><span id="langBtnLabel">العربية</span>
           </button>
-          <p class="mt-1 ml-6 text-sm text-gray-600 dark:text-gray-400">10.05.2025</p>
-          <div class="mt-2 px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
-            <p class="mb-2">
-              يكتمل عام على إطلاق مشروع PredictorPro! خلال هذه الفترة، حقق مئات المشاركين نتائج استثنائية وغيروا حياتهم وبدأوا يجنون مبالغ مهمة. شكرًا لكم على دعمكم—نحن الآن عائلة كبيرة تتطلع لمزيد من الإنجازات. احتفاءً بهذه المناسبة، سيكون PredictorPro مجانيًا لمدة شهر كامل. حظًا سعيدًا!
-            </p>
-          </div>
-        </div>
-        <!-- خبر 2: تحديث لعبة «الألغام» -->
-        <div>
-          <button class="w-full py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-6 
-                         border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
-            تحديث لعبة «الألغام»
-          </button>
-          <p class="mt-1 ml-6 text-sm text-gray-600 dark:text-gray-400">08.05.2025</p>
-          <div class="mt-2 px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
-            <p>
-              قمنا بتحسين نظام التنبؤات للعبة «الألغام» بشكل كبير. بفضل تحليل البيانات العميق، وصلت دقتنا إلى 97%! جربها الآن!
-            </p>
-          </div>
-        </div>
-        <!-- خبر 3: إعلان ميزة «سجل الرهانات» -->
-        <div>
-          <button class="w-full py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-6 
-                         border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
-            إعلان ميزة «سجل الرهانات»
-          </button>
-          <p class="mt-1 ml-6 text-sm text-gray-600 dark:text-gray-400">06.05.2025</p>
-          <div class="mt-2 px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
-            <p>
-              أطلقنا ميزة «سجل الرهانات»: يمكنك الآن مراجعة وتحليل كل تنبؤاتك من كل جلسة في مكان واحد.
-            </p>
-          </div>
-        </div>
-        <!-- خبر 4: تطوير تطبيق PredictorPro للهواتف -->
-        <div>
-          <button class="w-full py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-6 
-                         border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
-            تطوير تطبيق PredictorPro للهواتف المحمولة
-          </button>
-          <p class="mt-1 ml-6 text-sm text-gray-600 dark:text-gray-400">04.05.2025</p>
-          <div class="mt-2 px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
-            <p>
-              نحن نعمل بنشاط على تطوير تطبيق PredictorPro للهواتف الذكية. من المتوقع الإطلاق في 28 مايو 2025.
-            </p>
-          </div>
-        </div>
-        <!-- خبر 5: تحديث واجهة المستخدم وتجربة المستخدم -->
-        <div>
-          <button class="w-full py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-6 
-                         border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
-            تحديث واجهة المستخدم وتجربة المستخدم: ثيمات تصميم جديدة
-          </button>
-          <p class="mt-1 ml-6 text-sm text-gray-600 dark:text-gray-400">30.04.2025</p>
-          <div class="mt-2 px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
-            <p>
-              قمنا بتجديد الواجهة: أضفنا ثيمات ألوان جديدة، وحسّنا التنقل، وطورنا أدوات التحكم لتجربة أكثر سلاسة.
-            </p>
+          <div id="langMenu"
+               class="hidden absolute right-0 mt-2 w-18 bg-gray-800 text-white rounded-lg shadow-lg border border-green-700/60 overflow-hidden text-sm z-50">
+            <button data-lang="ar" data-dir="rtl"  data-langtag="ar-DZ" class="w-full text-right px-3 py-2 hover:bg-gray-700">العربية</button>
+            <button data-lang="es" data-dir="ltr"  data-langtag="es-PE" class="w-full text-left  px-3 py-2 hover:bg-gray-700">Español</button>
+            <button data-lang="en" data-dir="ltr"  data-langtag="en"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">English</button>
+            <button data-lang="pl" data-dir="ltr"  data-langtag="pl"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Polski</button>
+            <button data-lang="fr" data-dir="ltr"  data-langtag="fr"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Français</button>
           </div>
         </div>
       </div>
     </div>
+  </header>
+
+  <!-- Основной контент: отступ сверху под фиксированную шапку и снизу под кнопку чата -->
+  <main class="flex flex-col items-center pt-28 sm:pt-36 lg:pt-48 pb-36 sm:pb-28 px-4">
+    <div class="w-full max-w-[58rem]">
+      <!-- Cuadrícula de botones de juegos -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8 lg:gap-10">
+        <!-- Aviador -->
+        <div class="flex flex-col items-center">
+          <a href="aviator.html"
+             class="w-full sm:w-40 aspect-square bg-black rounded-2xl flex items-center justify-center overflow-hidden border-2 border-green-700 transition-colors">
+            <img src="images/awiator-1win.png" alt="Aviador" class="w-full h-full object-contain"/>
+          </a>
+          <span id="gameAviator" class="mt-2 text-base sm:text-lg font-semibold text-black dark:text-white">Aviator</span>
+        </div>
+        <!-- Penalti -->
+        <div class="flex flex-col items-center">
+          <a href="penalty.html"
+             class="w-full sm:w-40 aspect-square bg-blue-200 rounded-2xl flex items-center justify-center overflow-hidden border-2 border-green-700 transition-colors">
+            <img src="images/penaltyshootoutstreet_logo.png" alt="Penalti" class="w-full h-full object-contain"/>
+          </a>
+          <span id="gamePenalty" class="mt-2 text-base sm:text-lg font-semibold text-black dark:text-white">Penalty</span>
+        </div>
+        <!-- Minas -->
+        <div class="flex flex-col items-center">
+          <a href="mines.html"
+             class="w-full sm:w-40 aspect-square bg-white rounded-2xl flex items-center justify-center overflow-hidden border-2 border-green-700 transition-colors">
+            <img src="images/images.jpg" alt="Minas" class="w-full h-full object-cover"/>
+          </a>
+          <span id="gameMines" class="mt-2 text-base sm:text-lg font-semibold text-black dark:text-white">Mines</span>
+        </div>
+        <!-- Manzanas de la Fortuna -->
+        <div class="flex flex-col items-center">
+          <a href="apple-of-fortune.html"
+             class="w-full sm:w-40 aspect-square bg-white rounded-2xl flex items-center justify-center overflow-hidden border-2 border-green-700 transition-colors">
+            <img src="images/unnamed.png" alt="Manzanas de la Fortuna" class="w-full h-full object-contain"/>
+          </a>
+          <span id="gameApple" class="mt-2 text-base sm:text-lg font-semibold text-black dark:text-white">Apple Of Fortune</span>
+        </div>
+      </div>
+
+      <!-- Noticias del proyecto -->
+      <section class="mt-10 sm:mt-12 p-4 sm:p-6 rounded-2xl border-2 border-green-700/70 bg-white/60 dark:bg-black/40 backdrop-blur-md shadow-xl">
+        <h2 id="newsHeader" class="text-lg sm:text-xl font-semibold text-center text-black dark:text-white">
+          Noticias del proyecto
+        </h2>
+        <div class="mt-4 sm:mt-6 space-y-6">
+          <!-- Noticia 0 -->
+          <div>
+            <button id="news0Title" class="w-full py-3 sm:py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-4 sm:px-6 
+                           border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
+              ¡Hermanoooos, victoria histórica de Jorge Reyes!
+            </button>
+            <p class="mt-1 ml-4 sm:ml-6 text-xs sm:text-sm text-gray-600 dark:text-gray-400">13.05.2025</p>
+            <div class="mt-2 px-4 sm:px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
+              <img id="news0Img" src="images/vot8fd10b8.png" alt="Jorge con su nuevo auto" class="w-full mb-4 rounded" />
+              <p id="news0p1" class="mb-2">
+                ¡Hermanoooos, hoy es fiesta total! 🎉 Quiero felicitar a mi alumno, mi amigo y mi hermano del alma — Jorge Reyes de Trujillo, que acaba de ganar el premio más grande en la historia de PredictorPro: ¡2 000 000 PEN! 😱💰
+              </p>
+              <p id="news0p2" class="mb-2">
+                Jorge estuvo conmigo desde el inicio. Era chofer y apenas le alcanzaba para el alquiler. Pero no se quejaba — escuchaba, aprendía y seguía las señales. Sin inventar nada. Y hoy, hermanos... ¡lo logró!
+              </p>
+              <p id="news0p3" class="mb-2">
+                🎁 En honor a su victoria, le regalo un auto nuevo, con las llaves entregadas en mano. Porque se lo merece, ¡carajo!
+              </p>
+              <p id="news0p4" class="mb-2">
+                🔥 Y para todos mis hermanos del canal, lanzo la semana del agradecimiento:<br>
+                ✅ Si recargas desde 50 PEN, recibes +500 PEN de regalo<br>
+                ⏳ Solo por 7 días. Solo para mi gente. Solo desde aquí.
+              </p>
+              <p id="news0p5">
+                Esto no es suerte. Es trabajo, fe y decisiones correctas. Jorge ya ganó. ¿Y tú? Es tu momento.
+              </p>
+            </div>
+          </div>
+
+          <!-- Noticia 1 -->
+          <div>
+            <button id="news1Title" class="w-full py-3 sm:py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-4 sm:px-6 
+                           border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
+              Aniversario del proyecto PredictorPro
+            </button>
+            <p class="mt-1 ml-4 sm:ml-6 text-xs sm:text-sm text-gray-600 dark:text-gray-400">10.05.2025</p>
+            <div class="mt-2 px-4 sm:px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
+              <p id="news1p1" class="mb-2">
+                ¡Nuestro proyecto PredictorPro cumple un año! En este tiempo, cientos de participantes lograron resultados extraordinarios, cambiaron su vida y empezaron a ganar sumas importantes. Gracias a todos por su apoyo: ahora somos una gran familia que apunta a nuevas metas. Para celebrar, PredictorPro será gratuito durante todo un mes. ¡Les deseamos mucha suerte y grandes victorias!
+              </p>
+            </div>
+          </div>
+
+          <!-- Noticia 2 -->
+          <div>
+            <button id="news2Title" class="w-full py-3 sm:py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-4 sm:px-6 
+                           border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
+              Actualización del juego «Minas»
+            </button>
+            <p class="mt-1 ml-4 sm:ml-6 text-xs sm:text-sm text-gray-600 dark:text-gray-400">08.05.2025</p>
+            <div class="mt-2 px-4 sm:px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
+              <p id="news2p1">
+                Hoy mejoramos sustancialmente el sistema de predicciones para «Minas». Gracias a un análisis profundo de datos, nuestra precisión alcanza el 97 %. ¡Compruébalo tú mismo!
+              </p>
+            </div>
+          </div>
+
+          <!-- Noticia 3 -->
+          <div>
+            <button id="news3Title" class="w-full py-3 sm:py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-4 sm:px-6 
+                           border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
+              Anuncio de la nueva función «Historial de apuestas»
+            </button>
+            <p class="mt-1 ml-4 sm:ml-6 text-xs sm:text-sm text-gray-600 dark:text-gray-400">06.05.2025</p>
+            <div class="mt-2 px-4 sm:px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
+              <p id="news3p1">
+                Lanzamos «Historial de apuestas»: ahora puedes revisar y analizar todas tus predicciones de cada sesión en un solo lugar.
+              </p>
+            </div>
+          </div>
+
+          <!-- Noticia 4 -->
+          <div>
+            <button id="news4Title" class="w-full py-3 sm:py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-4 sm:px-6 
+                           border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
+              Desarrollo de la aplicación móvil PredictorPro
+            </button>
+            <p class="mt-1 ml-4 sm:ml-6 text-xs sm:text-sm text-gray-600 dark:text-gray-400">04.05.2025</p>
+            <div class="mt-2 px-4 sm:px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
+              <p id="news4p1">
+                Estamos desarrollando activamente la aplicación móvil PredictorPro. Lanzamiento previsto: 28 de mayo de 2025.
+              </p>
+            </div>
+          </div>
+
+          <!-- Noticia 5 -->
+          <div>
+            <button id="news5Title" class="w-full py-3 sm:py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-4 sm:px-6 
+                           border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
+              Actualización de UI/UX: nuevos temas de diseño
+            </button>
+            <p class="mt-1 ml-4 sm:ml-6 text-xs sm:text-sm text-gray-600 dark:text-gray-400">30.04.2025</p>
+            <div class="mt-2 px-4 sm:px-6 py-4 bg-gray-50 dark:bg-gray-900 rounded-lg hidden article">
+              <p id="news5p1">
+                Hemos renovado la interfaz: añadimos nuevos esquemas de color, mejoramos la navegación y optimizamos los controles para una experiencia más cómoda.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   </main>
 
-  <!-- زر الدردشة والدعم -->
-  <a href="https://t.me/Aymen_PredictorPro_bot"
-     class="absolute bottom-4 right-4 bg-gray-200 dark:bg-gray-800 p-2 rounded-full border-4 border-green-700 transition-colors z-20"
-     target="_blank" rel="noopener noreferrer">
-    <img
-      src="images/—Pngtree—technical support_3767452.png"
-      alt="الدعم الفني"
-      class="w-16 h-16 filter dark:invert"
-    />
-  </a>
+  <!-- Botón de chat de soporte + etiqueta (закреплено снизу справа) -->
+  <div class="fixed bottom-4 right-4 z-30 flex flex-col items-center space-y-2 p-3 rounded-2xl border-2 border-green-700/70 bg-white/70 dark:bg-white/10 backdrop-blur-md shadow-xl">
+    <a href="https://t.me/Pedro_PredictorPro_bot"
+       class="bg-gray-200 dark:bg-gray-800 p-2 rounded-full border-4 border-green-700 transition-transform hover:scale-105"
+       target="_blank" rel="noopener noreferrer" aria-label="Chat de soporte" id="supportLinkAria">
+      <img
+        src="images/—Pngtree—technical support_3767452.png"
+        alt="Soporte"
+        class="w-14 h-14 sm:w-16 sm:h-16 filter dark:invert"
+      />
+    </a>
+    <span id="supportChatLabel" class="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">Chat de soporte</span>
+  </div>
 
   <script>
     document.documentElement.classList.add('dark');
-    themeToggle.textContent = '🌞'; // رمز الشمس عند الوضع الداكن افتراضيًا
+    const themeToggleEl = document.getElementById('themeToggle');
+    themeToggleEl.textContent = '🌞'; // Иконка солнца при тёмной теме по умолчанию
 
     function toggleTheme() {
       document.documentElement.classList.toggle('dark');
-      themeToggle.textContent = document.documentElement.classList.contains('dark') ? '🌞' : '🌙';
+      themeToggleEl.textContent = document.documentElement.classList.contains('dark') ? '🌞' : '🌙';
     }
 
     document.querySelectorAll('.toggle-btn').forEach(btn => {
@@ -199,6 +275,361 @@
         btn.nextElementSibling.nextElementSibling.classList.toggle('hidden');
       });
     });
+
+    // ==== Lógica del indicador de usuarios activos ====
+    const usersEl = document.getElementById('activeUsersCount');
+    function updateUsers() {
+      const min = 120, max = 340;
+      usersEl.textContent = Math.floor(min + Math.random() * (max - min));
+    }
+    updateUsers();
+    setInterval(updateUsers, 5000);
+    // ==================================================
+
+    // ==================== I18N (5 языков) ====================
+    const I18N = {
+      ar: {
+        langName:'العربية', langTag:'ar-DZ', dir:'ltr',
+        title:'PredictorPro – الصفحة الرئيسية',
+        themeAria:'تبديل السمة',
+        online:'متصل',
+        support:'دردشة الدعم',
+        games:{ aviator:'أفياتور', penalty:'ضربة جزاء', mines:'الألغام', apple:'تفاحة الحظ' },
+        newsHeader:'أخبار المشروع',
+        news:[
+          {
+            title:'يا إخوة! فوز تاريخي لجورجي رييس!',
+            imgAlt:'خورخي مع سيارته الجديدة',
+            p:[
+              'يا إخوة، اليوم عيد كبير! 🎉 أهنئ تلميذي وصديقي وأخي خورخي رييس من تروخيو الذي فاز بأكبر جائزة في تاريخ PredictorPro: ‏2,000,000 PEN! 😱💰',
+              'كان خورخي معي منذ البداية. كان سائقًا بالكاد يكفيه الإيجار، لكنه لم يشتكِ — كان يستمع ويتعلم ويتبع الإشارات دون اختراع. واليوم… حققها!',
+              '🎁 بمناسبة فوزه أهديه سيارة جديدة مع تسليم المفاتيح بيدي، لأنه يستحق ذلك!',
+              '🔥 ولجميع إخوتي في القناة أطلق أسبوع الشكر: ✅ إذا شحنت من 50 PEN تحصل على +500 PEN هدية ⏳ لمدة 7 أيام فقط. فقط من هنا.',
+              'هذا ليس حظًا، بل عمل وإيمان وقرارات صحيحة. خورخي ربح… والآن دورك.'
+            ]
+          },
+          {
+            title:'ذكرى إطلاق مشروع PredictorPro',
+            p:[
+              'مشروعنا PredictorPro يُتم عامه الأول! خلال هذه الفترة حقق مئات المشاركين نتائج مذهلة وغيّروا حياتهم وبدؤوا في جني أرباح مهمة. شكرًا للجميع على الدعم — نحن الآن عائلة كبيرة بأهداف جديدة. احتفالًا بالمناسبة سيكون PredictorPro مجانيًا لمدة شهر كامل. نتمنى لكم التوفيق والانتصارات!'
+            ]
+          },
+          {
+            title:'تحديث لعبة «الألغام»',
+            p:[ 'قمنا اليوم بتحسينات كبيرة على نظام التنبؤ للعبة «الألغام». بفضل التحليل العميق للبيانات بلغت دقتنا 97٪. جرّب بنفسك!' ]
+          },
+          {
+            title:'ميزة جديدة: «سجل الرهانات»',
+            p:[ 'أطلقنا «سجل الرهانات» — الآن يمكنك مراجعة وتحليل جميع توقعاتك لكل جلسة في مكان واحد.' ]
+          },
+          {
+            title:'تطوير تطبيق PredictorPro للهواتف',
+            p:[ 'نطوّر بنشاط تطبيق PredictorPro للهواتف. الإطلاق المخطط: 28 مايو 2025.' ]
+          },
+          {
+            title:'تحديث واجهة المستخدم/التجربة',
+            p:[ 'جدّدنا الواجهة: أضفنا مخططات ألوان جديدة، وحسّنّا التنقل، وخصصنا عناصر التحكم لتجربة أكثر راحة.' ]
+          }
+        ]
+      },
+      es: {
+        langName:'Español', langTag:'es-PE', dir:'ltr',
+        title:'PredictorPro – Página principal',
+        themeAria:'Cambiar tema',
+        online:'En línea',
+        support:'Chat de soporte',
+        games:{ aviator:'Aviator', penalty:'Penalty', mines:'Mines', apple:'Apple Of Fortune' },
+        newsHeader:'Noticias del proyecto',
+        news:[
+          {
+            title:'¡Hermanoooos, victoria histórica de Jorge Reyes!',
+            imgAlt:'Jorge con su nuevo auto',
+            p:[
+              '¡Hermanoooos, hoy es fiesta total! 🎉 Quiero felicitar a mi alumno, mi amigo y mi hermano del alma — Jorge Reyes de Trujillo, que acaba de ganar el premio más grande en la historia de PredictorPro: ¡2 000 000 PEN! 😱💰',
+              'Jorge estuvo conmigo desde el inicio. Era chofer y apenas le alcanzaba para el alquiler. Pero no se quejaba — escuchaba, aprendía y seguía las señales. Sin inventar nada. Y hoy, hermanos... ¡lo logró!',
+              '🎁 En honor a su victoria, le regalo un auto nuevo, con las llaves entregadas en mano. Porque se lo merece, ¡carajo!',
+              '🔥 Y para todos mis hermanos del canal, lanzo la semana del agradecimiento: ✅ Si recargas desde 50 PEN, recibes +500 PEN de regalo ⏳ Solo por 7 días. Solo para mi gente. Solo desde aquí.',
+              'Esto no es suerte. Es trabajo, fe y decisiones correctas. Jorge ya ganó. ¿Y tú? Es tu momento.'
+            ]
+          },
+          {
+            title:'Aniversario del proyecto PredictorPro',
+            p:[ '¡Nuestro proyecto PredictorPro cumple un año! En este tiempo, cientos de participantes lograron resultados extraordinarios, cambiaron su vida y empezaron a ganar sumas importantes. Gracias a todos por su apoyo: ahora somos una gran familia que apunta a nuevas metas. Para celebrar, PredictorPro será gratuito durante todo un mes. ¡Les deseamos mucha suerte y grandes victorias!' ]
+          },
+          {
+            title:'Actualización del juego «Minas»',
+            p:[ 'Hoy mejoramos sustancialmente el sistema de predicciones para «Minas». Gracias a un análisis profundo de datos, nuestra precisión alcanza el 97 %. ¡Compruébalo tú mismo!' ]
+          },
+          {
+            title:'Anuncio de la nueva función «Historial de apuestas»',
+            p:[ 'Lanzamos «Historial de apuestas»: ahora puedes revisar y analizar todas tus predicciones de cada sesión en un solo lugar.' ]
+          },
+          {
+            title:'Desarrollo de la aplicación móvil PredictorPro',
+            p:[ 'Estamos desarrollando activamente la aplicación móvil PredictorPro. Lanzamiento previsto: 28 de mayo de 2025.' ]
+          },
+          {
+            title:'Actualización de UI/UX: nuevos temas de diseño',
+            p:[ 'Hemos renovado la interfaz: añadimos nuevos esquemas de color, mejoramos la navegación y optimizamos los controles para una experiencia más cómoda.' ]
+          }
+        ]
+      },
+      en: {
+        langName:'English', langTag:'en', dir:'ltr',
+        title:'PredictorPro – Home',
+        themeAria:'Toggle theme',
+        online:'Online',
+        support:'Support chat',
+        games:{ aviator:'Aviator', penalty:'Penalty', mines:'Mines', apple:'Apple of Fortune' },
+        newsHeader:'Project news',
+        news:[
+          {
+            title:'Brothers! A historic win by Jorge Reyes!',
+            imgAlt:'Jorge with his new car',
+            p:[
+              'Brothers, today is a full-on celebration! 🎉 Congrats to my student, friend, and brother — Jorge Reyes from Trujillo — who just won the biggest prize in PredictorPro history: 2,000,000 PEN! 😱💰',
+              'Jorge has been with me since the start. He was a driver barely covering rent, but never complained — he listened, learned, and followed the signals. No improvising. And today he made it!',
+              '🎁 In honor of his victory I\'m gifting him a brand-new car, keys in hand — he truly earned it!',
+              '🔥 For everyone in our channel I\'m launching a Thanksgiving Week: ✅ Top up from 50 PEN and get +500 PEN bonus ⏳ Only 7 days. Only for our people. Only from here.',
+              'This is not luck — it\'s work, faith, and good decisions. Jorge already won. Your turn.'
+            ]
+          },
+          {
+            title:'PredictorPro project anniversary',
+            p:[ 'Our PredictorPro project turns one! In this time, hundreds achieved standout results, changed their lives, and started earning serious money. Thank you for your support — we are now a big family aiming for new goals. To celebrate, PredictorPro is free for a full month. Wishing you luck and big wins!' ]
+          },
+          {
+            title:'“Mines” game update',
+            p:[ 'We significantly improved the prediction system for “Mines”. Thanks to deep data analysis our accuracy reaches 97%. Try it yourself!' ]
+          },
+          {
+            title:'New feature: “Bet history”',
+            p:[ 'We launched “Bet history”: now you can review and analyze all your session predictions in one place.' ]
+          },
+          {
+            title:'PredictorPro mobile app development',
+            p:[ 'We are actively developing the PredictorPro mobile app. Planned release: May 28, 2025.' ]
+          },
+          {
+            title:'UI/UX refresh: new themes',
+            p:[ 'We revamped the interface: added new color schemes, improved navigation, and optimized controls for a smoother experience.' ]
+          }
+        ]
+      },
+      pl: {
+        langName:'Polski', langTag:'pl', dir:'ltr',
+        title:'PredictorPro – Strona główna',
+        themeAria:'Przełącz motyw',
+        online:'Online',
+        support:'Czat wsparcia',
+        games:{ aviator:'Aviator', penalty:'Rzut karny', mines:'Miny', apple:'Jabłko Fortuny' },
+        newsHeader:'Aktualności projektu',
+        news:[
+          {
+            title:'Bracia! Historyczne zwycięstwo Jorge Reyesa!',
+            imgAlt:'Jorge ze swoim nowym samochodem',
+            p:[
+              'Bracia, dziś świętujemy! 🎉 Gratulacje dla mojego ucznia, przyjaciela i brata — Jorge Reyesa z Trujillo — który właśnie wygrał największą nagrodę w historii PredictorPro: 2 000 000 PEN! 😱💰',
+              'Jorge był ze mną od początku. Był kierowcą, ledwo starczało mu na czynsz, ale nie narzekał — słuchał, uczył się i podążał za sygnałami. Bez kombinowania. I dziś dopiął swego!',
+              '🎁 Z okazji zwycięstwa podarowałem mu nowy samochód — kluczyki wręczone osobiście. Zasłużył!',
+              '🔥 Dla wszystkich z naszego kanału ogłaszam Tydzień Podziękowań: ✅ Doładuj od 50 PEN i otrzymaj +500 PEN bonusu ⏳ Tylko 7 dni. Tylko dla swoich. Tylko stąd.',
+              'To nie jest szczęście — to praca, wiara i właściwe decyzje. Jorge już wygrał. Teraz Ty.'
+            ]
+          },
+          {
+            title:'Rocznica projektu PredictorPro',
+            p:[ 'Nasz projekt PredictorPro kończy rok! W tym czasie setki uczestników osiągnęły znakomite wyniki, odmieniły życie i zaczęły dobrze zarabiać. Dziękujemy za wsparcie — jesteśmy jedną, wielką rodziną z nowymi celami. Z tej okazji PredictorPro będzie darmowy przez cały miesiąc. Powodzenia i wielkich wygranych!' ]
+          },
+          {
+            title:'Aktualizacja gry „Miny”',
+            p:[ 'Dziś mocno usprawniliśmy system predykcji dla „Min”. Dzięki głębokiej analizie danych nasza skuteczność sięga 97%. Sprawdź sam!' ]
+          },
+          {
+            title:'Nowa funkcja: „Historia zakładów”',
+            p:[ 'Wprowadziliśmy „Historię zakładów”: teraz przejrzysz i przeanalizujesz wszystkie swoje prognozy z każdej sesji w jednym miejscu.' ]
+          },
+          {
+            title:'Prace nad aplikacją mobilną PredictorPro',
+            p:[ 'Aktywnie tworzymy aplikację mobilną PredictorPro. Planowana premiera: 28 maja 2025.' ]
+          },
+          {
+            title:'Odświeżenie UI/UX: nowe motywy',
+            p:[ 'Odnowiliśmy interfejs: dodaliśmy nowe schematy kolorów, ulepszyliśmy nawigację i zoptymalizowaliśmy sterowanie dla wygodniejszej pracy.' ]
+          }
+        ]
+      },
+      fr: {
+        langName:'Français', langTag:'fr', dir:'ltr',
+        title:'PredictorPro – Page d’accueil',
+        themeAria:'Changer de thème',
+        online:'En ligne',
+        support:'Chat du support',
+        games:{ aviator:'Aviator', penalty:'Penalty', mines:'Mines', apple:'Pomme de la Fortune' },
+        newsHeader:'Actualités du projet',
+        news:[
+          {
+            title:'Frères ! Victoire historique de Jorge Reyes !',
+            imgAlt:'Jorge avec sa nouvelle voiture',
+            p:[
+              'Frères, c’est la fête aujourd’hui ! 🎉 Félicitations à mon élève, ami et frère — Jorge Reyes de Trujillo — qui vient de remporter le plus grand prix de l’histoire de PredictorPro : 2 000 000 PEN ! 😱💰',
+              'Jorge est avec moi depuis le début. Chauffeur, il avait tout juste de quoi payer le loyer, mais il ne se plaignait pas — il écoutait, apprenait et suivait les signaux, sans improviser. Et aujourd’hui, il a réussi !',
+              '🎁 En son honneur, je lui offre une voiture neuve, clés en main — il le mérite amplement !',
+              '🔥 Pour tous les frères du canal, je lance la Semaine de remerciement : ✅ Recharge à partir de 50 PEN = +500 PEN offerts ⏳ Pendant 7 jours seulement. Uniquement ici.',
+              'Ce n’est pas de la chance : c’est du travail, de la foi et de bonnes décisions. Jorge a gagné. À vous de jouer.'
+            ]
+          },
+          {
+            title:'Anniversaire du projet PredictorPro',
+            p:[ 'Notre projet PredictorPro fête sa première année ! Durant cette période, des centaines de participants ont obtenu des résultats remarquables, changé leur vie et commencé à bien gagner. Merci à tous pour votre soutien — nous sommes désormais une grande famille tournée vers de nouveaux objectifs. Pour célébrer, PredictorPro sera gratuit pendant un mois. Bonne chance et belles victoires !' ]
+          },
+          {
+            title:'Mise à jour du jeu « Mines »',
+            p:[ 'Nous avons nettement amélioré le système de prédiction pour « Mines ». Grâce à une analyse approfondie des données, notre précision atteint 97 %. Essayez par vous-même !' ]
+          },
+          {
+            title:'Nouvelle fonctionnalité : « Historique des paris »',
+            p:[ 'Nous lançons « Historique des paris » : vous pouvez désormais consulter et analyser toutes vos prédictions de chaque session en un seul endroit.' ]
+          },
+          {
+            title:'Développement de l’app mobile PredictorPro',
+            p:[ 'Nous développons activement l’application mobile PredictorPro. Lancement prévu : 28 mai 2025.' ]
+          },
+          {
+            title:'Mise à jour UI/UX : nouveaux thèmes',
+            p:[ 'Nous avons modernisé l’interface : nouveaux jeux de couleurs, navigation améliorée et contrôles optimisés pour une expérience plus confortable.' ]
+          }
+        ]
+      }
+    };
+
+    // Узлы для подстановки
+    const htmlEl = document.documentElement;
+    const docTitle = document.getElementById('docTitle');
+    const onlineLabel = document.getElementById('onlineLabel');
+    const supportLabel = document.getElementById('supportChatLabel');
+    const supportLinkAria = document.getElementById('supportLinkAria');
+    const langBtn = document.getElementById('langBtn');
+    const langBtnLabel = document.getElementById('langBtnLabel');
+    const langMenu = document.getElementById('langMenu');
+
+    const gameAviator = document.getElementById('gameAviator');
+    const gamePenalty = document.getElementById('gamePenalty');
+    const gameMines   = document.getElementById('gameMines');
+    const gameApple   = document.getElementById('gameApple');
+
+    const newsHeader = document.getElementById('newsHeader');
+
+    // Новости – элементы
+    const news0Title = document.getElementById('news0Title');
+    const news0Img   = document.getElementById('news0Img');
+    const news0p1 = document.getElementById('news0p1');
+    const news0p2 = document.getElementById('news0p2');
+    const news0p3 = document.getElementById('news0p3');
+    const news0p4 = document.getElementById('news0p4');
+    const news0p5 = document.getElementById('news0p5');
+
+    const news1Title = document.getElementById('news1Title');
+    const news1p1 = document.getElementById('news1p1');
+
+    const news2Title = document.getElementById('news2Title');
+    const news2p1 = document.getElementById('news2p1');
+
+    const news3Title = document.getElementById('news3Title');
+    const news3p1 = document.getElementById('news3p1');
+
+    const news4Title = document.getElementById('news4Title');
+    const news4p1 = document.getElementById('news4p1');
+
+    const news5Title = document.getElementById('news5Title');
+    const news5p1 = document.getElementById('news5p1');
+
+    // Применение языка
+    function applyLang(code){
+      const dict = I18N[code] || I18N.ar;
+
+      // <html> lang/dir
+      htmlEl.lang = dict.langTag;
+      htmlEl.dir  = dict.dir;
+
+      // Заголовок документа
+      if (docTitle) docTitle.textContent = dict.title;
+
+      // Текстовые метки шапки/чата/кнопок
+      if (onlineLabel) onlineLabel.textContent = dict.online;
+      if (supportLabel) supportLabel.textContent = dict.support;
+      if (supportLinkAria) supportLinkAria.setAttribute('aria-label', dict.support);
+      if (themeToggleEl) themeToggleEl.setAttribute('aria-label', dict.themeAria);
+
+      // Кнопка языка — подпись и aria
+      if (langBtnLabel) langBtnLabel.textContent = dict.langName;
+      if (langBtn) langBtn.setAttribute('aria-label', dict.langName);
+
+      // Игры
+      if (gameAviator) gameAviator.textContent = dict.games.aviator;
+      if (gamePenalty) gamePenalty.textContent = dict.games.penalty;
+      if (gameMines)   gameMines.textContent   = dict.games.mines;
+      if (gameApple)   gameApple.textContent   = dict.games.apple;
+
+      // Заголовок новостей
+      if (newsHeader) newsHeader.textContent = dict.newsHeader;
+
+      // Новости (тексты)
+      const n = dict.news;
+      if (n && n[0]) {
+        news0Title.textContent = n[0].title;
+        if (news0Img && n[0].imgAlt) news0Img.alt = n[0].imgAlt;
+        [news0p1, news0p2, news0p3, news0p4, news0p5].forEach((el, i) => { if (el && n[0].p[i] !== undefined) el.innerHTML = n[0].p[i]; });
+      }
+      if (n && n[1]) { news1Title.textContent = n[1].title; if (news1p1) news1p1.textContent = n[1].p[0]; }
+      if (n && n[2]) { news2Title.textContent = n[2].title; if (news2p1) news2p1.textContent = n[2].p[0]; }
+      if (n && n[3]) { news3Title.textContent = n[3].title; if (news3p1) news3p1.textContent = n[3].p[0]; }
+      if (n && n[4]) { news4Title.textContent = n[4].title; if (news4p1) news4p1.textContent = n[4].p[0]; }
+      if (n && n[5]) { news5Title.textContent = n[5].title; if (news5p1) news5p1.textContent = n[5].p[0]; }
+
+      // Сохранить выбор
+      try { localStorage.setItem('preferredLang', code); } catch(_) {}
+    }
+
+    // Открыть/закрыть меню языков
+    (function langMenuInit(){
+      const btn = langBtn, menu = langMenu;
+      if (!btn || !menu) return;
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = !menu.classList.contains('hidden');
+        menu.classList.toggle('hidden', isOpen);
+        btn.setAttribute('aria-expanded', String(!isOpen));
+      });
+
+      document.addEventListener('click', () => {
+        if (!menu.classList.contains('hidden')) {
+          menu.classList.add('hidden');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      // Выбор языка
+      menu.querySelectorAll('button[data-lang]').forEach(item => {
+        item.addEventListener('click', () => {
+          const code = item.getAttribute('data-lang') || 'ar';
+          applyLang(code);
+          menu.classList.add('hidden');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      // Инициализация: по умолчанию арабский, либо сохранённый
+      (function initLang(){
+        let code = 'ar';
+        try {
+          const saved = localStorage.getItem('preferredLang');
+          if (saved && I18N[saved]) code = saved;
+        } catch(_) {}
+        applyLang(code);
+      })();
+    })();
+    // =========================================================
   </script>
 </body>
 </html>
