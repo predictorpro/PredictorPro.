@@ -6,81 +6,127 @@
   <title>PredictorPro – ركلات الترجيح</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    // تفعيل الوضع الداكن عبر الكلاس
     tailwind.config = { darkMode: 'class' };
   </script>
+  <style>
+    /* Фиксированный фон (как на main): переносим на псевдо-слой, чтобы не «ездил» на мобилках */
+    body.diamond-bg{
+      background: none !important;
+      position: relative;
+    }
+    body.diamond-bg::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-color:#fff;
+      background-image:
+        linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 40%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 65%),
+        repeating-linear-gradient(45deg, rgba(22,163,74,.15) 0 12px, rgba(22,163,74,0) 12px 24px),
+        repeating-linear-gradient(-45deg, rgba(22,163,74,.15) 0 12px, rgba(22,163,74,0) 12px 24px),
+        linear-gradient(to bottom, #ecfdf5, #d1fae5);
+      background-size: auto, 40px 40px, 40px 40px, auto;
+      background-position: top left, center, center, center;
+    }
+    .dark body.diamond-bg::before{
+      background-color:#000;
+      background-image:
+        linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0) 65%),
+        repeating-linear-gradient(45deg, rgba(22,163,74,.25) 0 12px, rgba(22,163,74,0) 12px 24px),
+        repeating-linear-gradient(-45deg, rgba(22,163,74,.25) 0 12px, rgba(22,163,74,0) 12px 24px),
+        linear-gradient(to bottom, #052e16, #065f46);
+      background-size: auto, 40px 40px, 40px 40px, auto;
+      background-position: top left, center, center, center;
+    }
+  </style>
 </head>
-<body class="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white px-4 relative">
 
-  <!-- الشعار -->
+<body class="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white relative diamond-bg">
+
+  <!-- ЛОГО (адаптивный размер под мобильные) -->
   <div class="absolute top-4 left-4 z-20">
     <a href="main.html">
-      <div class="w-48 h-48 rounded-full border-4 border-green-700 overflow-hidden">
+      <div class="w-28 h-28 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full border-4 border-green-700 overflow-hidden">
         <img src="images/PredictorPro.jpg" alt="PredictorPro" class="w-full h-full object-cover"/>
       </div>
     </a>
   </div>
 
-  <!-- زر تبديل الوضع -->
-  <div class="absolute top-4 right-4 z-20">
+  <!-- ПРАВЫЙ ВЕРХ: тема + язык (столбиком, чтобы не налезало) -->
+  <div class="fixed top-4 right-4 z-30 flex flex-col items-end gap-2">
+    <!-- Переключатель темы (как было) -->
     <button
       id="themeToggle"
-      class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 shadow transition-colors"
+      class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 shadow transition-colors"
       onclick="toggleTheme()"
-      aria-label="تبديل الوضع"
+      aria-label="Cambiar tema"
     >🌙</button>
+
+    <!-- Переключатель языка (продолговатая кнопка с подписью текущего языка) -->
+    <div class="relative">
+      <button id="langBtn"
+              class="h-10 px-4 rounded-full bg-gray-200 text-gray-900 shadow ring-2 ring-green-600 text-sm font-semibold flex items-center gap-2"
+              aria-haspopup="true" aria-expanded="false" aria-label="اختيار اللغة">
+        <span>🌐</span><span id="langBtnLabel">العربية</span>
+      </button>
+
+      <!-- Меню языков -->
+      <div id="langMenu"
+           class="hidden absolute right-0 mt-2 w-18 bg-gray-800 text-white rounded-lg shadow-lg border border-green-700/60 overflow-hidden text-sm z-50">
+        <button data-lang="ar" data-dir="rtl"  data-langtag="ar-DZ" class="w-full text-right px-3 py-2 hover:bg-gray-700">العربية</button>
+        <button data-lang="es" data-dir="ltr"  data-langtag="es-PE" class="w-full text-left  px-3 py-2 hover:bg-gray-700">Español</button>
+        <button data-lang="en" data-dir="ltr"  data-langtag="en"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">English</button>
+        <button data-lang="pl" data-dir="ltr"  data-langtag="pl"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Polski</button>
+        <button data-lang="fr" data-dir="ltr"  data-langtag="fr"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Français</button>
+      </div>
+    </div>
   </div>
 
-  <!-- زر الأسئلة الشائعة -->
+  <!-- Кнопка FAQ (на мобилках снизу справа, на больших по центру справа) -->
   <div
     id="faqButton"
-    class="fixed right-4 bottom-4 sm:top-1/2 sm:bottom-auto sm:transform sm:-translate-y-1/2
-           flex items-center space-x-2 p-2 bg-gray-200 dark:bg-gray-800 rounded-lg
-           cursor-pointer shadow transition-colors z-20"
-  >
-    <img
-      src="images/311092c3467c45c938fd5b63ac29281a.png"
-      alt="الأسئلة الشائعة"
-      class="w-8 h-8"
-    />
-    <span class="font-semibold text-gray-900 dark:text-white">
-      الأسئلة الشائعة
-    </span>
+    class="fixed right-4 bottom-4 sm:top-1/2 sm:bottom-auto sm:-translate-y-1/2
+           flex items-center gap-2 p-2 bg-gray-200 dark:bg-gray-800 rounded-lg
+           cursor-pointer shadow transition-colors z-20">
+    <img src="images/311092c3467c45c938fd5b63ac29281a.png" alt="FAQ" class="w-8 h-8"/>
+    <span id="faqBtnLabel" class="font-semibold text-gray-900 dark:text-white">الأسئلة الشائعة</span>
   </div>
 
-  <!-- لوحة الأسئلة الشائعة -->
+  <!-- Панель FAQ -->
   <div
     id="faqPanel"
-    class="fixed right-4 bottom-16 sm:top-1/2 sm:bottom-auto sm:transform sm:-translate-y-1/2
-           w-80 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg p-4 hidden
-           text-gray-900 dark:text-white z-20"
-  >
+    class="fixed right-4 bottom-16 sm:top-1/2 sm:bottom-auto sm:-translate-y-1/2
+           w-80 max-w-[88vw] bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg p-4 hidden
+           text-gray-900 dark:text-white z-20">
     <button
       id="faqClose"
-      class="absolute top-2 right-2 text-gray-500 dark:text-gray-400 hover:text-gray-700
-             dark:hover:text-gray-200 text-xl leading-none"
+      class="absolute top-2 right-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-xl leading-none"
     >&times;</button>
-    <h3 class="text-lg font-semibold mb-2">الأسئلة الشائعة – ركلات الترجيح</h3>
-    <h4 class="text-md font-semibold mb-1">1. كيف تعمل التنبؤات؟</h4>
-    <p class="text-sm mb-3">
-      عند الضغط على “الحصول على الإشارة”، يقوم النظام بتحليل بيانات ركلات الترجيح السابقة
-      وسلوك حارس المرمى. بعد محاكاة قصيرة، يظهر كرة واحدة فقط — هذه هي “إشارتك” للمراهنة.
+    <h3 id="faqTitle" class="text-lg font-semibold mb-2">الأسئلة الشائعة – ركلات الترجيح</h3>
+
+    <h4 id="faqQ1" class="text-md font-semibold mb-1">1. كيف تعمل الإشارة؟</h4>
+    <p id="faqA1" class="text-sm mb-3">
+      عند الضغط على «الحصول على إشارة»، يقوم النظام بتحليل البيانات التاريخية لتسديدات اللاعبين وسلوك الحارس.
+      بعد محاكاة قصيرة لمدة 3 ثوانٍ يظهر كرة واحدة — وهي «الإشارة» للرهان.
     </p>
-    <h4 class="text-md font-semibold mb-1">2. ماذا تمثل المراحل الخمسة؟</h4>
-    <p class="text-sm mb-3">
-      كل ضغطة تولد إشارة جديدة (حتى 5). الشريط والنقاط الخضراء تُظهر مستوى التقدم
-      (×2، ×4، ×12، ×20، ×32). عند الوصول للخامس، الضغطة التالية تعيد الدورة إلى البداية.
+
+    <h4 id="faqQ2" class="text-md font-semibold mb-1">2. ماذا تعني المراحل الخمس؟</h4>
+    <p id="faqA2" class="text-sm mb-3">
+      كل نقرة تولّد إشارة جديدة (حتى 5). الشريط والنقاط الخضراء يوضحان مستوى التقدم
+      (×2، ×4، ×12، ×20، ×32). عند الوصول إلى الخامسة تعيد النقرة التالية الدورة.
     </p>
-    <h4 class="text-md font-semibold mb-1">3. كيف تدير رصيدك؟</h4>
-    <p class="text-sm">
-      ننصح بتثبيت أرباحك عند المرحلة الثالثة أو الرابعة حسب تحملك للمخاطر.
-      احرص دائماً على وجود خطة خروج واضحة.
+
+    <h4 id="faqQ3" class="text-md font-semibold mb-1">3. كيف أدير البنك الخاص بي؟</h4>
+    <p id="faqA3" class="text-sm">
+      ننصح بتثبيت الربح عند الوصول إلى الخطوة الثالثة أو الرابعة، حسب مستوى تقبلك للمخاطرة.
+      احتفظ دائمًا بخطة خروج واضحة.
     </p>
   </div>
 
-  <!-- المحتوى الرئيسي -->
-  <main class="flex flex-col items-center pt-56 sm:pt-32 pb-12 space-y-6">
-    <!-- شريط التقدم -->
+  <!-- ОСНОВНОЙ КОНТЕНТ: увеличили верхний отступ под логотип/кнопки на мобилках -->
+  <main class="flex flex-col items-center pt-44 sm:pt-32 pb-20 space-y-6 px-4">
+    <!-- Прогресс-бар -->
     <div class="w-full max-w-md">
       <div class="relative mb-4">
         <div class="h-2 bg-gray-300 dark:bg-gray-700 rounded-full">
@@ -111,107 +157,261 @@
       </div>
     </div>
 
-    <!-- نافذة التنبؤ -->
+    <!-- Окно с сеткой мячей -->
     <div
       id="forecastWindow"
       class="relative bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl shadow-lg
-             border-2 border-green-700 transition-colors w-full max-w-md h-64 overflow-hidden"
-    >
-      <!-- خلفية المرمى -->
+             border-2 border-green-700 transition-colors w-full max-w-md h-64 overflow-hidden">
       <div class="absolute inset-0 bg-no-repeat bg-center opacity-20"
-           style="background-image: url('images/vecteezy_soccer-goal-illustration_45757623.png'); background-size: 110% 195%;">
-      </div>
+           style="background-image: url('images/vecteezy_soccer-goal-illustration_45757623.png'); background-size: 110% 195%;"></div>
 
-      <!-- التراكب والرسالة -->
-      <div
-        id="loadingText"
-        class="absolute inset-0 z-30 flex items-center justify-center
-               bg-black bg-opacity-50 text-center px-4 text-lg font-semibold text-white
-               opacity-0 transition-opacity"
-      ></div>
+      <!-- Оверлей с сообщениями -->
+      <div id="loadingText"
+           class="absolute inset-0 z-30 flex items-center justify-center
+                  bg-black bg-opacity-50 text-center px-4 text-lg font-semibold text-white
+                  opacity-0 transition-opacity"></div>
 
-      <!-- شبكة الكرات -->
-      <div
-        id="ballsGrid"
-        class="relative z-10 grid grid-cols-5 grid-rows-3 gap-8 justify-items-center items-center mt-4
-               divide-x divide-y divide-gray-300 dark:divide-gray-700"
-      >
-        <!-- 15 كرة -->
-        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
-        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
-        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
-        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
-        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
-        <!-- الصف الثاني -->
-        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
-        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
-        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
-        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
-        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
-        <!-- الصف الثالث -->
-        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
-        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
-        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
-        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
-        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="كرة" class="w-full h-full object-cover"/></div>
+      <!-- Сетка (уменьшен gap на мобилках) -->
+      <div id="ballsGrid"
+           class="relative z-10 grid grid-cols-5 grid-rows-3 gap-4 sm:gap-8 justify-items-center items-center mt-4
+                  divide-x divide-y divide-gray-300 dark:divide-gray-700">
+        <!-- 15 мячей -->
+        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="Ball" class="w-full h-full object-cover"/></div>
+        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="Ball" class="w-full h-full object-cover"/></div>
+        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="Ball" class="w-full h-full object-cover"/></div>
+        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="Ball" class="w-full h-full object-cover"/></div>
+        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="Ball" class="w-full h-full object-cover"/></div>
+
+        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="Ball" class="w-full h-full object-cover"/></div>
+        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="Ball" class="w-full h-full object-cover"/></div>
+        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="Ball" class="w-full h-full object-cover"/></div>
+        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="Ball" class="w-full h-full object-cover"/></div>
+        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="Ball" class="w-full h-full object-cover"/></div>
+
+        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="Ball" class="w-full h-full object-cover"/></div>
+        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="Ball" class="w-full h-full object-cover"/></div>
+        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="Ball" class="w-full h-full object-cover"/></div>
+        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="Ball" class="w-full h-full object-cover"/></div>
+        <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="Ball" class="w-full h-full object-cover"/></div>
       </div>
     </div>
 
-    <!-- أزرار التحكم -->
-    <div class="flex space-x-2">
-      <!-- زر الرهان -->
-      <button
-        id="fetchBtn"
-        class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white
-               rounded-2xl font-semibold transition-colors"
-      >
-        احصل على الإشارة
+    <!-- Кнопки -->
+    <div class="flex gap-2">
+      <button id="fetchBtn"
+              class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-semibold transition-colors">
+        الحصول على إشارة
       </button>
-      <!-- زر إعادة التعيين -->
-      <button
-        id="resetBtn"
-        class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-lg
-               flex items-center justify-center shadow transition-colors"
-        aria-label="إعادة ضبط الإشارات"
-      >
-        <img src="images/7646bf17f356f37147352829310cbf50.png" alt="إعادة ضبط" class="w-6 h-6"/>
+      <button id="resetBtn"
+              class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center shadow transition-colors"
+              aria-label="إعادة تشغيل الإشارات">
+        <img src="images/7646bf17f356f37147352829310cbf50.png" alt="Reload" class="w-6 h-6"/>
       </button>
     </div>
   </main>
 
   <script>
-    // تفعيل الوضع الداكن مبدئيًا مع أيقونة الشمس
-    document.documentElement.classList.add('dark');
-    themeToggle.textContent = '🌞';
-
+    // ===== ТЕМНАЯ ТЕМА (без изменения логики) =====
     function toggleTheme() {
       document.documentElement.classList.toggle('dark');
-      themeToggle.textContent = document.documentElement.classList.contains('dark') ? '🌞' : '🌙';
+      themeToggle.textContent =
+        document.documentElement.classList.contains('dark') ? '🌞' : '🌙';
+    }
+    document.documentElement.classList.add('dark');
+
+    // ===== I18N словарь для penalty =====
+    const I18N = {
+      ar: {
+        langName: 'العربية', langTag: 'ar-DZ', dir: 'ltr',
+        title: 'PredictorPro – ركلات الترجيح',
+        faqBtn: 'الأسئلة الشائعة',
+        faqTitle: 'الأسئلة الشائعة – ركلات الترجيح',
+        q1: '1. كيف تعمل الإشارة؟',
+        a1: 'عند الضغط على «الحصول على إشارة»، يقوم النظام بتحليل البيانات التاريخية لتسديدات اللاعبين وسلوك الحارس. بعد محاكاة قصيرة لمدة 3 ثوانٍ يظهر كرة واحدة — وهي «الإشارة» للرهان.',
+        q2: '2. ماذا تعني المراحل الخمس؟',
+        a2: 'كل نقرة تولّد إشارة جديدة (حتى 5). الشريط والنقاط الخضراء يوضحان مستوى التقدم (×2، ×4، ×12، ×20، ×32). عند الوصول إلى الخامسة تعيد النقرة التالية الدورة.',
+        q3: '3. كيف أدير البنك الخاص بي؟',
+        a3: 'ننصح بتثبيت الربح عند الوصول إلى الخطوة الثالثة أو الرابعة، حسب مستوى تقبلك للمخاطرة. احتفظ دائمًا بخطة خروج واضحة.',
+        fetch: 'الحصول على إشارة',
+        getNew: 'الحصول على إشارات جديدة؟',
+        resetAria: 'إعادة تشغيل الإشارات',
+        msgRound: 'انتظر، جارٍ جلب بيانات الجولة التالية',
+        msgReset: 'انتظر، جارٍ التحضير لإشارات جديدة',
+        ariaLang: 'اختيار اللغة'
+      },
+      es: {
+        langName: 'Español', langTag: 'es-PE', dir: 'ltr',
+        title: 'PredictorPro – Penalti',
+        faqBtn: 'Preguntas frecuentes',
+        faqTitle: 'Preguntas frecuentes – Penalti',
+        q1: '1. ¿Cómo funciona la predicción?',
+        a1: 'Al pulsar “Obtener señal”, el sistema analiza datos históricos de lanzamientos y comportamiento del portero. Tras una breve simulación de 3 segundos, aparece un solo balón — ese es tu “señal” para apostar.',
+        q2: '2. ¿Qué representan las cinco etapas?',
+        a2: 'Cada clic genera una nueva señal (hasta 5). La barra y los puntos verdes indican el nivel de avance (×2, ×4, ×12, ×20, ×32). Al llegar al quinto, la siguiente pulsación reinicia el ciclo.',
+        q3: '3. ¿Cómo gestionar tu banca?',
+        a3: 'Recomendamos fijar tu beneficio cuando alcances el tercer o cuarto paso, según tu tolerancia al riesgo. Mantén siempre un plan de salida claro.',
+        fetch: 'Obtener señal',
+        getNew: '¿Obtener nuevas señales?',
+        resetAria: 'Reiniciar señales',
+        msgRound: 'Espere, obteniendo datos para la siguiente ronda',
+        msgReset: 'Espere, preparando base para nuevas señales',
+        ariaLang: 'Seleccionar idioma'
+      },
+      en: {
+        langName: 'English', langTag: 'en', dir: 'ltr',
+        title: 'PredictorPro – Penalty',
+        faqBtn: 'FAQ',
+        faqTitle: 'FAQ – Penalty',
+        q1: '1. How does the signal work?',
+        a1: 'When you press “Get signal”, the system analyzes historical kicks and goalkeeper behavior. After a short 3-second simulation, a single ball appears — that is your betting “signal”.',
+        q2: '2. What are the five stages?',
+        a2: 'Each click generates a new signal (up to 5). The bar and green dots indicate progress (×2, ×4, ×12, ×20, ×32). Upon reaching the fifth, the next click restarts the cycle.',
+        q3: '3. How to manage your bankroll?',
+        a3: 'We recommend locking profit on the 3rd or 4th step depending on your risk tolerance. Always keep a clear exit plan.',
+        fetch: 'Get signal',
+        getNew: 'Get new signals?',
+        resetAria: 'Reset signals',
+        msgRound: 'Please wait, fetching data for the next round',
+        msgReset: 'Please wait, preparing base for new signals',
+        ariaLang: 'Select language'
+      },
+      pl: {
+        langName: 'Polski', langTag: 'pl', dir: 'ltr',
+        title: 'PredictorPro – Rzuty karne',
+        faqBtn: 'FAQ',
+        faqTitle: 'FAQ – Rzuty karne',
+        q1: '1. Jak działa sygnał?',
+        a1: 'Po kliknięciu „Pobierz sygnał” system analizuje historyczne strzały oraz zachowanie bramkarza. Po krótkiej, 3-sekundowej symulacji pojawia się jedna piłka — to Twój „sygnał” do obstawienia.',
+        q2: '2. Co oznacza pięć etapów?',
+        a2: 'Każde kliknięcie generuje nowy sygnał (do 5). Pasek i zielone kropki pokazują postęp (×2, ×4, ×12, ×20, ×32). Po piątym etapie kolejne kliknięcie resetuje cykl.',
+        q3: '3. Jak zarządzać bankrollem?',
+        a3: 'Zalecamy zabezpieczać zysk na 3. lub 4. kroku, zależnie od tolerancji ryzyka. Zawsze miej jasny plan wyjścia.',
+        fetch: 'Pobierz sygnał',
+        getNew: 'Pobrać nowe sygnały?',
+        resetAria: 'Zresetuj sygnały',
+        msgRound: 'Proszę czekać, pobieramy dane do następnej rundy',
+        msgReset: 'Proszę czekać, przygotowujemy bazę do nowych sygnałów',
+        ariaLang: 'Wybierz język'
+      },
+      fr: {
+        langName: 'Français', langTag: 'fr', dir: 'ltr',
+        title: 'PredictorPro – Penalty',
+        faqBtn: 'FAQ',
+        faqTitle: 'FAQ – Penalty',
+        q1: '1. Comment fonctionne le signal ?',
+        a1: 'En appuyant sur « Obtenir le signal », le système analyse les tirs historiques et le comportement du gardien. Après une courte simulation de 3 secondes, un seul ballon apparaît — c’est votre « signal » pour miser.',
+        q2: '2. Que représentent les cinq étapes ?',
+        a2: 'Chaque clic génère un nouveau signal (jusqu’à 5). La barre et les points verts indiquent la progression (×2, ×4, ×12, ×20, ×32). À la cinquième, le clic suivant relance le cycle.',
+        q3: '3. Comment gérer votre bankroll ?',
+        a3: 'Nous recommandons de sécuriser le profit à la 3e ou 4e étape selon votre tolérance au risque. Gardez toujours un plan de sortie clair.',
+        fetch: 'Obtenir le signal',
+        getNew: 'Obtenir de nouveaux signaux ?',
+        resetAria: 'Réinitialiser les signaux',
+        msgRound: 'Veuillez patienter, récupération des données pour la prochaine manche',
+        msgReset: 'Veuillez patienter, préparation de la base pour de nouveaux signaux',
+        ariaLang: 'Choisir la langue'
+      }
+    };
+
+    // ===== ССЫЛКИ НА ЭЛЕМЕНТЫ ДЛЯ ПЕРЕВОДА =====
+    const htmlEl   = document.documentElement;
+    const titleEl  = document.getElementsByTagName('title')[0];
+    const langBtn  = document.getElementById('langBtn');
+    const langLbl  = document.getElementById('langBtnLabel');
+    const langMenu = document.getElementById('langMenu');
+
+    const faqBtnEl   = document.getElementById('faqButton');
+    const faqBtnLbl  = document.getElementById('faqBtnLabel');
+    const faqTitleEl = document.getElementById('faqTitle');
+    const faqQ1 = document.getElementById('faqQ1'), faqA1 = document.getElementById('faqA1');
+    const faqQ2 = document.getElementById('faqQ2'), faqA2 = document.getElementById('faqA2');
+    const faqQ3 = document.getElementById('faqQ3'), faqA3 = document.getElementById('faqA3');
+
+    const fetchBtn  = document.getElementById('fetchBtn');
+    const resetBtn  = document.getElementById('resetBtn');
+    const loadingText  = document.getElementById('loadingText');
+
+    // Сообщения (меняются при смене языка)
+    let MSG_ROUND = I18N.ar.msgRound;
+    let MSG_RESET = I18N.ar.msgReset;
+
+    // ===== Применение языка =====
+    function applyLang(code){
+      const d = I18N[code] || I18N.ar;
+
+      // lang/dir и заголовок
+      htmlEl.lang = d.langTag;
+      htmlEl.dir  = d.dir;
+      if (titleEl) titleEl.textContent = d.title;
+
+      // Кнопка языка
+      langLbl.textContent = d.langName;
+      langBtn.setAttribute('aria-label', d.ariaLang);
+
+      // FAQ
+      faqBtnLbl.textContent = d.faqBtn;
+      faqTitleEl.textContent = d.faqTitle;
+      faqQ1.textContent = d.q1; faqA1.textContent = d.a1;
+      faqQ2.textContent = d.q2; faqA2.textContent = d.a2;
+      faqQ3.textContent = d.q3; faqA3.textContent = d.a3;
+
+      // Кнопки и aria
+      fetchBtn.textContent = d.fetch;
+      resetBtn.setAttribute('aria-label', d.resetAria);
+
+      // Сообщения
+      MSG_ROUND = d.msgRound;
+      MSG_RESET = d.msgReset;
+
+      // Сохранить выбор
+      try { localStorage.setItem('preferredLang', code); } catch(e){}
     }
 
-    // التعامل مع إظهار/إخفاء FAQ
-    const faqBtn = document.getElementById('faqButton');
+    // ===== Меню выбора языка =====
+    langBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = !langMenu.classList.contains('hidden');
+      langMenu.classList.toggle('hidden', isOpen);
+      langBtn.setAttribute('aria-expanded', String(!isOpen));
+    });
+    document.addEventListener('click', () => {
+      if (!langMenu.classList.contains('hidden')) {
+        langMenu.classList.add('hidden');
+        langBtn.setAttribute('aria-expanded','false');
+      }
+    });
+    langMenu.querySelectorAll('button[data-lang]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const code = btn.getAttribute('data-lang') || 'ar';
+        applyLang(code);
+        langMenu.classList.add('hidden');
+        langBtn.setAttribute('aria-expanded','false');
+      });
+    });
+
+    // ==== FAQ show/hide (как было) ====
     const faqPanel = document.getElementById('faqPanel');
     const faqClose = document.getElementById('faqClose');
-    faqBtn.addEventListener('click', () => faqPanel.classList.toggle('hidden'));
+    faqBtnEl.addEventListener('click', () => faqPanel.classList.toggle('hidden'));
     faqClose.addEventListener('click', () => faqPanel.classList.toggle('hidden'));
 
-    // رسائل النظام
-    const MSG_ROUND = "الرجاء الانتظار، جاري جلب بيانات الجولة التالية";
-    const MSG_RESET = "الرجاء الانتظار، يتم إعداد إشارات جديدة";
+    // ===== Инициализация языка: по умолчанию арабский, но учитываем сохранённый выбор =====
+    (function initLang(){
+      let code = 'ar';
+      try {
+        const saved = localStorage.getItem('preferredLang');
+        if (saved && I18N[saved]) code = saved;
+      } catch(e){}
+      applyLang(code);
+    })();
 
-    // عناصر التحكم
-    const fetchBtn     = document.getElementById('fetchBtn');
-    const resetBtn     = document.getElementById('resetBtn');
+    // ====== ЛОГИКА ИГРЫ (НЕ менялась; только тексты подставляются из текущего языка) ======
     const progressFill = document.getElementById('progressFill');
-    const loadingText  = document.getElementById('loadingText');
-    const balls        = Array.from(document.querySelectorAll('#ballsGrid > div'));
-    const MAX_STEPS    = 5;
+    const balls  = Array.from(document.querySelectorAll('#ballsGrid > div'));
+    const MAX_STEPS = 5;
     let step = 0;
 
-    // دالة الحصول على إشارة
     fetchBtn.addEventListener('click', runStep);
-    // دالة إعادة التعيين
     resetBtn.addEventListener('click', () => resetCycle());
 
     function runStep() {
@@ -235,7 +435,11 @@
             const pct = ((step - 1)/(MAX_STEPS-1))*100;
             progressFill.style.width = `${pct}%`;
           }
-          if (step === MAX_STEPS) fetchBtn.textContent = "إعادة تشغيل الإشارات";
+          if (step === MAX_STEPS) {
+            // локализованная подпись «получить новые сигналы?»
+            const code = (localStorage.getItem('preferredLang') && I18N[localStorage.getItem('preferredLang')]) ? localStorage.getItem('preferredLang') : 'ar';
+            fetchBtn.textContent = I18N[code].getNew;
+          }
 
           fetchBtn.disabled = false;
           fetchBtn.classList.remove('opacity-50','cursor-not-allowed');
@@ -264,7 +468,11 @@
           resetDot.classList.add('bg-gray-300','dark:bg-gray-700');
         }
         balls.forEach(b => b.classList.remove('invisible'));
-        fetchBtn.textContent = "احصل على الإشارة";
+
+        // вернуть локализованную надпись основной кнопке
+        const code = (localStorage.getItem('preferredLang') && I18N[localStorage.getItem('preferredLang')]) ? localStorage.getItem('preferredLang') : 'ar';
+        fetchBtn.textContent = I18N[code].fetch;
+
         fetchBtn.disabled = false;
         fetchBtn.classList.remove('opacity-50','cursor-not-allowed');
         resetBtn.disabled = false;
