@@ -5,107 +5,325 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>PredictorPro – تفاح الحظ</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    // Activar tema oscuro por clase
-    tailwind.config = { darkMode: 'class' };
-  </script>
+  <script> tailwind.config = { darkMode: 'class' };</script>
+  <style>
+    /* Фиксированный фон как на aviator/penalty */
+    body.diamond-bg{ background: none !important; position: relative; }
+    body.diamond-bg::before{
+      content:""; position: fixed; inset:0; z-index:-1; pointer-events:none;
+      background-color:#fff;
+      background-image:
+        linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 40%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 65%),
+        repeating-linear-gradient(45deg, rgba(22,163,74,.15) 0 12px, rgba(22,163,74,0) 12px 24px),
+        repeating-linear-gradient(-45deg, rgba(22,163,74,.15) 0 12px, rgba(22,163,74,0) 12px 24px),
+        linear-gradient(to bottom, #ecfdf5, #d1fae5);
+      background-size:auto,40px 40px,40px 40px,auto;
+      background-position: top left, center, center, center;
+    }
+    .dark body.diamond-bg::before{
+      background-color:#000;
+      background-image:
+        linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0) 65%),
+        repeating-linear-gradient(45deg, rgba(22,163,74,.25) 0 12px, rgba(22,163,74,0) 12px 24px),
+        repeating-linear-gradient(-45deg, rgba(22,163,74,.25) 0 12px, rgba(22,163,74,0) 12px 24px),
+        linear-gradient(to bottom, #052e16, #065f46);
+      background-size:auto,40px 40px,40px 40px,auto;
+      background-position: top left, center, center, center;
+    }
+  </style>
 </head>
-<body class="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white px-4 relative">
+<body class="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white relative diamond-bg">
 
-  <!-- Logotipo -->
-  <div class="absolute top-4 left-4 z-20">
-    <a href="main.html">
-      <div class="w-48 h-48 rounded-full border-4 border-green-700 overflow-hidden">
-        <img
-          src="images/PredictorPro.jpg"
-          alt="PredictorPro"
-          class="w-full h-full object-cover"
-        />
+  <!-- Верхний бар как на aviator/penalty -->
+  <header class="fixed top-0 left-0 right-0 z-30 backdrop-blur-md bg-white/70 dark:bg-black/40 border-b border-green-700/30">
+    <div class="max-w-[74rem] mx-auto px-4 py-2 flex items-center justify-between gap-3 sm:gap-4 flex-wrap">
+      <!-- Логотип (домой) -->
+      <a href="main.html" class="shrink-0 flex items-center gap-2">
+        <img src="images/PredictorPro.jpg" alt="PredictorPro"
+             class="w-16 h-16 sm:w-24 sm:h-24 lg:w-32 lg:h-32 rounded-full border-4 border-green-700 object-cover"/>
+      </a>
+
+      <!-- Правый блок: онлайн + язык + тема -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        <!-- Онлайн-индикатор -->
+        <div class="flex items-center gap-2 px-2.5 py-1 rounded-full border border-green-600/70 bg-white/60 dark:bg-white/10 shadow-md">
+          <span class="relative flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+          </span>
+          <span id="onlineLabel" class="hidden sm:inline text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">متصل</span>
+          <span id="activeUsersCount" class="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">—</span>
+        </div>
+
+        <!-- Язык -->
+        <div class="relative">
+          <button id="langBtn"
+                  class="h-10 px-4 rounded-full bg-gray-200 text-gray-900 shadow ring-2 ring-green-600 text-sm font-semibold flex items-center gap-2"
+                  aria-haspopup="true" aria-expanded="false" aria-label="اختيار اللغة">
+            <span>🌐</span><span id="langBtnLabel">العربية</span>
+          </button>
+          <div id="langMenu"
+               class="hidden absolute right-0 mt-2 w-18 bg-gray-800 text-white rounded-lg shadow-lg border border-green-700/60 overflow-hidden text-sm z-50">
+            <button data-lang="ar" data-dir="rtl"  data-langtag="ar-DZ" class="w-full text-right px-3 py-2 hover:bg-gray-700">العربية</button>
+            <button data-lang="es" data-dir="ltr"  data-langtag="es-PE" class="w-full text-left  px-3 py-2 hover:bg-gray-700">Español</button>
+            <button data-lang="en" data-dir="ltr"  data-langtag="en"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">English</button>
+            <button data-lang="pl" data-dir="ltr"  data-langtag="pl"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Polski</button>
+            <button data-lang="fr" data-dir="ltr"  data-langtag="fr"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Français</button>
+          </div>
+        </div>
+
+        <!-- Тема -->
+        <button id="themeToggle"
+                class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 shadow-lg transition-colors ring-2 ring-green-600 ring-offset-2 ring-offset-transparent"
+                onclick="toggleTheme()" aria-label="Cambiar tema">🌙</button>
       </div>
-    </a>
+    </div>
+  </header>
+
+  <!-- FAQ-кнопка (слева внизу на мобилках, справа-центр на широких) -->
+  <div id="faqButton"
+       class="fixed left-4 bottom-4 sm:top-1/2 sm:bottom-auto sm:right-4 sm:left-auto sm:-translate-y-1/2
+              flex items-center gap-2 p-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer shadow transition-colors z-20">
+    <img src="images/311092c3467c45c938fd5b63ac29281a.png" alt="FAQ" class="w-8 h-8"/>
+    <span id="faqBtnLabel" class="font-semibold text-gray-900 dark:text-white">الأسئلة الشائعة</span>
   </div>
 
-  <!-- Interruptor de tema -->
-  <div class="absolute top-4 right-4 z-20">
-    <button
-      id="themeToggle"
-      class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 shadow transition-colors"
-      onclick="toggleTheme()"
-      aria-label="تغيير النمط"
-    >🌙</button>
-  </div>
+  <!-- FAQ-панель -->
+  <div id="faqPanel"
+       class="fixed left-4 right-4 bottom-24 sm:left-auto sm:right-4 sm:top-1/2 sm:bottom-auto sm:-translate-y-1/2
+              w-auto sm:w-80 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg p-4 hidden text-gray-900 dark:text-white z-20">
+    <button id="faqClose"
+            class="absolute top-2 right-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-xl leading-none">&times;</button>
 
-  <!-- زر الأسئلة الشائعة -->
-  <div
-    id="faqButton"
-    class="fixed right-4 bottom-4 sm:top-1/2 sm:bottom-auto sm:transform sm:-translate-y-1/2
-           flex items-center space-x-2 p-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer shadow transition-colors z-20"
-  >
-    <img
-      src="images/311092c3467c45c938fd5b63ac29281a.png"
-      alt="الأسئلة الشائعة"
-      class="w-8 h-8"
-    />
-    <span class="font-semibold text-gray-900 dark:text-white">
-      الأسئلة الشائعة
-    </span>
-  </div>
-
-  <!-- لوحة الأسئلة الشائعة -->
-  <div
-    id="faqPanel"
-    class="fixed right-4 bottom-16 sm:top-1/2 sm:bottom-auto sm:transform sm:-translate-y-1/2
-           w-80 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg p-4 hidden text-gray-900 dark:text-white z-20"
-  >
-    <button
-      id="faqClose"
-      class="absolute top-2 right-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-xl leading-none"
-    >&times;</button>
-
-    <h3 class="text-lg font-semibold mb-2">الأسئلة الشائعة</h3>
-    <p class="text-sm mb-2">
+    <h3 id="faqTitle" class="text-lg font-semibold mb-2">الأسئلة الشائعة – تفاح الحظ</h3>
+    <p id="faqIntro1" class="text-sm mb-2">
       صفحة «تفاح الحظ» غير متوفرة حالياً بسبب الصيانة التقنية.
     </p>
-    <p class="text-sm mb-4">
+    <p id="faqIntro2" class="text-sm mb-4">
       يرجى المحاولة لاحقاً. شكراً لتفهمك!
     </p>
-    <h4 class="text-md font-semibold mb-1">كيف تعمل التوقعات؟</h4>
-    <p class="text-sm mb-3">
+
+    <h4 id="faqQ1" class="text-md font-semibold mb-1">كيف تعمل التوقعات؟</h4>
+    <p id="faqA1" class="text-sm mb-3">
       نقوم بتحليل توزيع الأرباح والحالة الحالية للعبة «تفاح الحظ» لاختيار أفضل توقيت للمراهنة.
     </p>
-    <h4 class="text-md font-semibold mb-1">ما دقة التوقعات؟</h4>
-    <p class="text-sm">
+
+    <h4 id="faqQ2" class="text-md font-semibold mb-1">ما دقة التوقعات؟</h4>
+    <p id="faqA2" class="text-sm">
       مع إدارة صحيحة لرأس المال، تتجاوز دقة توقعاتنا 80٪.
     </p>
   </div>
 
-  <main class="flex flex-col items-center justify-center h-screen space-y-6 z-10">
-    <div class="p-6 bg-gray-100 dark:bg-gray-800 rounded-2xl border-2 border-green-700">
-      <img
-        src="images/7c9c9f265eaac08ede2a9b919b795ce2.png"
-        alt="صيانة تقنية"
-        class="w-32 h-32 filter dark:invert"
-      />
+  <!-- Контент с отступами под фикс. шапку и плавающие элементы -->
+  <main class="flex flex-col items-center pt-28 sm:pt-36 lg:pt-48 pb-44 sm:pb-28 space-y-6 px-4">
+    <div class="p-6 sm:p-8 bg-gray-100 dark:bg-gray-800 rounded-2xl border-2 border-green-700 shadow-lg text-center max-w-md w-full">
+      <img src="images/7c9c9f265eaac08ede2a9b919b795ce2.png" alt="Maintenance" class="w-24 h-24 sm:w-32 sm:h-32 mx-auto filter dark:invert"/>
+      <h2 id="maintTitle" class="mt-4 text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
+        جاري الصيانة التقنية
+      </h2>
+      <p id="maintText" class="mt-1 text-sm sm:text-base text-gray-600 dark:text-gray-300">
+        سنعود قريبًا مع تحديثات وتحسينات.
+      </p>
     </div>
-    <p class="text-xl font-semibold text-gray-900 dark:text-white">
-      جاري الصيانة التقنية
-    </p>
   </main>
 
-  <script>
-    document.documentElement.classList.add('dark');
-    themeToggle.textContent = '🌞'; // أيقونة الشمس في الوضع الداكن
+  <!-- SUPPORT CHAT -->
+  <div class="fixed bottom-4 right-4 z-30 flex flex-col items-center space-y-2 p-3 rounded-2xl border-2 border-green-700/70 bg-white/70 dark:bg-white/10 backdrop-blur-md shadow-xl">
+    <a href="https://t.me/Pedro_PredictorPro_bot"
+       class="bg-gray-200 dark:bg-gray-800 p-2 rounded-full border-4 border-green-700 transition-transform hover:scale-105"
+       target="_blank" rel="noopener noreferrer" aria-label="Support chat">
+      <img src="images/—Pngtree—technical support_3767452.png" alt="Support" class="w-14 h-14 sm:w-16 sm:h-16 filter dark:invert"/>
+    </a>
+    <span id="supportLabel" class="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">دردشة الدعم</span>
+  </div>
 
+  <script>
+    // ===== ТЕМА
+    document.documentElement.classList.add('dark');
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) themeToggle.textContent = '🌞';
     function toggleTheme() {
       document.documentElement.classList.toggle('dark');
       themeToggle.textContent = document.documentElement.classList.contains('dark') ? '🌞' : '🌙';
     }
-    // عرض/إخفاء الأسئلة الشائعة
-    const faqBtn = document.getElementById('faqButton');
+
+    // ==== Онлайн-индикатор (симуляция)
+    const usersEl = document.getElementById('activeUsersCount');
+    function updateUsers() {
+      const min = 120, max = 340;
+      usersEl.textContent = Math.floor(min + Math.random() * (max - min));
+    }
+    updateUsers(); setInterval(updateUsers, 5000);
+
+    // ===== I18N (apple-of-fortune)
+    const I18N = {
+      ar: {
+        langName:'العربية', langTag:'ar-DZ', dir:'ltr',
+        title:'PredictorPro – تفاح الحظ',
+        online:'متصل',
+        faqBtn:'الأسئلة الشائعة',
+        faqTitle:'الأسئلة الشائعة – تفاح الحظ',
+        faqIntro1:'صفحة «تفاح الحظ» غير متوفرة حالياً بسبب الصيانة التقنية.',
+        faqIntro2:'يرجى المحاولة لاحقاً. شكراً لتفهمك!',
+        q1:'كيف تعمل التوقعات؟',
+        a1:'نقوم بتحليل توزيع الأرباح والحالة الحالية للعبة «تفاح الحظ» لاختيار أفضل توقيت للمراهنة.',
+        q2:'ما دقة التوقعات؟',
+        a2:'مع إدارة صحيحة لرأس المال، تتجاوز دقة توقعاتنا 80٪.',
+        maintTitle:'جاري الصيانة التقنية',
+        maintText:'سنعود قريبًا مع تحديثات وتحسينات.',
+        support:'دردشة الدعم',
+        ariaLang:'اختيار اللغة'
+      },
+      es: {
+        langName:'Español', langTag:'es-PE', dir:'ltr',
+        title:'PredictorPro – Manzana de la fortuna',
+        online:'En línea',
+        faqBtn:'Preguntas frecuentes',
+        faqTitle:'Preguntas frecuentes – Manzana de la fortuna',
+        faqIntro1:'La página «Manzana de la fortuna» está en mantenimiento.',
+        faqIntro2:'Vuelve a intentarlo más tarde. ¡Gracias por tu comprensión!',
+        q1:'¿Cómo funcionan las previsiones?',
+        a1:'Analizamos la distribución de pagos y el estado actual del juego para elegir el mejor momento para apostar.',
+        q2:'¿Qué precisión tienen?',
+        a2:'Con una correcta gestión del bankroll, superan el 80%.',
+        maintTitle:'Mantenimiento en curso',
+        maintText:'Volveremos pronto con mejoras.',
+        support:'Chat de soporte',
+        ariaLang:'Seleccionar idioma'
+      },
+      en: {
+        langName:'English', langTag:'en', dir:'ltr',
+        title:'PredictorPro – Apple of Fortune',
+        online:'Online',
+        faqBtn:'FAQ',
+        faqTitle:'FAQ – Apple of Fortune',
+        faqIntro1:'The “Apple of Fortune” page is currently under maintenance.',
+        faqIntro2:'Please try again later. Thanks for your understanding!',
+        q1:'How do the forecasts work?',
+        a1:'We analyze payout distribution and the game’s current state to pick optimal betting timing.',
+        q2:'How accurate are they?',
+        a2:'With proper bankroll management, our forecasts exceed 80% accuracy.',
+        maintTitle:'Under maintenance',
+        maintText:'We’ll be back soon with updates and improvements.',
+        support:'Support chat',
+        ariaLang:'Select language'
+      },
+      pl: {
+        langName:'Polski', langTag:'pl', dir:'ltr',
+        title:'PredictorPro – Jabłko Fortuny',
+        online:'Online',
+        faqBtn:'FAQ',
+        faqTitle:'FAQ – Jabłko Fortuny',
+        faqIntro1:'Strona „Jabłko Fortuny” jest w trakcie prac serwisowych.',
+        faqIntro2:'Spróbuj ponownie później. Dziękujemy za wyrozumiałość!',
+        q1:'Jak działają prognozy?',
+        a1:'Analizujemy rozkład wypłat i aktualny stan gry, aby wybrać najlepszy moment na zakład.',
+        q2:'Jaka jest ich skuteczność?',
+        a2:'Przy właściwym zarządzaniu bankrollem skuteczność przekracza 80%.',
+        maintTitle:'Trwa konserwacja',
+        maintText:'Wkrótce wrócimy z ulepszeniami.',
+        support:'Czat wsparcia',
+        ariaLang:'Wybierz język'
+      },
+      fr: {
+        langName:'Français', langTag:'fr', dir:'ltr',
+        title:'PredictorPro – Pomme de la fortune',
+        online:'En ligne',
+        faqBtn:'FAQ',
+        faqTitle:'FAQ – Pomme de la fortune',
+        faqIntro1:'La page « Pomme de la fortune » est en maintenance.',
+        faqIntro2:'Veuillez réessayer plus tard. Merci de votre compréhension !',
+        q1:'Comment fonctionnent les prévisions ?',
+        a1:'Nous analysons la distribution des gains et l’état du jeu pour choisir le meilleur moment pour miser.',
+        q2:'Quel est leur niveau de précision ?',
+        a2:'Avec une bonne gestion de bankroll, elles dépassent 80 %.',
+        maintTitle:'Maintenance en cours',
+        maintText:'Nous revenons bientôt avec des améliorations.',
+        support:'Chat de support',
+        ariaLang:'Choisir la langue'
+      }
+    };
+
+    // ===== Узлы
+    const htmlEl = document.documentElement;
+    const titleEl = document.getElementsByTagName('title')[0];
+    const langBtn = document.getElementById('langBtn');
+    const langLbl = document.getElementById('langBtnLabel');
+    const langMenu = document.getElementById('langMenu');
+    const onlineLabel = document.getElementById('onlineLabel');
+    const supportLabel = document.getElementById('supportLabel');
+
+    const faqBtnEl = document.getElementById('faqButton');
+    const faqBtnLbl = document.getElementById('faqBtnLabel');
     const faqPanel = document.getElementById('faqPanel');
     const faqClose = document.getElementById('faqClose');
-    faqBtn.addEventListener('click', () => faqPanel.classList.toggle('hidden'));
+    const faqTitleEl = document.getElementById('faqTitle');
+    const faqIntro1El = document.getElementById('faqIntro1');
+    const faqIntro2El = document.getElementById('faqIntro2');
+    const faqQ1 = document.getElementById('faqQ1'), faqA1 = document.getElementById('faqA1');
+    const faqQ2 = document.getElementById('faqQ2'), faqA2 = document.getElementById('faqA2');
+
+    const maintTitleEl = document.getElementById('maintTitle');
+    const maintTextEl  = document.getElementById('maintText');
+
+    // ===== Применение языка
+    function applyLang(code){
+      const d = I18N[code] || I18N.ar;
+      htmlEl.lang = d.langTag; htmlEl.dir = d.dir;
+      if (titleEl) titleEl.textContent = d.title;
+      if (langLbl) langLbl.textContent = d.langName;
+      if (langBtn) langBtn.setAttribute('aria-label', d.ariaLang);
+      if (onlineLabel) onlineLabel.textContent = d.online;
+      if (supportLabel) supportLabel.textContent = d.support;
+
+      if (faqBtnLbl) faqBtnLbl.textContent = d.faqBtn;
+      if (faqTitleEl) faqTitleEl.textContent = d.faqTitle;
+      if (faqIntro1El) faqIntro1El.textContent = d.faqIntro1;
+      if (faqIntro2El) faqIntro2El.textContent = d.faqIntro2;
+      if (faqQ1) faqQ1.textContent = d.q1; if (faqA1) faqA1.textContent = d.a1;
+      if (faqQ2) faqQ2.textContent = d.q2; if (faqA2) faqA2.textContent = d.a2;
+
+      if (maintTitleEl) maintTitleEl.textContent = d.maintTitle;
+      if (maintTextEl)  maintTextEl.textContent  = d.maintText;
+
+      try { localStorage.setItem('preferredLang', code); } catch(_){}
+    }
+
+    // ===== Меню выбора языка (как на других страницах)
+    langBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = !langMenu.classList.contains('hidden');
+      langMenu.classList.toggle('hidden', isOpen);
+      langBtn.setAttribute('aria-expanded', String(!isOpen));
+    });
+    document.addEventListener('click', () => {
+      if (!langMenu.classList.contains('hidden')) {
+        langMenu.classList.add('hidden');
+        langBtn.setAttribute('aria-expanded','false');
+      }
+    });
+    langMenu.querySelectorAll('button[data-lang]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const code = btn.getAttribute('data-lang') || 'ar';
+        applyLang(code);
+        langMenu.classList.add('hidden');
+        langBtn.setAttribute('aria-expanded','false');
+      });
+    });
+
+    // ==== FAQ show/hide (кнопка и крестик работают и на мобилках)
+    faqBtnEl.addEventListener('click', () => faqPanel.classList.toggle('hidden'));
     faqClose.addEventListener('click', () => faqPanel.classList.toggle('hidden'));
+
+    // ===== Инициализация языка
+    (function initLang(){
+      let code = 'ar';
+      try {
+        const saved = localStorage.getItem('preferredLang');
+        if (saved && I18N[saved]) code = saved;
+      } catch(_){}
+      applyLang(code);
+    })();
   </script>
 </body>
 </html>
