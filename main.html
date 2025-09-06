@@ -60,39 +60,41 @@
       </a>
 
       <div class="flex items-center gap-3 sm:gap-4">
-        <!-- Indicador de usuarios activos -->
-        <div class="flex items-center gap-2 px-2.5 py-1 rounded-full border border-green-600/70 bg-white/60 dark:bg-white/10 shadow-md">
-          <span class="relative flex h-3 w-3">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-          </span>
-          <span id="onlineLabel" class="hidden sm:inline text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">En línea</span>
-          <span id="activeUsersCount" class="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">—</span>
-        </div>
+  <!-- Indicador de usuarios activos -->
+  <div class="flex items-center gap-2 px-2.5 py-1 rounded-full border border-green-600/70 bg-white/60 dark:bg-white/10 shadow-md">
+    <span class="relative flex h-3 w-3">
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+      <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+    </span>
+    <span id="onlineLabel" class="hidden sm:inline text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">En línea</span>
+    <span id="activeUsersCount" class="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">—</span>
+  </div>
 
-        <!-- Переключатель темы -->
-        <button
-          id="themeToggle"
-          class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 shadow-lg transition-colors ring-2 ring-green-600 ring-offset-2 ring-offset-transparent"
-          onclick="toggleTheme()"
-          aria-label="Cambiar tema"
-        >🌙</button>
+  <!-- Переключатель языка (по середине) -->
+  <div class="relative">
+    <button id="langBtn"
+            class="h-10 px-4 rounded-full bg-gray-200 text-gray-900 shadow ring-2 ring-green-600 text-sm font-semibold flex items-center gap-2"
+            aria-haspopup="true" aria-expanded="false" aria-label="Select language">
+      <span>🌐</span><span id="langBtnLabel">العربية</span>
+    </button>
+    <div id="langMenu"
+         class="hidden absolute right-0 mt-2 w-18 bg-gray-800 text-white rounded-lg shadow-lg border border-green-700/60 overflow-hidden text-sm z-50">
+      <button data-lang="ar" data-dir="rtl"  data-langtag="ar-DZ" class="w-full text-right px-3 py-2 hover:bg-gray-700">العربية</button>
+      <button data-lang="es" data-dir="ltr"  data-langtag="es-PE" class="w-full text-left  px-3 py-2 hover:bg-gray-700">Español</button>
+      <button data-lang="en" data-dir="ltr"  data-langtag="en"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">English</button>
+      <button data-lang="pl" data-dir="ltr"  data-langtag="pl"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Polski</button>
+      <button data-lang="fr" data-dir="ltr"  data-langtag="fr"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Français</button>
+    </div>
+  </div>
 
-        <!-- Переключатель языка (как на index) -->
-        <div class="relative">
-          <button id="langBtn"
-                  class="h-10 px-4 rounded-full bg-gray-200 text-gray-900 shadow ring-2 ring-green-600 text-sm font-semibold flex items-center gap-2"
-                  aria-haspopup="true" aria-expanded="false" aria-label="Select language">
-            <span>🌐</span><span id="langBtnLabel">العربية</span>
-          </button>
-          <div id="langMenu"
-               class="hidden absolute right-0 mt-2 w-18 bg-gray-800 text-white rounded-lg shadow-lg border border-green-700/60 overflow-hidden text-sm z-50">
-            <button data-lang="ar" data-dir="rtl"  data-langtag="ar-DZ" class="w-full text-right px-3 py-2 hover:bg-gray-700">العربية</button>
-            <button data-lang="es" data-dir="ltr"  data-langtag="es-PE" class="w-full text-left  px-3 py-2 hover:bg-gray-700">Español</button>
-            <button data-lang="en" data-dir="ltr"  data-langtag="en"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">English</button>
-            <button data-lang="pl" data-dir="ltr"  data-langtag="pl"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Polski</button>
-            <button data-lang="fr" data-dir="ltr"  data-langtag="fr"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Français</button>
-          </div>
+  <!-- Переключатель темы (справа) -->
+  <button
+    id="themeToggle"
+    class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 shadow-lg transition-colors ring-2 ring-green-600 ring-offset-2 ring-offset-transparent"
+    onclick="toggleTheme()"
+    aria-label="Cambiar tema"
+  >🌙</button>
+</div>
         </div>
       </div>
     </div>
@@ -216,7 +218,7 @@
 
           <!-- Noticia 4 -->
           <div>
-            <button id="news4Title" class="w-full py-3 sm:py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-4 sm:px-6 
+            <button id="news4Title" class="w-full py-3 sm:py-4 bg-gray-200 dark:bg-gray-800 rounded-lg text-left px-4 см:px-6 
                            border-2 border-green-700 dark:border-green-700 dark:text-white transition-colors toggle-btn">
               Desarrollo de la aplicación móvil PredictorPro
             </button>
@@ -245,6 +247,13 @@
       </section>
     </div>
   </main>
+
+  <!-- Нижний бар (копирайт) -->
+  <footer class="border-t border-green-700/30 bg-white/70 dark:bg-black/40 backdrop-blur-md">
+    <div class="max-w-[74rem] mx-auto px-4 py-4 text-center text-sm text-gray-700 dark:text-gray-300">
+      Copyright © 2024-2025 "Predictor-Pro". <span id="rightsLabel">All rights reserved.</span>
+    </div>
+  </footer>
 
   <!-- Botón de chat de soporte + etiqueta (закреплено снизу справа) -->
   <div class="fixed bottom-4 right-4 z-30 flex flex-col items-center space-y-2 p-3 rounded-2xl border-2 border-green-700/70 bg-white/70 dark:bg-white/10 backdrop-blur-md shadow-xl">
@@ -296,6 +305,7 @@
         support:'دردشة الدعم',
         games:{ aviator:'أفياتور', penalty:'ضربة جزاء', mines:'الألغام', apple:'تفاحة الحظ' },
         newsHeader:'أخبار المشروع',
+        rights:'جميع الحقوق محفوظة.',
         news:[
           {
             title:'يا إخوة! فوز تاريخي لجورجي رييس!',
@@ -340,6 +350,7 @@
         support:'Chat de soporte',
         games:{ aviator:'Aviator', penalty:'Penalty', mines:'Mines', apple:'Apple Of Fortune' },
         newsHeader:'Noticias del proyecto',
+        rights:'Todos los derechos reservados.',
         news:[
           {
             title:'¡Hermanoooos, victoria histórica de Jorge Reyes!',
@@ -382,6 +393,7 @@
         support:'Support chat',
         games:{ aviator:'Aviator', penalty:'Penalty', mines:'Mines', apple:'Apple of Fortune' },
         newsHeader:'Project news',
+        rights:'All rights reserved.',
         news:[
           {
             title:'Brothers! A historic win by Jorge Reyes!',
@@ -424,6 +436,7 @@
         support:'Czat wsparcia',
         games:{ aviator:'Aviator', penalty:'Rzut karny', mines:'Miny', apple:'Jabłko Fortuny' },
         newsHeader:'Aktualności projektu',
+        rights:'Wszelkie prawa zastrzeżone.',
         news:[
           {
             title:'Bracia! Historyczne zwycięstwo Jorge Reyesa!',
@@ -466,6 +479,7 @@
         support:'Chat du support',
         games:{ aviator:'Aviator', penalty:'Penalty', mines:'Mines', apple:'Pomme de la Fortune' },
         newsHeader:'Actualités du projet',
+        rights:'Tous droits réservés.',
         news:[
           {
             title:'Frères ! Victoire historique de Jorge Reyes !',
@@ -496,7 +510,7 @@
           },
           {
             title:'Mise à jour UI/UX : nouveaux thèmes',
-            p:[ 'Nous avons modernisé l’interface : nouveaux jeux de couleurs, navigation améliorée et contrôles optimisés pour une expérience plus confortable.' ]
+            p:[ 'Nous avons modernisé l’interface : nouveaux jeux de couleurs, navigation améliorée et contrôles optimisés pour une expérience más confortable.' ]
           }
         ]
       }
@@ -511,6 +525,7 @@
     const langBtn = document.getElementById('langBtn');
     const langBtnLabel = document.getElementById('langBtnLabel');
     const langMenu = document.getElementById('langMenu');
+    const rightsEl = document.getElementById('rightsLabel');
 
     const gameAviator = document.getElementById('gameAviator');
     const gamePenalty = document.getElementById('gamePenalty');
@@ -572,6 +587,9 @@
 
       // Заголовок новостей
       if (newsHeader) newsHeader.textContent = dict.newsHeader;
+
+      // Фраза в копирайте
+      if (rightsEl && dict.rights) rightsEl.textContent = dict.rights;
 
       // Новости (тексты)
       const n = dict.news;
