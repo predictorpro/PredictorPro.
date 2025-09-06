@@ -9,7 +9,7 @@
     tailwind.config = { darkMode: 'class' };
   </script>
   <style>
-    /* Фиксированный фон (как на main): переносим на псевдо-слой, чтобы не «ездил» на мобилках */
+    /* Фиксированный фон (как на main/aviator): на псевдослой, чтобы не «ездил» */
     body.diamond-bg{
       background: none !important;
       position: relative;
@@ -44,61 +44,71 @@
 
 <body class="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white relative diamond-bg">
 
-  <!-- ЛОГО (адаптивный размер под мобильные) -->
-  <div class="absolute top-4 left-4 z-20">
-    <a href="main.html">
-      <div class="w-28 h-28 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full border-4 border-green-700 overflow-hidden">
-        <img src="images/PredictorPro.jpg" alt="PredictorPro" class="w-full h-full object-cover"/>
-      </div>
-    </a>
-  </div>
+  <!-- Верхний бар как на aviator -->
+  <header class="fixed top-0 left-0 right-0 z-30 backdrop-blur-md bg-white/70 dark:bg-black/40 border-b border-green-700/30">
+    <div class="max-w-[74rem] mx-auto px-4 py-2 flex items-center justify-between gap-3 sm:gap-4 flex-wrap">
+      <!-- Логотип (домой) -->
+      <a href="main.html" class="shrink-0 flex items-center gap-2">
+        <img src="images/PredictorPro.jpg" alt="PredictorPro"
+             class="w-16 h-16 sm:w-24 sm:h-24 lg:w-32 lg:h-32 rounded-full border-4 border-green-700 object-cover"/>
+      </a>
 
-  <!-- ПРАВЫЙ ВЕРХ: тема + язык (столбиком, чтобы не налезало) -->
-  <div class="fixed top-4 right-4 z-30 flex flex-col items-end gap-2">
-    <!-- Переключатель темы (как было) -->
-    <button
-      id="themeToggle"
-      class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 shadow transition-colors"
-      onclick="toggleTheme()"
-      aria-label="Cambiar tema"
-    >🌙</button>
+      <!-- Правый блок: онлайн + язык (центр) + тема (справа) -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        <!-- Онлайн -->
+        <div class="flex items-center gap-2 px-2.5 py-1 rounded-full border border-green-600/70 bg-white/60 dark:bg-white/10 shadow-md">
+          <span class="relative flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+          </span>
+          <span id="onlineLabel" class="hidden sm:inline text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">متصل</span>
+          <span id="activeUsersCount" class="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">—</span>
+        </div>
 
-    <!-- Переключатель языка (продолговатая кнопка с подписью текущего языка) -->
-    <div class="relative">
-      <button id="langBtn"
-              class="h-10 px-4 rounded-full bg-gray-200 text-gray-900 shadow ring-2 ring-green-600 text-sm font-semibold flex items-center gap-2"
-              aria-haspopup="true" aria-expanded="false" aria-label="اختيار اللغة">
-        <span>🌐</span><span id="langBtnLabel">العربية</span>
-      </button>
+        <!-- Язык (по центру) -->
+        <div class="relative">
+          <button id="langBtn"
+                  class="h-10 px-4 rounded-full bg-gray-200 text-gray-900 shadow ring-2 ring-green-600 text-sm font-semibold flex items-center gap-2"
+                  aria-haspopup="true" aria-expanded="false" aria-label="اختيار اللغة">
+            <span>🌐</span><span id="langBtnLabel">العربية</span>
+          </button>
+          <div id="langMenu"
+               class="hidden absolute right-0 mt-2 w-18 bg-gray-800 text-white rounded-lg shadow-lg border border-green-700/60 overflow-hidden text-sm z-50">
+            <button data-lang="ar" data-dir="rtl"  data-langtag="ar-DZ" class="w-full text-right px-3 py-2 hover:bg-gray-700">العربية</button>
+            <button data-lang="es" data-dir="ltr"  data-langtag="es-PE" class="w-full text-left  px-3 py-2 hover:bg-gray-700">Español</button>
+            <button data-lang="en" data-dir="ltr"  data-langtag="en"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">English</button>
+            <button data-lang="pl" data-dir="ltr"  data-langtag="pl"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Polski</button>
+            <button data-lang="fr" data-dir="ltr"  data-langtag="fr"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Français</button>
+          </div>
+        </div>
 
-      <!-- Меню языков -->
-      <div id="langMenu"
-           class="hidden absolute right-0 mt-2 w-18 bg-gray-800 text-white rounded-lg shadow-lg border border-green-700/60 overflow-hidden text-sm z-50">
-        <button data-lang="ar" data-dir="rtl"  data-langtag="ar-DZ" class="w-full text-right px-3 py-2 hover:bg-gray-700">العربية</button>
-        <button data-lang="es" data-dir="ltr"  data-langtag="es-PE" class="w-full text-left  px-3 py-2 hover:bg-gray-700">Español</button>
-        <button data-lang="en" data-dir="ltr"  data-langtag="en"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">English</button>
-        <button data-lang="pl" data-dir="ltr"  data-langtag="pl"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Polski</button>
-        <button data-lang="fr" data-dir="ltr"  data-langtag="fr"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Français</button>
+        <!-- Тема (справа) -->
+        <button
+          id="themeToggle"
+          class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 shadow-lg transition-colors ring-2 ring-green-600 ring-offset-2 ring-offset-transparent"
+          onclick="toggleTheme()"
+          aria-label="Cambiar tema"
+        >🌙</button>
       </div>
     </div>
-  </div>
+  </header>
 
-  <!-- Кнопка FAQ (на мобилках снизу справа, на больших по центру справа) -->
+  <!-- FAQ-кнопка: слева снизу на мобилках, справа по центру на широких -->
   <div
     id="faqButton"
-    class="fixed right-4 bottom-4 sm:top-1/2 sm:bottom-auto sm:-translate-y-1/2
-           flex items-center gap-2 p-2 bg-gray-200 dark:bg-gray-800 rounded-lg
-           cursor-pointer shadow transition-colors z-20">
+    class="fixed left-4 bottom-4 sm:top-1/2 sm:bottom-auto sm:right-4 sm:left-auto sm:transform sm:-translate-y-1/2
+           flex items-center gap-2 p-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer shadow transition-colors z-20">
     <img src="images/311092c3467c45c938fd5b63ac29281a.png" alt="FAQ" class="w-8 h-8"/>
     <span id="faqBtnLabel" class="font-semibold text-gray-900 dark:text-white">الأسئلة الشائعة</span>
   </div>
 
-  <!-- Панель FAQ -->
+  <!-- FAQ-панель (адаптивная ширина) -->
   <div
-    id="faqPanel"
-    class="fixed right-4 bottom-16 sm:top-1/2 sm:bottom-auto sm:-translate-y-1/2
-           w-80 max-w-[88vw] bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg p-4 hidden
-           text-gray-900 dark:text-white z-20">
+  id="faqPanel"
+  class="fixed left-4 right-4 bottom-24 sm:left-auto sm:right-4 sm:top-1/2 sm:bottom-auto sm:-translate-y-1/2
+         w-auto sm:w-80 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg p-4 hidden
+         text-gray-900 dark:text-white z-50">
+
     <button
       id="faqClose"
       class="absolute top-2 right-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-xl leading-none"
@@ -124,8 +134,8 @@
     </p>
   </div>
 
-  <!-- ОСНОВНОЙ КОНТЕНТ: увеличили верхний отступ под логотип/кнопки на мобилках -->
-  <main class="flex flex-col items-center pt-44 sm:pt-32 pb-20 space-y-6 px-4">
+  <!-- Контент: отступы под фикс. шапку и плавающие элементы -->
+  <main class="flex flex-col items-center pt-28 sm:pt-36 lg:pt-48 pb-44 sm:pb-28 space-y-6 px-4">
     <!-- Прогресс-бар -->
     <div class="w-full max-w-md">
       <div class="relative mb-4">
@@ -160,20 +170,20 @@
     <!-- Окно с сеткой мячей -->
     <div
       id="forecastWindow"
-      class="relative bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl shadow-lg
+      class="relative bg-gray-100 dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg
              border-2 border-green-700 transition-colors w-full max-w-md h-64 overflow-hidden">
-      <div class="absolute inset-0 bg-no-repeat bg-center opacity-20"
-           style="background-image: url('images/vecteezy_soccer-goal-illustration_45757623.png'); background-size: 110% 195%;"></div>
+      <div class="absolute inset-0 bg-no-repeat bg-center opacity-20 pointer-events-none"
+     style="background-image: url('images/vecteezy_soccer-goal-illustration_45757623.png'); background-size: 110% 195%;"></div>
 
       <!-- Оверлей с сообщениями -->
       <div id="loadingText"
-           class="absolute inset-0 z-30 flex items-center justify-center
-                  bg-black bg-opacity-50 text-center px-4 text-lg font-semibold text-white
-                  opacity-0 transition-opacity"></div>
+     class="absolute inset-0 z-30 flex items-center justify-center
+            bg-black bg-opacity-50 text-center px-4 text-lg font-semibold text-white
+            opacity-0 transition-opacity pointer-events-none"></div>
 
-      <!-- Сетка (уменьшен gap на мобилках) -->
+      <!-- Сетка (чуть компактнее на мобилках) -->
       <div id="ballsGrid"
-           class="relative z-10 grid grid-cols-5 grid-rows-3 gap-8 sm:gap-8 justify-items-center items-center mt-4
+           class="relative z-10 grid grid-cols-5 grid-rows-3 gap-10 sm:gap-8 justify-items-center items-center mt-4
                   divide-x divide-y divide-gray-300 dark:divide-gray-700">
         <!-- 15 мячей -->
         <div class="w-8 h-8 rounded-full overflow-hidden"><img src="images/3120e1b79749213597f4fe30a60211df.png" alt="Ball" class="w-full h-full object-cover"/></div>
@@ -197,33 +207,63 @@
     </div>
 
     <!-- Кнопки -->
-    <div class="flex gap-2">
-      <button id="fetchBtn"
-              class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-semibold transition-colors">
-        الحصول على إشارة
-      </button>
-      <button id="resetBtn"
-              class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center shadow transition-colors"
-              aria-label="إعادة تشغيل الإشارات">
-        <img src="images/7646bf17f356f37147352829310cbf50.png" alt="Reload" class="w-6 h-6"/>
-      </button>
-    </div>
+<div class="flex gap-2 w-full max-w-md flex-nowrap">
+  <button id="fetchBtn"
+          class="px-4 sm:px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-semibold transition-colors flex-1 min-w-0">
+    الحصول على إشارة
+  </button>
+  <button id="resetBtn"
+          class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center shadow transition-colors"
+          aria-label="إعادة تشغيل الإشارات">
+    <img src="images/7646bf17f356f37147352829310cbf50.png" alt="Reload" class="w-6 h-6"/>
+  </button>
+</div>
+
   </main>
 
+  <!-- SUPPORT CHAT: кнопка поддержки + подпись (как на aviator) -->
+  <div class="fixed bottom-4 right-4 z-30 flex flex-col items-center space-y-2 p-3 rounded-2xl border-2 border-green-700/70 bg-white/70 dark:bg-white/10 backdrop-blur-md shadow-xl">
+    <a href="https://t.me/Pedro_PredictorPro_bot"
+       class="bg-gray-200 dark:bg-gray-800 p-2 rounded-full border-4 border-green-700 transition-transform hover:scale-105"
+       target="_blank" rel="noopener noreferrer" aria-label="Chat de soporte">
+      <img
+        src="images/—Pngtree—technical support_3767452.png"
+        alt="Soporte"
+        class="w-14 h-14 sm:w-16 sm:h-16 filter dark:invert"
+      />
+    </a>
+    <span id="supportLabel" class="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">Chat de soporte</span>
+  </div>
+  <!-- /SUPPORT CHAT -->
+
   <script>
-    // ===== ТЕМНАЯ ТЕМА (без изменения логики) =====
+    // ===== ТЕМА
     function toggleTheme() {
       document.documentElement.classList.toggle('dark');
-      themeToggle.textContent =
+      const el = document.getElementById('themeToggle');
+      if (el) el.textContent =
         document.documentElement.classList.contains('dark') ? '🌞' : '🌙';
     }
     document.documentElement.classList.add('dark');
+    const themeToggleEl = document.getElementById('themeToggle');
+    if (themeToggleEl) themeToggleEl.textContent = '🌞';
 
-    // ===== I18N словарь для penalty =====
+    // ==== Онлайн-индикатор (симуляция, как на aviator)
+    const usersEl = document.getElementById('activeUsersCount');
+    function updateUsers() {
+      const min = 120, max = 340;
+      usersEl.textContent = Math.floor(min + Math.random() * (max - min));
+    }
+    updateUsers();
+    setInterval(updateUsers, 5000);
+
+    // ===== I18N для penalty (добавлен перевод "online" и "support")
     const I18N = {
       ar: {
         langName: 'العربية', langTag: 'ar-DZ', dir: 'ltr',
         title: 'PredictorPro – ركلات الترجيح',
+        online: 'متصل',
+        support: 'دردشة الدعم',
         faqBtn: 'الأسئلة الشائعة',
         faqTitle: 'الأسئلة الشائعة – ركلات الترجيح',
         q1: '1. كيف تعمل الإشارة؟',
@@ -242,6 +282,8 @@
       es: {
         langName: 'Español', langTag: 'es-PE', dir: 'ltr',
         title: 'PredictorPro – Penalti',
+        online: 'En línea',
+        support: 'Chat de soporte',
         faqBtn: 'Preguntas frecuentes',
         faqTitle: 'Preguntas frecuentes – Penalti',
         q1: '1. ¿Cómo funciona la predicción?',
@@ -260,6 +302,8 @@
       en: {
         langName: 'English', langTag: 'en', dir: 'ltr',
         title: 'PredictorPro – Penalty',
+        online: 'Online',
+        support: 'Support chat',
         faqBtn: 'FAQ',
         faqTitle: 'FAQ – Penalty',
         q1: '1. How does the signal work?',
@@ -278,6 +322,8 @@
       pl: {
         langName: 'Polski', langTag: 'pl', dir: 'ltr',
         title: 'PredictorPro – Rzuty karne',
+        online: 'Online',
+        support: 'Czat wsparcia',
         faqBtn: 'FAQ',
         faqTitle: 'FAQ – Rzuty karne',
         q1: '1. Jak działa sygnał?',
@@ -296,6 +342,8 @@
       fr: {
         langName: 'Français', langTag: 'fr', dir: 'ltr',
         title: 'PredictorPro – Penalty',
+        online: 'En ligne',
+        support: 'Chat de support',
         faqBtn: 'FAQ',
         faqTitle: 'FAQ – Penalty',
         q1: '1. Comment fonctionne le signal ?',
@@ -313,12 +361,15 @@
       }
     };
 
-    // ===== ССЫЛКИ НА ЭЛЕМЕНТЫ ДЛЯ ПЕРЕВОДА =====
+    // ===== Узлы для локализации
     const htmlEl   = document.documentElement;
     const titleEl  = document.getElementsByTagName('title')[0];
     const langBtn  = document.getElementById('langBtn');
     const langLbl  = document.getElementById('langBtnLabel');
     const langMenu = document.getElementById('langMenu');
+
+    const onlineLabel = document.getElementById('onlineLabel');
+    const supportLabel = document.getElementById('supportLabel'); // <-- SUPPORT CHAT label
 
     const faqBtnEl   = document.getElementById('faqButton');
     const faqBtnLbl  = document.getElementById('faqBtnLabel');
@@ -335,39 +386,36 @@
     let MSG_ROUND = I18N.ar.msgRound;
     let MSG_RESET = I18N.ar.msgReset;
 
-    // ===== Применение языка =====
+    // ===== Применение языка
     function applyLang(code){
       const d = I18N[code] || I18N.ar;
 
-      // lang/dir и заголовок
       htmlEl.lang = d.langTag;
       htmlEl.dir  = d.dir;
       if (titleEl) titleEl.textContent = d.title;
 
-      // Кнопка языка
       langLbl.textContent = d.langName;
       langBtn.setAttribute('aria-label', d.ariaLang);
 
-      // FAQ
+      if (onlineLabel) onlineLabel.textContent = d.online;
+      if (supportLabel && d.support) supportLabel.textContent = d.support; // <-- SUPPORT CHAT label i18n
+
       faqBtnLbl.textContent = d.faqBtn;
       faqTitleEl.textContent = d.faqTitle;
       faqQ1.textContent = d.q1; faqA1.textContent = d.a1;
       faqQ2.textContent = d.q2; faqA2.textContent = d.a2;
       faqQ3.textContent = d.q3; faqA3.textContent = d.a3;
 
-      // Кнопки и aria
       fetchBtn.textContent = d.fetch;
       resetBtn.setAttribute('aria-label', d.resetAria);
 
-      // Сообщения
       MSG_ROUND = d.msgRound;
       MSG_RESET = d.msgReset;
 
-      // Сохранить выбор
       try { localStorage.setItem('preferredLang', code); } catch(e){}
     }
 
-    // ===== Меню выбора языка =====
+    // ===== Меню выбора языка
     langBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const isOpen = !langMenu.classList.contains('hidden');
@@ -389,13 +437,13 @@
       });
     });
 
-    // ==== FAQ show/hide (как было) ====
+    // ==== FAQ show/hide
     const faqPanel = document.getElementById('faqPanel');
     const faqClose = document.getElementById('faqClose');
     faqBtnEl.addEventListener('click', () => faqPanel.classList.toggle('hidden'));
     faqClose.addEventListener('click', () => faqPanel.classList.toggle('hidden'));
 
-    // ===== Инициализация языка: по умолчанию арабский, но учитываем сохранённый выбор =====
+    // ===== Инициализация языка (saved -> 'ar')
     (function initLang(){
       let code = 'ar';
       try {
@@ -405,7 +453,7 @@
       applyLang(code);
     })();
 
-    // ====== ЛОГИКА ИГРЫ (НЕ менялась; только тексты подставляются из текущего языка) ======
+    // ====== ЛОГИКА ИГРЫ (НЕ изм.) ======
     const progressFill = document.getElementById('progressFill');
     const balls  = Array.from(document.querySelectorAll('#ballsGrid > div'));
     const MAX_STEPS = 5;
@@ -436,7 +484,6 @@
             progressFill.style.width = `${pct}%`;
           }
           if (step === MAX_STEPS) {
-            // локализованная подпись «получить новые сигналы?»
             const code = (localStorage.getItem('preferredLang') && I18N[localStorage.getItem('preferredLang')]) ? localStorage.getItem('preferredLang') : 'ar';
             fetchBtn.textContent = I18N[code].getNew;
           }
@@ -469,7 +516,6 @@
         }
         balls.forEach(b => b.classList.remove('invisible'));
 
-        // вернуть локализованную надпись основной кнопке
         const code = (localStorage.getItem('preferredLang') && I18N[localStorage.getItem('preferredLang')]) ? localStorage.getItem('preferredLang') : 'ar';
         fetchBtn.textContent = I18N[code].fetch;
 
@@ -482,4 +528,3 @@
   </script>
 </body>
 </html>
-
