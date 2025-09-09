@@ -148,7 +148,7 @@
 
   <!-- SUPPORT CHAT -->
   <div class="fixed bottom-4 right-4 z-30 flex flex-col items-center space-y-2 p-3 rounded-2xl border-2 border-green-700/70 bg-white/70 dark:bg-white/10 backdrop-blur-md shadow-xl">
-    <a href="https://t.me/Aymen_PredictorPro_bot"
+    <a href="https://t.me/Pedro_PredictorPro_bot"
        class="bg-gray-200 dark:bg-gray-800 p-2 rounded-full border-4 border-green-700 transition-transform hover:scale-105"
        target="_blank" rel="noopener noreferrer" aria-label="Support chat">
       <img src="images/—Pngtree—technical support_3767452.png" alt="Support" class="w-14 h-14 sm:w-16 sm:h-16 filter dark:invert"/>
@@ -335,7 +335,7 @@
     applyLang(code);
   })();
 
-  // ===== ЛОГИКА ПРОГНОЗОВ (НЕ менялась) =====
+  // ===== ЛОГИКА ПРОГНОЗОВ (без задержек выдачи сигналов) =====
   const MAX_REVEALS = 5;
   let clickCount = 0;
   let firstForecastDone = false;
@@ -374,7 +374,7 @@
         btn.classList.remove('opacity-50','cursor-not-allowed');
         revealCell();
         waitingTimerId = null;
-      }, 3000);
+      }, 0); /* было 3000 */
       return;
     }
 
@@ -435,9 +435,8 @@
         <img src="images/01e14e13be54d7a50878cb9370d59d2c.png" alt="Crystal" class="w-full h-full object-contain"/>
       `;
       revealTimerId = null;
-    }, 1000);
+    }, 0); /* было 1000 */
   }
 </script>
 </body>
 </html>
-
