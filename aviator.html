@@ -2,26 +2,16 @@
 <html lang="es-PE" class="dark">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/> <!-- ✅ для мобильной адаптации -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>PredictorPro – Aviador</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    // Activar tema oscuro por clase
     tailwind.config = { darkMode: 'class' };
   </script>
   <style>
-    /* Переносим фон с body на фиксированный слой, чтобы он не «ездил» на мобилках */
-    body.diamond-bg{
-      background: none !important; /* отключаем прежний фон у body */
-      position: relative;          /* базовый контекст для псевдо-элемента */
-    }
-    /* Фон (светлая тема) — фиксированный слой позади контента */
+    body.diamond-bg{ background: none !important; position: relative; }
     body.diamond-bg::before{
-      content:"";
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
+      content:""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
       background-color:#fff;
       background-image:
         linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 40%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 65%),
@@ -31,7 +21,6 @@
       background-size: auto, 40px 40px, 40px 40px, auto;
       background-position: top left, center, center, center;
     }
-    /* Фон (тёмная тема) — тот же слой, но с тёмными градиентами */
     .dark body.diamond-bg::before{
       background-color:#000;
       background-image:
@@ -60,7 +49,7 @@
 
     <!-- Правый блок: индикатор + язык + тема -->
     <div class="flex items-center gap-3 sm:gap-4">
-      <!-- Индикатор онлайн (как доп. элемент; можно скрыть, если его нет на main) -->
+      <!-- Индикатор онлайн -->
       <div class="flex items-center gap-2 px-2.5 py-1 rounded-full border border-green-600/70 bg-white/60 dark:bg-white/10 shadow-md">
         <span class="relative flex h-3 w-3">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
@@ -70,7 +59,7 @@
         <span id="activeUsersCount" class="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">—</span>
       </div>
 
-      <!-- Кнопка выбора языка (идентичные id и поведение) -->
+      <!-- Кнопка выбора языка -->
       <div class="relative">
         <button
           id="langBtn"
@@ -107,7 +96,7 @@
     id="faqButton"
     class="fixed left-4 bottom-4 sm:top-1/2 sm:bottom-auto sm:right-4 sm:left-auto sm:transform sm:-translate-y-1/2
            flex items-center space-x-2 p-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer shadow transition-colors z-20"
-  > <!-- ✅ на мобилках слева, чтобы не перекрывать поддержку -->
+  >
     <img
       src="images/311092c3467c45c938fd5b63ac29281a.png"
       alt="Preguntas frecuentes"
@@ -122,7 +111,7 @@
   <div
     id="faqPanel"
     class="fixed left-4 right-4 bottom-24 sm:left-auto sm:right-4 sm:top-1/2 sm:bottom-auto sm:-translate-y-1/2 mt-14 w-auto sm:w-80 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg p-4 hidden text-gray-900 dark:text-white z-50"
-  > <!-- ✅ z-50 чтобы крестик всегда кликабелен -->
+  >
     <button
       id="faqClose"
       class="absolute top-2 right-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-xl leading-none"
@@ -135,13 +124,12 @@
     </p>
   </div>
 
-  <!-- Контент с отступами под фикс. шапку и плавающие кнопки -->
-  <main class="flex flex-col items-center pt-28 sm:pt-36 lg:pt-48 pb-44 sm:pb-28 px-4 space-y-6"> <!-- ✅ больше нижний отступ на мобилках -->
-    <!-- Ventana de pronóstico -->
+  <!-- Контент -->
+  <main class="flex flex-col items-center pt-28 sm:pt-36 lg:pt-48 pb-44 sm:pb-28 px-4 space-y-6">
     <div
       id="forecastWindow"
       class="bg-gray-100 dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg border-2 border-green-700 transition-colors max-w-md w-full text-center z-10"
-    > <!-- ✅ мягче паддинги на мобилках -->
+    >
       <h2 id="forecastTitle" class="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
         Pronóstico «Aviador»
       </h2>
@@ -151,28 +139,24 @@
       <p id="recommendation" class="mt-2 text-gray-600 dark:text-gray-400"></p>
     </div>
 
-    <!-- Botón de pronóstico -->
     <button
       id="fetchBtn"
       class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-semibold transition-colors z-10 w-full max-w-md"
-    > <!-- ✅ на мобилках тянется на ширину карточки -->
+    >
       Obtener pronóstico
     </button>
 
-    <!-- Historial de pronósticos -->
     <div id="historyContainer" class="hidden flex flex-col items-center mt-4 w-full max-w-md z-10">
       <h3 id="historyTitle" class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
         Historial de los últimos pronósticos
       </h3>
-      <ul id="historyList" class="w-full space-y-1 text-gray-700 dark:text-gray-300 max-h-60 overflow-y-auto">
-        <!-- Aquí aparecerán los registros del historial -->
-      </ul> <!-- ✅ прокрутка на маленьких экранах -->
+      <ul id="historyList" class="w-full space-y-1 text-gray-700 dark:text-gray-300 max-h-60 overflow-y-auto"></ul>
     </div>
   </main>
 
-  <!-- Кнопка поддержки + подпись (закреплено) -->
+  <!-- Поддержка -->
   <div class="fixed bottom-4 right-4 z-30 flex flex-col items-center space-y-2 p-3 rounded-2xl border-2 border-green-700/70 bg-white/70 dark:bg-white/10 backdrop-blur-md shadow-xl">
-    <a href="https://t.me/Aymen_PredictorPro_bot"
+    <a href="https://t.me/Pedro_PredictorPro_bot"
        class="bg-gray-200 dark:bg-gray-800 p-2 rounded-full border-4 border-green-700 transition-transform hover:scale-105"
        target="_blank" rel="noopener noreferrer" aria-label="Chat de soporte">
       <img
@@ -195,14 +179,14 @@
     const themeToggleEl = document.getElementById('themeToggle');
     if (themeToggleEl) themeToggleEl.textContent = '🌞';
 
-    // ===== FAQ show/hide
+    // ===== FAQ
     const faqBtn = document.getElementById('faqButton');
     const faqPanel = document.getElementById('faqPanel');
     const faqClose = document.getElementById('faqClose');
     faqBtn.addEventListener('click', () => faqPanel.classList.toggle('hidden'));
     faqClose.addEventListener('click', () => faqPanel.classList.toggle('hidden'));
 
-    // ==== Indicador "En línea" (симуляция) ====
+    // ==== Онлайн (симуляция)
     const usersEl = document.getElementById('activeUsersCount');
     function updateUsers() {
       const min = 120, max = 340;
@@ -211,138 +195,38 @@
     updateUsers();
     setInterval(updateUsers, 5000);
 
-    // ===== I18N словарь (aviator)
+    // ===== I18N
     const I18N = {
-      ar: {
-        langName: 'العربية', langTag:'ar-DZ', dir:'ltr',
-        title: 'PredictorPro – أفياتور',
-        online: 'متصل',
-        forecastTitle: 'توقع «أفياتور»',
-        forecastHint: 'اضغط على الزر للحصول على التوقع',
-        btnGet: 'الحصول على التوقع',
-        wait: 'يرجى الانتظار، جارٍ جلب بيانات الجولة التالية',
-        faqButton: 'الأسئلة الشائعة',
-        faqTitle: 'قواعد لعبة «أفياتور»',
-        faqText: 'تعرض لعبة «أفياتور» توقعات للمعامل في الجولة التالية. اضغط «الحصول على التوقع»، انتظر النتائج وثبِّت أرباحك. كلما استخدمت الأداة أكثر أصبحت إشاراتنا أدق.',
-        historyTitle: 'سجل آخر التوقعات',
-        support: 'دردشة الدعم',
-        recs: [
-          'معامل جيد، يمكنك زيادة المبلغ.',
-          'احتمال فوز مرتفع، المخاطرة مبررة.',
-          'معامل متوسط، تصرّف بحذر.',
-          'ربح صغير، نوصي بمتوسط الرهانات.',
-          'نتيجة ممتازة، ثبّت أرباحك.',
-          'احتمال يتجاوز 80%، يمكن رفع الرهان.',
-          'نوصي بالانتظار قبل الرهان التالي.',
-          'احتمال الهبوط مرتفع، كن حذرًا.',
-          'وقت مثالي للدخول، تصرّف الآن.',
-          'إشارة متوسطة، من الأفضل عدم المخاطرة.'
-        ]
-      },
-      es: {
-        langName: 'Español', langTag:'es-PE', dir:'ltr',
-        title: 'PredictorPro – Aviador',
-        online: 'En línea',
-        forecastTitle: 'Pronóstico «Aviador»',
-        forecastHint: 'Haga clic en el botón para obtener un pronóstico',
-        btnGet: 'Obtener pronóstico',
-        wait: 'Espere, obteniendo datos para la siguiente ronda',
-        faqButton: 'Preguntas frecuentes',
-        faqTitle: 'Reglas del juego «Aviador»',
-        faqText: 'El juego «Aviador» ofrece pronósticos de coeficientes para la próxima ronda. Haga clic en «Obtener pronóstico», espere los resultados y asegure sus ganancias. Cuanto más use la herramienta, más precisas serán nuestras señales.',
-        historyTitle: 'Historial de los últimos pronósticos',
-        support: 'Chat de soporte',
-        recs: [
-          'Buen coeficiente, puede apostar una suma mayor.',
-          'Alta probabilidad de victoria, el riesgo vale la pena.',
-          'Coeficiente medio, proceda con cautela.',
-          'Ganancia pequeña, recomendamos promediar las apuestas.',
-          'Excelente resultado, asegure sus ganancias.',
-          'Probabilidad superior al 80%, puede aumentar la apuesta.',
-          'Recomendamos esperar antes de la próxima apuesta.',
-          'Mayor probabilidad de caída, sea cauteloso.',
-          'Momento ideal para entrar, actúe ahora.',
-          'Señal moderada, es mejor no arriesgarse.'
-        ]
-      },
-      en: {
-        langName: 'English', langTag:'en', dir:'ltr',
-        title: 'PredictorPro – Aviator',
-        online: 'Online',
-        forecastTitle: 'Aviator Forecast',
-        forecastHint: 'Click the button to get a forecast',
-        btnGet: 'Get forecast',
-        wait: 'Please wait, fetching data for the next round',
-        faqButton: 'FAQ',
-        faqTitle: 'Aviator Game Rules',
-        faqText: 'The “Aviator” game provides odds forecasts for the next round. Click “Get forecast”, wait for the result and lock in your profit. The more you use the tool, the more accurate the signals become.',
-        historyTitle: 'Recent forecasts history',
-        support: 'Support chat',
-        recs: [
-          'Good odds, you can bet more.',
-          'High chance of winning, risk is justified.',
-          'Medium odds, proceed carefully.',
-          'Small profit, consider averaging bets.',
-          'Excellent result, secure your profit.',
-          'Probability above 80%, you may increase the bet.',
-          'We recommend waiting before the next bet.',
-          'Higher chance of drop, be cautious.',
-          'Perfect moment to enter, act now.',
-          'Moderate signal, better not to risk.'
-        ]
-      },
-      pl: {
-        langName: 'Polski', langTag:'pl', dir:'ltr',
-        title: 'PredictorPro – Aviator',
-        online: 'Online',
-        forecastTitle: 'Prognoza „Aviator”',
-        forecastHint: 'Kliknij przycisk, aby otrzymać prognozę',
-        btnGet: 'Pobierz prognozę',
-        wait: 'Proszę czekać, pobieranie danych do następnej rundy',
-        faqButton: 'FAQ',
-        faqTitle: 'Zasady gry „Aviator”',
-        faqText: 'Gra „Aviator” podaje prognozy kursów na następną rundę. Kliknij „Pobierz prognozę”, poczekaj na wynik i zabezpiecz zysk. Im częściej korzystasz, tym dokładniejsze sygnały.',
-        historyTitle: 'Historia ostatnich prognoz',
-        support: 'Czat wsparcia',
-        recs: [
-          'Dobry kurs, możesz zwiększyć stawkę.',
-          'Wysoka szansa wygranej, warto zaryzykować.',
-          'Średni kurs, postępuj ostrożnie.',
-          'Mały zysk, zalecamy uśrednianie stawek.',
-          'Świetny wynik, zabezpiecz zysk.',
-          'Prawdopodobieństwo powyżej 80%, można podnieść stawkę.',
-          'Zalecamy poczekać przed następnym zakładem.',
-          'Większa szansa spadku, bądź ostrożny.',
-          'Idealny moment na wejście, działaj teraz.',
-          'Sygнаł umiarkowany, lepiej nie ryzykować.'
-        ]
-      },
-      fr: {
-        langName: 'Français', langTag:'fr', dir:'ltr',
-        title: 'PredictorPro – Aviator',
-        online: 'En ligne',
-        forecastTitle: 'Prévision « Aviator »',
-        forecastHint: 'Cliquez sur le bouton pour obtenir une prévision',
-        btnGet: 'Obtenir une prévision',
-        wait: 'Veuillez patienter, récupération des données pour la prochaine manche',
-        faqButton: 'FAQ',
-        faqTitle: 'Règles du jeu « Aviator »',
-        faqText: 'Le jeu « Aviator » fournit des prévisions de cotes pour la prochaine manche. Cliquez sur « Obtenir une prévision », attendez le résultat et sécurisez vos gains. Plus vous utilisez l’outil, plus nos signaux deviennent précis.',
-        historyTitle: 'Historique des dernières prévisions',
-        support: 'Chat de support',
-        recs: [
-          'Bonne cote, vous pouvez miser davantage.',
-          'Forte probabilité de gain, le risque en vaut la peine.',
-          'Cote moyenne, avancez avec prudence.',
-          'Petit gain, nous recommandons de moyenner les mises.',
-          'Excellent résultat, sécurisez vos gains.',
-          'Probabilité supérieure à 80 %, misez davantage.',
-          'Nous recommandons d’attendre avant la prochaine mise.',
-          'Risque de baisse accru, soyez prudent.',
-          'Moment idéal pour entrer, agissez maintenant.',
-          'Signal modéré, mieux vaut ne pas risquer.'
-        ]
-      }
+      ar: { langName:'العربية', langTag:'ar-DZ', dir:'ltr', title:'PredictorPro – أفياتور', online:'متصل',
+        forecastTitle:'توقع «أفياتور»', forecastHint:'اضغط على الزر للحصول على التوقع', btnGet:'الحصول على التوقع',
+        wait:'يرجى الانتظار، جارٍ جلب بيانات الجولة التالية', faqButton:'الأسئلة الشائعة', faqTitle:'قواعد لعبة «أفياتور»',
+        faqText:'تعرض لعبة «أفياتور» توقعات للمعامل في الجولة التالية. اضغط «الحصول على التوقع»، انتظر النتائج وثبِّت أرباحك. كلما استخدمت الأداة أكثر أصبحت إشاراتنا أدق.',
+        historyTitle:'سجل آخر التوقعات', support:'دردشة الدعم',
+        recs:['معامل جيد، يمكنك زيادة المبلغ.','احتمال فوز مرتفع، المخاطرة مبررة.','معامل متوسط، تصرّف بحذر.','ربح صغير، نوصي بمتوسط الرهانات.','نتيجة ممتازة، ثبّت أرباحك.','احتمال يتجاوز 80%، يمكن رفع الرهان.','نوصي بالانتظار قبل الرهان التالي.','احتمال الهبوط مرتفع، كن حذرًا.','وقت مثالي للدخول، تصرّف الآن.','إشارة متوسطة، من الأفضل عدم المخاطرة.']},
+      es: { langName:'Español', langTag:'es-PE', dir:'ltr', title:'PredictorPro – Aviador', online:'En línea',
+        forecastTitle:'Pronóstico «Aviador»', forecastHint:'Haga clic en el botón para obtener un pronóstico', btnGet:'Obtener pronóstico',
+        wait:'Espere, obteniendo datos para la siguiente ronda', faqButton:'Preguntas frecuentes', faqTitle:'Reglas del juego «Aviador»',
+        faqText:'El juego «Aviador» ofrece pronósticos de coeficientes para la próxima ronda. Haga clic en «Obtener pronóstico», espere los resultados y asegure sus ganancias. Cuanto más use la herramienta, más precisas serán nuestras señales.',
+        historyTitle:'Historial de los últimos pronósticos', support:'Chat de soporte',
+        recs:['Buen coeficiente, puede apostar una suma mayor.','Alta probabilidad de victoria, el riesgo vale la pena.','Coeficiente medio, proceda con cautela.','Ganancia pequeña, recomendamos promediar las apuestas.','Excelente resultado, asegure sus ganancias.','Probabilidad superior al 80%, puede aumentar la apuesta.','Recomendamos esperar antes de la próxima apuesta.','Mayor probabilidad de caída, sea cauteloso.','Momento ideal para entrar, actúe ahora.','Señal moderada, es mejor no arriesgarse.']},
+      en: { langName:'English', langTag:'en', dir:'ltr', title:'PredictorPro – Aviator', online:'Online',
+        forecastTitle:'Aviator Forecast', forecastHint:'Click the button to get a forecast', btnGet:'Get forecast',
+        wait:'Please wait, fetching data for the next round', faqButton:'FAQ', faqTitle:'Aviator Game Rules',
+        faqText:'The “Aviator” game provides odds forecasts for the next round. Click “Get forecast”, wait for the result and lock in your profit. The more you use the tool, the more accurate the signals become.',
+        historyTitle:'Recent forecasts history', support:'Support chat',
+        recs:['Good odds, you can bet more.','High chance of winning, risk is justified.','Medium odds, proceed carefully.','Small profit, consider averaging bets.','Excellent result, secure your profit.','Probability above 80%, you may increase the bet.','We recommend waiting before the next bet.','Higher chance of drop, be cautious.','Perfect moment to enter, act now.','Moderate signal, better not to risk.']},
+      pl: { langName:'Polski', langTag:'pl', dir:'ltr', title:'PredictorPro – Aviator', online:'Online',
+        forecastTitle:'Prognoza „Aviator”', forecastHint:'Kliknij przycisk, aby otrzymać prognozę', btnGet:'Pobierz prognozę',
+        wait:'Proszę czekać, pobieranie danych do następnej rundy', faqButton:'FAQ', faqTitle:'Zasady gry „Aviator”',
+        faqText:'Gra „Aviator” podaje prognozy kursów na następną rundę. Kliknij „Pobierz prognozę”, poczekaj na wynik i zabezpiecz zysk. Im częściej korzystasz, tym dokładniejsze sygnały.',
+        historyTitle:'Historia ostatnich prognoz', support:'Czat wsparcia',
+        recs:['Dobry kurs, możesz zwiększyć stawkę.','Wysoka szansa wygranej, warto zaryzykować.','Średni kurs, postępuj ostrożnie.','Mały zysk, zalecamy uśrednianie stawek.','Świetny wynik, zabezpiecz zysk.','Prawdopodobieństwo powyżej 80%, można podnieść stawkę.','Zalecamy poczekać przed następnym zakładem.','Większa szansa spadku, bądź ostrożny.','Idealny момент na wejście, działaj teraz.','Sygnał umiarkowany, lepiej nie ryzykować.']},
+      fr: { langName:'Français', langTag:'fr', dir:'ltr', title:'PredictorPro – Aviator', online:'En ligne',
+        forecastTitle:'Prévision « Aviator »', forecastHint:'Cliquez sur le bouton pour obtenir une prévision', btnGet:'Obtenir une prévision',
+        wait:'Veuillez patienter, récupération des données pour la prochaine manche', faqButton:'FAQ', faqTitle:'Règles du jeu « Aviator »',
+        faqText:'Le jeu « Aviator » fournit des prévisions de cotes pour la prochaine manche. Cliquez sur « Obtenir une prévision », attendez le résultat et sécurisez vos gains. Plus vous utilisez l’outil, plus nos signaux deviennent précis.',
+        historyTitle:'Historique des dernières prévisions', support:'Chat de support',
+        recs:['Bonne cote, vous pouvez miser davantage.','Forte probabilité de gain, le risque en vaut la peine.','Cote moyenne, avancez avec prudence.','Petit gain, nous recommandons de moyenner les mises.','Excellent résultat, sécurisez vos gains.','Probabilité supérieure à 80 %, misez davantage.','Nous recommandons d’attendre avant la prochaine mise.','Risque de baisse accru, soyez prudent.','Moment idéal pour entrer, agissez maintenant.','Signal modéré, mieux vaut ne pas risquer.']}
     };
 
     // ===== Элементы для локализации
@@ -362,11 +246,9 @@
     const langBtnLabel = document.getElementById('langBtnLabel');
     const langMenu = document.getElementById('langMenu');
 
-    // Глобальные тексты, зависящие от языка
     let WAIT_MSG = I18N.es.wait;
     let recommendations = I18N.es.recs;
 
-    // Применить язык
     function applyLang(code) {
       const dict = I18N[code] || I18N.ar;
 
@@ -393,7 +275,6 @@
       try { localStorage.setItem('preferredLang', code); } catch(_) {}
     }
 
-    // ===== Языковое меню (UI)
     (function () {
       if (!langBtn || !langMenu) return;
 
@@ -420,7 +301,6 @@
         });
       });
 
-      // Инициализация языка: saved -> default 'ar'
       (function initLang(){
         let code = 'ar';
         try {
@@ -431,7 +311,7 @@
       })();
     })();
 
-    // --------- ЛОГИКА ПРОГНОЗОВ (оставлена, тексты локализованы) ----------
+    // --------- ЛОГИКА ПРОГНОЗОВ (без задержек) ----------
     const recommendationEl = document.getElementById('recommendation');
     const historyContainer = document.getElementById('historyContainer');
     const historyList = document.getElementById('historyList');
@@ -439,48 +319,45 @@
     let history = [];
 
     fetchBtn.addEventListener('click', () => {
+      // мгновенный расчёт прогноза без ожиданий
       fetchBtn.disabled = true;
       fetchBtn.classList.add('opacity-50', 'cursor-not-allowed');
-      forecastHintEl.textContent = WAIT_MSG;
-      recommendationEl.textContent = '';
 
-      setTimeout(() => {
-        const r = Math.random();
-        let low, high;
-        if (r < 0.72) {
-          low = 1; high = 2;
-        } else if (r < 0.945) {
-          low = 2; high = 3;
-        } else if (r < 0.995) {
-          low = 3; high = 5;
-        } else if (r < 1.015) {
-          low = 5; high = 10;
-        } else if (r < 1.0199) {
-          low = 10; high = 20;
-        } else {
-          low = 20; high = 50;
-        }
-        const coefValue = (Math.random() * (high - low) + low).toFixed(2);
-        const coef = `> ${coefValue}×`;
-        forecastHintEl.textContent = coef;
+      const r = Math.random();
+      let low, high;
+      if (r < 0.72) {
+        low = 1; high = 2;
+      } else if (r < 0.945) {
+        low = 2; high = 3;
+      } else if (r < 0.995) {
+        low = 3; high = 5;
+      } else if (r < 1.015) {
+        low = 5; high = 10;
+      } else if (r < 1.0199) {
+        low = 10; high = 20;
+      } else {
+        low = 20; high = 50;
+      }
+      const coefValue = (Math.random() * (high - low) + low).toFixed(2);
+      const coef = `> ${coefValue}×`;
+      forecastHintEl.textContent = coef;
 
-        const rec = recommendations[Math.floor(Math.random() * recommendations.length)];
-        recommendationEl.textContent = rec;
+      const rec = recommendations[Math.floor(Math.random() * recommendations.length)];
+      recommendationEl.textContent = rec;
 
-        history.unshift(coef);
-        if (history.length > MAX_HISTORY) history.pop();
-        historyList.innerHTML = '';
-        history.forEach(item => {
-          const li = document.createElement('li');
-          li.textContent = item;
-          li.className = 'px-4 py-1 bg-gray-200 dark:bg-gray-700 rounded';
-          historyList.appendChild(li);
-        });
-        historyContainer.classList.remove('hidden');
+      history.unshift(coef);
+      if (history.length > MAX_HISTORY) history.pop();
+      historyList.innerHTML = '';
+      history.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        li.className = 'px-4 py-1 bg-gray-200 dark:bg-gray-700 rounded';
+        historyList.appendChild(li);
+      });
+      historyContainer.classList.remove('hidden');
 
-        fetchBtn.disabled = false;
-        fetchBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-      }, 3000);
+      fetchBtn.disabled = false;
+      fetchBtn.classList.remove('opacity-50', 'cursor-not-allowed');
     });
     // -------------------------------------------------
   </script>
