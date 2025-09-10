@@ -335,7 +335,7 @@
     applyLang(code);
   })();
 
-  // ===== ЛОГИКА ПРОГНОЗОВ (без задержек выдачи сигналов) =====
+  // ===== ЛОГИКА ПРОГНОЗОВ (НЕ менялась) =====
   const MAX_REVEALS = 5;
   let clickCount = 0;
   let firstForecastDone = false;
@@ -374,7 +374,7 @@
         btn.classList.remove('opacity-50','cursor-not-allowed');
         revealCell();
         waitingTimerId = null;
-      }, 0); /* было 3000 */
+      }, 3000);
       return;
     }
 
@@ -435,7 +435,7 @@
         <img src="images/01e14e13be54d7a50878cb9370d59d2c.png" alt="Crystal" class="w-full h-full object-contain"/>
       `;
       revealTimerId = null;
-    }, 0); /* было 1000 */
+    }, 1000);
   }
 </script>
 </body>
