@@ -39,6 +39,18 @@
       background-size: auto, 40px 40px, 40px 40px, auto;
       background-position: top left, center, center, center;
     }
+
+    /* ✅ Анимация «летящего» мяча */
+    .flying-ball{
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border-radius: 9999px;
+      overflow: hidden;
+      transition: transform 700ms cubic-bezier(0.18,0.89,0.32,1.28);
+      z-index: 40;
+      pointer-events: none;
+    }
   </style>
 </head>
 
@@ -453,7 +465,7 @@
       applyLang(code);
     })();
 
-    // ====== ЛОГИКА ИГРЫ (НЕ изм.) ======
+    // ====== ЛОГИКА ИГРЫ (мгновенный сигнал + анимация полёта) ======
     const progressFill = document.getElementById('progressFill');
     const balls  = Array.from(document.querySelectorAll('#ballsGrid > div'));
     const MAX_STEPS = 5;
@@ -462,23 +474,67 @@
     fetchBtn.addEventListener('click', runStep);
     resetBtn.addEventListener('click', () => resetCycle());
 
+    // ✅ Помощник: полёт «мяча» к выбранной ячейке
+    function flyBallTo(index, onDone){
+      const fw = document.getElementById('forecastWindow');
+      const target = balls[index];
+      if (!fw || !target){ onDone && onDone(); return; }
+
+      const fwRect = fw.getBoundingClientRect();
+      const tr     = target.getBoundingClientRect();
+
+      // старт — низ центра окна (точка удара)
+      const startX = fwRect.width/2 - 16;
+      const startY = fwRect.height - 40;
+
+      // цель — центр выбранного мяча
+      const targetX = tr.left + tr.width/2 - fwRect.left - 16;
+      const targetY = tr.top  + tr.height/2 - fwRect.top  - 16;
+
+      const img = document.createElement('img');
+      img.src = 'images/3120e1b79749213597f4fe30a60211df.png';
+      img.alt = 'Ball';
+      img.className = 'flying-ball';
+      img.style.transform = `translate(${startX}px, ${startY}px)`;
+      fw.appendChild(img);
+
+      requestAnimationFrame(() => {
+        img.style.transform = `translate(${targetX}px, ${targetY}px)`;
+      });
+
+      img.addEventListener('transitionend', () => {
+        img.remove();
+        onDone && onDone();
+      }, { once: true });
+    }
+
     function runStep() {
       if (step < MAX_STEPS) {
         balls.forEach(b => b.classList.remove('invisible'));
+
+        // показать подсказку и сразу убрать, чтобы не задерживать
         loadingText.textContent = MSG_ROUND;
         loadingText.classList.add('opacity-100');
+
         fetchBtn.disabled = true;
         fetchBtn.classList.add('opacity-50','cursor-not-allowed');
 
-        setTimeout(() => {
-          loadingText.classList.remove('opacity-100');
-          const winner = Math.floor(Math.random() * balls.length);
+        // мгновенно выбираем «победителя»
+        const winner = Math.floor(Math.random() * balls.length);
+
+        // убрать затемнение перед анимацией
+        loadingText.classList.remove('opacity-100');
+
+        // анимация полёта к выбранной ячейке
+        flyBallTo(winner, () => {
+          // после долёта скрываем остальные
           balls.forEach((b,i) => { if (i !== winner) b.classList.add('invisible'); });
 
           step++;
           const dot = document.getElementById(`dot${step}`);
           dot.classList.remove('bg-gray-300','dark:bg-gray-700');
           dot.classList.add('bg-green-700');
+
           if (step > 1) {
             const pct = ((step - 1)/(MAX_STEPS-1))*100;
             progressFill.style.width = `${pct}%`;
@@ -490,7 +546,7 @@
 
           fetchBtn.disabled = false;
           fetchBtn.classList.remove('opacity-50','cursor-not-allowed');
-        }, 3000);
+        });
 
       } else {
         resetCycle(true);
@@ -528,4 +584,3 @@
   </script>
 </body>
 </html>
-
