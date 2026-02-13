@@ -7,15 +7,15 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script> tailwind.config = { darkMode: 'class' };</script>
   <style>
-    /* Фиксированный фон как на aviator/penalty */
+    /* ===== Фон страницы (паттерн), поверх — liquid glass ===== */
     body.diamond-bg{ background: none !important; position: relative; }
     body.diamond-bg::before{
       content:""; position: fixed; inset:0; z-index:-1; pointer-events:none;
       background-color:#fff;
       background-image:
         linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 40%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 65%),
-        repeating-linear-gradient(45deg, rgba(22,163,74,.15) 0 12px, rgba(22,163,74,0) 12px 24px),
-        repeating-linear-gradient(-45deg, rgba(22,163,74,.15) 0 12px, rgba(22,163,74,0) 12px 24px),
+        repeating-linear-gradient(45deg, rgba(22,163,74,.12) 0 12px, rgba(22,163,74,0) 12px 24px),
+        repeating-linear-gradient(-45deg, rgba(22,163,74,.12) 0 12px, rgba(22,163,74,0) 12px 24px),
         linear-gradient(to bottom, #ecfdf5, #d1fae5);
       background-size:auto,40px 40px,40px 40px,auto;
       background-position: top left, center, center, center;
@@ -24,307 +24,1550 @@
       background-color:#000;
       background-image:
         linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0) 65%),
-        repeating-linear-gradient(45deg, rgba(22,163,74,.25) 0 12px, rgba(22,163,74,0) 12px 24px),
-        repeating-linear-gradient(-45deg, rgba(22,163,74,.25) 0 12px, rgba(22,163,74,0) 12px 24px),
+        repeating-linear-gradient(45deg, rgba(22,163,74,.2) 0 12px, rgba(22,163,74,0) 12px 24px),
+        repeating-linear-gradient(-45deg, rgba(22,163,74,.2) 0 12px, rgba(22,163,74,0) 12px 24px),
         linear-gradient(to bottom, #052e16, #065f46);
       background-size:auto,40px 40px,40px 40px,auto;
       background-position: top left, center, center, center;
+    }
+
+    /* ======= Apple Liquid Glass — базовые утилиты ======= */
+    .lgx-blur{ backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    .lgx-sheen{ position:relative; overflow:hidden; }
+    .lgx-sheen::before{
+      content:""; position:absolute; left:-30%; top:-40%; width:160%; height:160%;
+      background: radial-gradient(140px 180px at 25% 30%, rgba(255,255,255,.35), transparent 60%);
+      filter: blur(12px); pointer-events: none; mix-blend-mode: screen;
+    }
+    @media (max-width: 640px){
+      .lgx-sheen::before{
+        left:-35%; top:-45%; width:170%; height:170%;
+        background: radial-gradient(120px 150px at 28% 28%, rgba(255,255,255,.32), transparent 62%);
+      }
+    }
+    .lgx-card{
+      border-radius: 1rem;
+      background: linear-gradient(135deg, rgba(255,255,255,.26), rgba(255,255,255,.08));
+      border: 1px solid rgba(34,197,94,.45);
+      box-shadow:
+        0 10px 30px rgba(0,0,0,.22),
+        inset 0 1px 0 rgba(255,255,255,.22),
+        inset 0 -1px 0 rgba(255,255,255,.12);
+    }
+    .dark .lgx-card{
+      background: linear-gradient(135deg, rgba(0,0,0,.38), rgba(0,0,0,.2));
+      border-color: rgba(34,197,94,.55);
+    }
+    .lgx-chip{
+      border-radius: 9999px;
+      background: linear-gradient(135deg, rgba(255,255,255,.28), rgba(255,255,255,.08));
+      border: 1px solid rgba(34,197,94,.5);
+      box-shadow:
+        0 8px 24px rgba(0,0,0,.22),
+        inset 0 1px 0 rgba(255,255,255,.25),
+        inset 0 -1px 0 rgba(255,255,255,.12);
+    }
+    .dark .lgx-chip{
+      background: linear-gradient(135deg, rgba(0,0,0,.35), rgba(0,0,0,.18));
+      border-color: rgba(34,197,94,.55);
+    }
+
+    /* ===== FIX: Support без backdrop-filter (убирает полосу на 100%) ===== */
+    .no-backdrop{
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    .no-backdrop.lgx-card{
+      background: linear-gradient(135deg, rgba(255,255,255,.30), rgba(255,255,255,.12)) !important;
+    }
+    .dark .no-backdrop.lgx-card{
+      background: linear-gradient(135deg, rgba(0,0,0,.50), rgba(0,0,0,.26)) !important;
+    }
+    .no-backdrop.lgx-chip{
+      background: linear-gradient(135deg, rgba(255,255,255,.34), rgba(255,255,255,.14)) !important;
+    }
+    .dark .no-backdrop.lgx-chip{
+      background: linear-gradient(135deg, rgba(0,0,0,.52), rgba(0,0,0,.26)) !important;
+    }
+
+    .lgx-btn{
+      border-radius: 1rem; font-weight: 600;
+      background: linear-gradient(135deg, rgba(34,197,94,.28), rgba(34,197,94,.12));
+      border: 1px solid rgba(34,197,94,.55);
+      box-shadow:
+        0 10px 28px rgba(0,0,0,.22),
+        inset 0 1px 0 rgba(255,255,255,.25),
+        inset 0 -1px 0 rgba(255,255,255,.12);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+      touch-action: manipulation;
+      transform: translate3d(0,0,0);
+    }
+    .lgx-btn:hover{ transform: translate3d(0,-1px,0); border-color: rgba(34,197,94,.7); }
+    .lgx-btn:active{ transform: translate3d(0,0,0); }
+    .lgx-btn.solid{ background: linear-gradient(135deg, rgba(16,185,129,.40), rgba(16,185,129,.18)); }
+
+    .lgx-nav{
+      background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
+      border-bottom: 1px solid rgba(34,197,94,.4);
+      box-shadow: 0 8px 22px rgba(0,0,0,.18);
+    }
+    .dark .lgx-nav{
+      background: linear-gradient(135deg, rgba(0,0,0,.5), rgba(0,0,0,.28));
+      border-color: rgba(34,197,94,.5);
+    }
+
+    /* ======= НОВЫЙ ДИЗАЙН КНОПОК ВЕРХНЕГО БАРА ======= */
+    .nav-badge{
+      border-radius: 9999px;
+      padding: .45rem .65rem;
+      background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.06));
+      border: 1px solid rgba(34,197,94,.40);
+      box-shadow:
+        0 8px 22px rgba(0,0,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.22);
+      transition: transform .18s ease;
+      transform: translate3d(0,0,0);
+    }
+    .dark .nav-badge{
+      background: linear-gradient(135deg, rgba(0,0,0,.45), rgba(0,0,0,.24));
+      border-color: rgba(34,197,94,.5);
+    }
+    .nav-badge:hover{ transform: translate3d(0,-1px,0); }
+
+    .online-dot{
+      position: relative; width: .75rem; height: .75rem; border-radius: 9999px;
+      background: radial-gradient(circle at 40% 40%, #22c55e, #16a34a);
+      box-shadow: 0 0 10px rgba(34,197,94,.7);
+      flex: 0 0 auto;
+    }
+    .online-dot::after{
+      content:""; position:absolute; inset: -6px;
+      border-radius: 9999px; border: 2px solid rgba(34,197,94,.45);
+      animation: online-pulse 1.6s infinite ease-out;
+    }
+    @keyframes online-pulse{
+      0%{ transform: scale(.6); opacity:.8; }
+      70%{ transform: scale(1.25); opacity:0; }
+      100%{ transform: scale(1.25); opacity:0; }
+    }
+
+    /* ===== ONLINE WAVES + GLASS INDICATOR + ALIGN ===== */
+    .online-pill{
+      border: 0 !important;
+      padding: .30rem .55rem !important;
+      gap: .45rem !important;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: linear-gradient(135deg, rgba(255,255,255,.30), rgba(255,255,255,.10)) !important;
+      box-shadow:
+        0 10px 26px rgba(0,0,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.22),
+        inset 0 -1px 0 rgba(255,255,255,.10) !important;
+      position: relative;
+      overflow: hidden;
+    }
+    .online-pill::before{
+      content:""; position:absolute; left:-35%; top:-55%; width:170%; height:170%;
+      background: radial-gradient(140px 180px at 28% 28%, rgba(255,255,255,.30), transparent 62%);
+      filter: blur(12px);
+      pointer-events:none;
+      mix-blend-mode: screen;
+      opacity: .9;
+    }
+    .dark .online-pill{
+      background: linear-gradient(135deg, rgba(0,0,0,.48), rgba(0,0,0,.28)) !important;
+      box-shadow:
+        0 10px 26px rgba(0,0,0,.22),
+        inset 0 1px 0 rgba(255,255,255,.12),
+        inset 0 -1px 0 rgba(255,255,255,.06) !important;
+    }
+    .dark .online-pill::before{ opacity: .55; }
+
+    .online-signal{
+      --cx: 50%;
+      --cy: 50%;
+      position: relative;
+      width: 1.65rem;
+      height: 1.65rem;
+      display: inline-block;
+      flex: 0 0 auto;
+    }
+    .online-signal .wave{
+      position:absolute;
+      left: var(--cx);
+      top: var(--cy);
+      width: .28rem;
+      height: .28rem;
+      border-radius: 9999px;
+      border: 2px solid rgba(34,197,94,.40);
+      transform: translate(-50%,-50%) scale(.25);
+      opacity: 0;
+      animation: wave-out 1.6s infinite ease-out;
+      pointer-events: none;
+    }
+    .online-signal .wave2{ animation-delay: .53s; opacity:0; }
+    .online-signal .wave3{ animation-delay: 1.06s; opacity:0; }
+    @keyframes wave-out{
+      0%{ transform: translate(-50%,-50%) scale(.35); opacity:.55; }
+      70%{ transform: translate(-50%,-50%) scale(4.2); opacity:0; }
+      100%{ transform: translate(-50%,-50%) scale(4.2); opacity:0; }
+    }
+
+    .online-signal .online-dot{
+      position: absolute;
+      left: var(--cx);
+      top: var(--cy);
+      transform: translate(-50%,-50%);
+      width: .52rem;
+      height: .52rem;
+      box-shadow: 0 0 12px rgba(34,197,94,.72);
+    }
+    .online-signal .online-dot::after{
+      inset: -7px;
+      border-color: rgba(34,197,94,.42);
+    }
+
+    .online-tooltip{
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      padding: .35rem .55rem;
+      border-radius: .75rem;
+      background: linear-gradient(135deg, rgba(255,255,255,.26), rgba(255,255,255,.10));
+      border: 1px solid rgba(34,197,94,.45);
+      box-shadow: 0 10px 24px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      font-size: 12px;
+      font-weight: 600;
+      color: #166534;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(-2px);
+      transition: opacity .18s ease, transform .18s ease;
+      pointer-events: none;
+      z-index: 60;
+    }
+    .dark .online-tooltip{
+      background: linear-gradient(135deg, rgba(0,0,0,.45), rgba(0,0,0,.28));
+      border-color: rgba(34,197,94,.55);
+      color: #4ade80;
+    }
+    .online-pill:hover .online-tooltip{
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Выравнивание числа в индикаторе */
+    #activeUsersCount{ line-height: 1; display: inline-flex; align-items: center; }
+
+    .lang-btn{ gap:.5rem; }
+
+    .glass-menu{
+      background: linear-gradient(135deg, rgba(255,255,255,.26), rgba(255,255,255,.10));
+      border: 1px solid rgba(34,197,94,.45);
+      box-shadow: 0 12px 26px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.18);
+      border-radius: .75rem;
+      overflow: hidden;
+    }
+    .dark .glass-menu{
+      background: linear-gradient(135deg, rgba(0,0,0,.45), rgba(0,0,0,.28));
+      border-color: rgba(34,197,94,.55);
+    }
+    .glass-menu button:hover{ background: rgba(255,255,255,.16); }
+    .dark .glass-menu button:hover{ background: rgba(255,255,255,.08); }
+
+    /* ====== УБРАТЬ "ПОЛОСУ" ОТ ФОКУСА (FIX) ====== */
+    #langBtn:focus,
+    #langMenu button:focus,
+    #faqButton:focus,
+    #faqButtonTop:focus,
+    .support-link:focus,
+    .support-top:focus,
+    #langBackBtn:focus,
+    #faqBackBtn:focus{
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    #langBtn:focus-visible,
+    #langMenu button:focus-visible,
+    #faqButton:focus-visible,
+    #faqButtonTop:focus-visible,
+    .support-link:focus-visible,
+    .support-top:focus-visible,
+    #langBackBtn:focus-visible,
+    #faqBackBtn:focus-visible{
+      outline: none !important;
+      box-shadow: 0 0 0 3px rgba(34,197,94,.35) !important;
+    }
+
+    /* ====== Ячейки игры ====== */
+    .aof-cell{
+      display:flex; align-items:center; justify-content:center; border-radius:.5rem;
+      height: 2.25rem; font-size: .825rem;
+      overflow: hidden; border: 1px solid rgba(34,197,94,.35);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(255,255,255,.08);
+    }
+    @media (min-width: 640px){ .aof-cell{ height: 2.75rem; font-size: .875rem; } }
+    .aof-closed{
+      color: #fff;
+      background: linear-gradient(135deg, rgba(16,185,129,.28), rgba(16,185,129,.12));
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    }
+    .aof-fresh{
+      color:#fff; border-color: rgba(34,197,94,.7);
+      background: linear-gradient(135deg, rgba(34,197,94,.38), rgba(34,197,94,.18));
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    }
+    .aof-rotten{
+      color:#fff; border-color: rgba(239,68,68,.55);
+      background: linear-gradient(135deg, rgba(239,68,68,.34), rgba(239,68,68,.16));
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    }
+    .aof-coeff{
+      color: #111;
+      background: linear-gradient(135deg, rgba(255,255,255,.32), rgba(255,255,255,.12));
+      border-color: rgba(107,114,128,.45);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      font-weight: 600; line-height: 1; white-space: nowrap; padding: 0 .25rem;
+      overflow: hidden; text-overflow: ellipsis;
+      font-size: 10px;
+    }
+    @media (min-width: 640px){ .aof-coeff{ font-size: 12px; } }
+    .dark .aof-coeff{ color:#fff; background: linear-gradient(135deg, rgba(0,0,0,.38), rgba(0,0,0,.22)); }
+
+    /* ==== Анимации ==== */
+    @keyframes aof-shake-kf {
+      0%,100% { transform: translate3d(0,0,0); }
+      20% { transform: translate3d(-2px,0,0) rotate(-1deg); }
+      40% { transform: translate3d(2px,0,0) rotate(1deg); }
+      60% { transform: translate3d(-1px,0,0) rotate(-1deg); }
+      80% { transform: translate3d(1px,0,0) rotate(1deg); }
+    }
+    .aof-shake { animation: aof-shake-kf 0.6s ease-in-out; }
+
+    @keyframes aof-crack-kf {
+      0%   { transform: scale(1);   filter: drop-shadow(0 0 0 rgba(34,197,94,0)); }
+      60%  { transform: scale(1.08);filter: drop-shadow(0 0 10px rgba(34,197,94,.6)); }
+      100% { transform: scale(1);   filter: drop-shadow(0 0 0 rgba(34,197,94,0)); }
+    }
+    .aof-crack { animation: aof-crack-kf .6s ease; }
+
+    .dot { display:inline-block; width:.25rem; height:.25rem; border-radius:9999px; background:currentColor; margin-left:.15rem; opacity:.35; animation:aof-dot 1.2s infinite; }
+    .dot:nth-child(2){ animation-delay:.15s; }
+    .dot:nth-child(3){ animation-delay:.3s; }
+    @keyframes aof-dot { 0%,60%,100%{ transform: translateY(0); opacity:.35 } 30%{ transform: translateY(-2px); opacity:1 } }
+
+    /* ===== FIX: у окна игры ===== */
+    #aofWindow{
+      box-shadow:
+        0 10px 30px rgba(0,0,0,.22),
+        inset 0 1px 0 rgba(255,255,255,.22);
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+
+      /* ===== ИЗМЕНЕНО: позиция теперь считается автоматически через переменную ===== */
+      position: fixed;
+      top: var(--aof-stack-top);
+      left: 50%;
+      transform: translateX(-50%) translateZ(0);
+      width: calc(100% - 2rem);
+      max-width: 42rem;
+      z-index: 20;
+    }
+    .dark #aofWindow{
+      box-shadow:
+        0 10px 30px rgba(0,0,0,.26),
+        inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    /* Вернуть зелёную окантовку кнопке поддержки */
+    .fixed.bottom-4.right-4.lgx-card{ border-color: rgba(34,197,94,.45) !important; }
+    .dark .fixed.bottom-4.right-4.lgx-card{ border-color: rgba(34,197,94,.55) !important; }
+    .fixed.bottom-4.right-4 a.lgx-chip{ border-color: rgba(34,197,94,.50) !important; }
+    .dark .fixed.bottom-4.right-4 a.lgx-chip{ border-color: rgba(34,197,94,.55) !important; }
+
+    /* HARD KILL */
+    * { -webkit-tap-highlight-color: transparent; }
+    :focus,:focus-visible,:active{ outline:none !important; box-shadow:none !important; }
+    button,a,[role="button"],[tabindex]{ outline:none !important; box-shadow:none !important; -webkit-tap-highlight-color: transparent; }
+    button::-moz-focus-inner{ border:0; }
+
+    /* Язык-меню fixed */
+    #langMenu{
+      position: fixed !important;
+      z-index: 2147483647 !important;
+      top: 0;
+      left: 0;
+    }
+    header{ z-index: 9990 !important; }
+
+    /* ===== FIXED SIZE: Language фикс, Online свободный ===== */
+    .top-pill{
+      width: 8rem;
+      height: 2.25rem;
+      padding: .25rem .5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .top-pill .online-dot{ width: .5rem; height: .5rem; }
+
+    /* ===== Online укорочен ===== */
+    .online-pill{
+      height: 2.25rem;
+      display: inline-flex;
+      align-items: center;
+      width: auto;
+    }
+
+    /* ===== Font for ALL buttons ===== */
+    :root{
+      --pp-btn-font: ui-rounded, -apple-system, system-ui, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, Arial, "Noto Sans", sans-serif;
+
+      /* ===== переменная высоты окна для фикса кнопок под ним ===== */
+      --aof-window-h: 0px;
+
+      /* ===== ИЗМЕНЕНО: базовая позиция стека (пересчитывается JS) ===== */
+      --aof-stack-top: 7.25rem;
+
+      /* ===== ДОБАВЛЕНО: высота шапки для мобильного выезжающего меню ===== */
+      --pp-header-h: 0px;
+    }
+    button, .nav-badge, #faqButton + span, #supportLabel, #supportLabelTop, #langCaption{
+      font-family: var(--pp-btn-font);
+    }
+
+    /* ===== Click zones: only image box ===== */
+    #langBtn, #faqButton, #faqButtonTop{ line-height: 0; }
+    #langCaption{ text-align:center; width:100%; pointer-events:none; }
+
+    /* ====== НОВОЕ: МОДАЛКА ВЫБОРА ЯЗЫКА + ЗАМЫЛИВАНИЕ ФОНА ====== */
+    .lang-modal-backdrop{
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: rgba(0,0,0,.18);
+    }
+    .dark .lang-modal-backdrop{ background: rgba(0,0,0,.35); }
+
+    /* ====== ИЗМЕНЕНО: фиксируем кнопки под фиксированным полем при скролле ====== */
+    #aofActionsBar{
+      position: fixed !important;
+      top: calc(var(--aof-stack-top) + var(--aof-window-h) + 1rem) !important; /* ИЗМЕНЕНО */
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: calc(100% - 2rem) !important;
+      max-width: 42rem !important;
+      z-index: 20 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    /* ====== корректное RTL (общая страница) ====== */
+    html[dir="rtl"] body{
+      direction: rtl;
+      text-align: right;
+    }
+    /* стрелка "назад" для RTL должна быть справа и смотреть вправо */
+    html[dir="rtl"] #langBackBtn .pp-back-icon,
+    html[dir="rtl"] #faqBackBtn .pp-back-icon{
+      left: auto !important;
+      right: .75rem !important;
+      transform: translateY(-50%) rotate(180deg) !important;
+    }
+
+    /* ====== ИЗМЕНЕНО: НЕ зеркалим игровое поле в RTL ====== */
+    html[dir="rtl"] #aofWindow,
+    html[dir="rtl"] #aofGrid{
+      direction: ltr !important;
+      text-align: left !important;
+    }
+
+    /* ===== ДОБАВЛЕНО: MOBILE MENU (бургер -> крестик + выезд панели) ===== */
+    .mobile-burger{
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: .6rem;
+      gap: .28rem;
+      flex-direction: column;
+      background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.06));
+      border: 1px solid rgba(34,197,94,.40);
+      box-shadow: 0 8px 22px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.22);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: transform .18s ease;
+      transform: translate3d(0,0,0);
+      touch-action: manipulation;
+    }
+    .dark .mobile-burger{
+      background: linear-gradient(135deg, rgba(0,0,0,.45), rgba(0,0,0,.24));
+      border-color: rgba(34,197,94,.5);
+    }
+    .mobile-burger:hover{ transform: translate3d(0,-1px,0); }
+
+    .mobile-burger .hm-line{
+      width: 1.3rem;
+      height: 2px;
+      border-radius: 9999px;
+      background: rgba(22,163,74,.95);
+      transition: transform .18s ease, opacity .18s ease, width .18s ease;
+      transform-origin: center;
+    }
+    .dark .mobile-burger .hm-line{ background: rgba(74,222,128,.95); }
+
+    .mobile-burger.open .hm-line:nth-child(1){
+      transform: translateY(.42rem) rotate(45deg);
+    }
+    .mobile-burger.open .hm-line:nth-child(2){
+      opacity: 0;
+      width: .2rem;
+    }
+    .mobile-burger.open .hm-line:nth-child(3){
+      transform: translateY(-.42rem) rotate(-45deg);
+    }
+
+    /* контейнер меню: по умолчанию "выключен" */
+    @media (max-width: 639px){
+      #mobileMenuWrap{
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .18s ease;
+      }
+      #mobileMenuWrap.open{
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #mobileMenuPanel{
+        transform: translateX(120%);
+        transition: transform .22s ease;
+      }
+      #mobileMenuWrap.open #mobileMenuPanel{
+        transform: translateX(0);
+      }
+    }
+
+    .mobile-menu-item{
+      display:flex;
+      align-items:center;
+      gap:.75rem;
+      width:100%;
+      padding:.55rem .6rem;
+      border-radius: .85rem;
+      border: 1px solid rgba(34,197,94,.35);
+      background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.18);
+      transition: transform .18s ease, border-color .18s ease;
+    }
+    .dark .mobile-menu-item{
+      background: linear-gradient(135deg, rgba(0,0,0,.35), rgba(0,0,0,.18));
+      border-color: rgba(34,197,94,.45);
+    }
+    .mobile-menu-item:hover{ transform: translateY(-1px); border-color: rgba(34,197,94,.6); }
+    .mobile-menu-label{
+      font-weight: 700;
+      font-size: 13px;
+      color: #166534;
+      white-space: nowrap;
+    }
+    .dark .mobile-menu-label{ color: #4ade80; }
+
+    /* =========================================================
+       ✅ ИЗМЕНЕНИЕ 1: чуть увеличить верхний бар на мобайле
+       (только мобайл, sm и выше без изменений)
+       ========================================================= */
+    @media (max-width: 639px){
+      header .max-w-\[74rem\]{
+        padding-top: .65rem !important;   /* было py-2 (0.5rem). стало чуть выше */
+        padding-bottom: .65rem !important;
+      }
+    }
+
+    /* =========================================================
+       ✅ ИЗМЕНЕНИЕ 2: убрать «полосу/баг» на кнопке "احصل على التنبؤ"
+       Обычно это артефакт blur/backdrop/transform в iOS/Safari.
+       Точечно отключаем blur только на этой кнопке.
+       ========================================================= */
+    #aofBtn{
+      -webkit-appearance: none;
+      appearance: none;
+      background-clip: padding-box;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+    }
+    #aofBtn.lgx-blur{
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
     }
   </style>
 </head>
 <body class="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white relative diamond-bg">
 
-  <!-- Верхний бар как на aviator/penalty -->
-  <header class="fixed top-0 left-0 right-0 z-30 backdrop-blur-md bg-white/70 dark:bg-black/40 border-b border-green-700/30">
+  <!-- Шапка -->
+  <header class="fixed top-0 left-0 right-0 z-30 lgx-nav lgx-blur">
     <div class="max-w-[74rem] mx-auto px-4 py-2 flex items-center justify-between gap-3 sm:gap-4 flex-wrap">
-      <!-- Логотип (домой) -->
-      <a href="main.html" class="shrink-0 flex items-center gap-2">
-        <img src="images/PredictorPro.jpg" alt="PredictorPro"
-             class="w-16 h-16 sm:w-24 sm:h-24 lg:w-32 lg:h-32 rounded-full border-4 border-green-700 object-cover"/>
-      </a>
 
-      <!-- Правый блок: онлайн + язык + тема -->
+      <!-- ИЗМЕНЕНО: Логотип + Онлайн-индикатор слева -->
       <div class="flex items-center gap-3 sm:gap-4">
-        <!-- Онлайн-индикатор -->
-        <div class="flex items-center gap-2 px-2.5 py-1 rounded-full border border-green-600/70 bg-white/60 dark:bg-white/10 shadow-md">
-          <span class="relative flex h-3 w-3">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-          </span>
-          <span id="onlineLabel" class="hidden sm:inline text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">متصل</span>
-          <span id="activeUsersCount" class="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">—</span>
-        </div>
+        <!-- КНОПКА-ЛОГОТИП (только изображение) -->
+        <a href="main.html"
+           class="shrink-0 inline-flex items-center justify-center p-0 transition-transform hover:scale-[1.02] focus:outline-none"
+           aria-label="Home">
+          <img
+            src="images/logo-predictorpro-liquid.png"
+            alt="PredictorPro"
+            onerror="this.onerror=null; this.src='images/PredictorPro.jpg';"
+            class="h-[4.25rem] sm:h-[5.25rem] lg:h-[5.75rem] w-auto select-none pointer-events-none -my-2" />
+        </a>
 
-        <!-- Язык -->
-        <div class="relative">
-          <button id="langBtn"
-                  class="h-10 px-4 rounded-full bg-gray-200 text-gray-900 shadow ring-2 ring-green-600 text-sm font-semibold flex items-center gap-2"
-                  aria-haspopup="true" aria-expanded="false" aria-label="اختيار اللغة">
-            <span>🌐</span><span id="langBtnLabel">العربية</span>
-          </button>
-          <div id="langMenu"
-               class="hidden absolute right-0 mt-2 w-18 bg-gray-800 text-white rounded-lg shadow-lg border border-green-700/60 overflow-hidden text-sm z-50">
-            <button data-lang="ar" data-dir="rtl"  data-langtag="ar-DZ" class="w-full text-right px-3 py-2 hover:bg-gray-700">العربية</button>
-            <button data-lang="es" data-dir="ltr"  data-langtag="es-PE" class="w-full text-left  px-3 py-2 hover:bg-gray-700">Español</button>
-            <button data-lang="en" data-dir="ltr"  data-langtag="en"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">English</button>
-            <button data-lang="pl" data-dir="ltr"  data-langtag="pl"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Polski</button>
-            <button data-lang="fr" data-dir="ltr"  data-langtag="fr"     class="w-full text-left  px-3 py-2 hover:bg-gray-700">Français</button>
+        <!-- Онлайн-индикатор (перенесён к логотипу) -->
+        <div class="nav-badge online-pill text-[13px] font-semibold text-green-700 dark:text-green-400 relative">
+          <span class="online-signal" aria-hidden="true">
+            <span class="wave wave1"></span>
+            <span class="wave wave2"></span>
+            <span class="wave wave3"></span>
+            <span class="online-dot"></span>
+          </span>
+          <span id="activeUsersCount" class="tabular-nums leading-none">—</span>
+          <span id="onlineTooltip" class="online-tooltip">Users online</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 sm:gap-4">
+        <!-- ===== ДОБАВЛЕНО: МОБИЛЬНОЕ МЕНЮ (бургер) ===== -->
+        <button id="mobileMenuToggle"
+                class="sm:hidden mobile-burger focus:outline-none"
+                aria-label="Menu"
+                aria-expanded="false">
+          <span class="hm-line"></span>
+          <span class="hm-line"></span>
+          <span class="hm-line"></span>
+        </button>
+
+        <!-- ===== ИЗМЕНЕНО: десктопные кнопки скрыты на мобайле ===== -->
+        <div id="desktopTopActions" class="hidden sm:flex items-center gap-3 sm:gap-4">
+          <!-- Выбор языка -->
+          <div class="relative flex flex-col items-center w-16 sm:w-20">
+            <button id="langBtn"
+                    class="inline-flex items-center justify-center p-0 m-0 bg-transparent border-0 shadow-none rounded-none transition-transform hover:scale-105 focus:outline-none"
+                    aria-haspopup="true" aria-expanded="false" aria-label="اختيار اللغة">
+              <img
+                src="images/lang-button.png"
+                alt=""
+                class="w-16 h-16 sm:w-20 sm:h-20 object-contain block pointer-events-none select-none" />
+              <span id="langBtnLabel" class="sr-only">العربية</span>
+            </button>
+            <span id="langCaption" class="mt-1 text-[11px] leading-none font-semibold text-green-700 dark:text-green-400 whitespace-nowrap select-none">
+              Язык
+            </span>
+
+            <!-- (ОСТАВЛЕНО В DOM) Старое меню, теперь будет открываться как модалка по центру -->
+            <div id="langMenu" class="hidden w-32 glass-menu text-sm py-1">
+              <button data-lang="ar" class="w-full text-right px-3 py-2 focus:outline-none">العربية</button>
+              <button data-lang="es" class="w-full text-left  px-3 py-2 focus:outline-none">Español</button>
+              <button data-lang="en" class="w-full text-left  px-3 py-2 focus:outline-none">English</button>
+              <button data-lang="pl" class="w-full text-left  px-3 py-2 focus:outline-none">Polski</button>
+              <button data-lang="fr" class="w-full text-left  px-3 py-2 focus:outline-none">Français</button>
+            </div>
+          </div>
+
+          <!-- ИЗМЕНЕНО: FAQ + SUPPORT в верхнем баре и на мобайле тоже -->
+          <div class="flex items-center gap-3">
+            <div class="flex flex-col items-center gap-1 w-16 sm:w-20">
+              <button id="faqButtonTop"
+                      class="inline-flex items-center justify-center p-0 m-0 bg-transparent border-0 shadow-none rounded-none transition-transform hover:scale-105 focus:outline-none"
+                      aria-label="FAQ">
+                <img
+                  src="images/faq-logo.png"
+                  alt=""
+                  class="w-16 h-16 sm:w-20 sm:h-20 object-contain block pointer-events-none select-none"
+                  onerror="(function(img){
+                    const list=[
+                      'images/faq-logo.png','images/faq-logo.webp','images/faq-logo.jpg','images/faq-logo.jpeg',
+                      'images/FAQ-logo.png','images/FAQ-logo.webp','images/FAQ-logo.jpg','images/FAQ-logo.jpeg',
+                      'images/faq.png','images/faq.webp','images/faq.jpg','images/faq.jpeg'
+                    ];
+                    const i=(parseInt(img.dataset.try||'0',10));
+                    if(i < list.length-1){ img.dataset.try=String(i+1); img.src=list[i+1]; }
+                    else { img.style.display='none'; }
+                  })(this);" />
+              </button>
+              <span class="text-[11px] leading-none font-semibold text-green-700 dark:text-green-400 whitespace-nowrap select-none pointer-events-none">FAQ</span>
+            </div>
+
+            <div class="flex flex-col items-center gap-1 w-16 sm:w-20">
+              <a href="https://t.me/Pedro_PredictorPro_bot"
+                 class="support-top inline-flex items-center justify-center p-0 m-0 bg-transparent border-0 shadow-none rounded-none transition-transform hover:scale-105 focus:outline-none"
+                 target="_blank" rel="noopener noreferrer" aria-label="Support chat">
+                <img
+                  src="images/support-icon.png"
+                  alt="Support"
+                  class="w-16 h-16 sm:w-20 sm:h-20 object-contain block pointer-events-none select-none"
+                  onerror="this.onerror=null; this.src='images/—Pngtree—technical support_3767452.png';"
+                />
+              </a>
+              <span id="supportLabelTop" class="text-[11px] leading-none font-semibold text-green-700 dark:text-green-400 whitespace-nowrap select-none pointer-events-none">
+                الدعم
+              </span>
+            </div>
           </div>
         </div>
-
-        <!-- Тема -->
-        <button id="themeToggle"
-                class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 shadow-lg transition-colors ring-2 ring-green-600 ring-offset-2 ring-offset-transparent"
-                onclick="toggleTheme()" aria-label="Cambiar tema">🌙</button>
       </div>
     </div>
   </header>
 
-  <!-- FAQ-кнопка (слева внизу на мобилках, справа-центр на широких) -->
-  <div id="faqButton"
-       class="fixed left-4 bottom-4 sm:top-1/2 sm:bottom-auto sm:right-4 sm:left-auto sm:-translate-y-1/2
-              flex items-center gap-2 p-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer shadow transition-colors z-20">
-    <img src="images/311092c3467c45c938fd5b63ac29281a.png" alt="FAQ" class="w-8 h-8"/>
-    <span id="faqBtnLabel" class="font-semibold text-gray-900 dark:text-white">الأسئلة الشائعة</span>
+  <!-- ===== ДОБАВЛЕНО: МОБИЛЬНАЯ ВЫЕЗЖАЮЩАЯ ПАНЕЛЬ (Язык/FAQ/Support) ===== -->
+  <!-- ИЗМЕНЕНО: z-index, чтобы панель была поверх поля/кнопок, но ниже шапки -->
+  <div id="mobileMenuWrap" class="sm:hidden fixed inset-0 z-[9988]">
+    <div id="mobileMenuBg" class="absolute inset-0 lang-modal-backdrop"></div>
+
+    <div id="mobileMenuPanel"
+         class="absolute right-4 w-56 lgx-card lgx-blur lgx-sheen p-3"
+         style="top: calc(var(--pp-header-h) + .5rem);">
+      <div class="flex flex-col gap-2">
+        <button id="mobileLangBtn" class="mobile-menu-item focus:outline-none" aria-label="Language">
+          <img src="images/lang-button.png" alt="" class="w-10 h-10 object-contain pointer-events-none select-none">
+          <span id="mobileLangText" class="mobile-menu-label">Язык</span>
+        </button>
+
+        <button id="mobileFaqBtn" class="mobile-menu-item focus:outline-none" aria-label="FAQ">
+          <img src="images/faq-logo.png" alt="" class="w-10 h-10 object-contain pointer-events-none select-none"
+               onerror="(function(img){
+                 const list=[
+                   'images/faq-logo.png','images/faq-logo.webp','images/faq-logo.jpg','images/faq-logo.jpeg',
+                   'images/FAQ-logo.png','images/FAQ-logo.webp','images/FAQ-logo.jpg','images/FAQ-logo.jpeg',
+                   'images/faq.png','images/faq.webp','images/faq.jpg','images/faq.jpeg'
+                 ];
+                 const i=(parseInt(img.dataset.try||'0',10));
+                 if(i < list.length-1){ img.dataset.try=String(i+1); img.src=list[i+1]; }
+                 else { img.style.display='none'; }
+               })(this);">
+          <span class="mobile-menu-label">FAQ</span>
+        </button>
+
+        <a id="mobileSupportBtn"
+           href="https://t.me/Pedro_PredictorPro_bot"
+           target="_blank" rel="noopener noreferrer"
+           class="mobile-menu-item focus:outline-none"
+           aria-label="Support chat">
+          <img src="images/support-icon.png" alt="Support" class="w-10 h-10 object-contain pointer-events-none select-none"
+               onerror="this.onerror=null; this.src='images/—Pngtree—technical support_3767452.png';">
+          <span id="mobileSupportText" class="mobile-menu-label">الدعم</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <!-- ===== /ДОБАВЛЕНО ===== -->
+
+  <!-- ===== НОВОЕ: МОДАЛКА ВЫБОРА ЯЗЫКА (ПО ЦЕНТРУ) + ЗАМЫЛИВАНИЕ ФОНА ===== -->
+  <div id="langOverlay" class="hidden fixed inset-0 z-[9998] flex items-center justify-center px-4">
+    <div id="langOverlayBg" class="absolute inset-0 lang-modal-backdrop"></div>
+
+    <div class="relative w-full max-w-xs sm:max-w-sm glass-menu">
+      <button id="langBackBtn" class="relative w-full px-3 py-2 font-semibold focus:outline-none">
+        <span class="pp-back-icon absolute left-3 top-1/2 -translate-y-1/2 text-green-700 dark:text-green-400" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span id="langBackText" class="block w-full text-center">Back</span>
+      </button>
+      <div class="h-px bg-black/10 dark:bg-white/10"></div>
+
+      <!-- Список языков (кнопки те же, что и были, только в модалке) -->
+      <div id="langModalList" class="py-1 text-sm">
+        <button data-lang="ar" class="w-full text-right px-3 py-2 focus:outline-none">العربية</button>
+        <button data-lang="es" class="w-full text-left  px-3 py-2 focus:outline-none">Español</button>
+        <button data-lang="en" class="w-full text-left  px-3 py-2 focus:outline-none">English</button>
+        <button data-lang="pl" class="w-full text-left  px-3 py-2 focus:outline-none">Polski</button>
+        <button data-lang="fr" class="w-full text-left  px-3 py-2 focus:outline-none">Français</button>
+      </div>
+    </div>
+  </div>
+  <!-- ===== /НОВОЕ ===== -->
+
+  <!-- ИЗМЕНЕНО: мобайл FAQ + SUPPORT снизу отключены -->
+  <div class="fixed right-4 bottom-[3.25rem] z-20 flex flex-col items-center gap-4 select-none lg:hidden hidden">
+    <!-- FAQ-кнопка (кликается только картинка) -->
+    <div class="flex flex-col items-center gap-1">
+      <button id="faqButton"
+              class="inline-flex items-center justify-center p-0 m-0 bg-transparent border-0 shadow-none rounded-none cursor-pointer transition-transform hover:scale-[1.03] focus:outline-none"
+              aria-label="FAQ">
+        <img
+          src="images/faq-logo.png"
+          alt=""
+          class="w-16 h-16 sm:w-20 sm:h-20 object-contain block pointer-events-none select-none"
+          onerror="(function(img){
+            const list=[
+              'images/faq-logo.png','images/faq-logo.webp','images/faq-logo.jpg','images/faq-logo.jpeg',
+              'images/FAQ-logo.png','images/FAQ-logo.webp','images/FAQ-logo.jpg','images/FAQ-logo.jpeg',
+              'images/faq.png','images/faq.webp','images/faq.jpg','images/faq.jpeg'
+            ];
+            const i=(parseInt(img.dataset.try||'0',10));
+            if(i < list.length-1){ img.dataset.try=String(i+1); img.src=list[i+1]; }
+            else { img.style.display='none'; }
+          })(this);" />
+      </button>
+      <span class="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400 whitespace-nowrap select-none pointer-events-none">FAQ</span>
+    </div>
+
+    <!-- SUPPORT CHAT -->
+    <div class="flex flex-col items-center gap-1">
+      <a href="https://t.me/Pedro_PredictorPro_bot"
+         class="support-link inline-flex items-center justify-center p-0 m-0 bg-transparent border-0 shadow-none rounded-none transition-transform hover:scale-105 focus:outline-none"
+         target="_blank" rel="noopener noreferrer" aria-label="Support chat">
+        <img
+          src="images/support-icon.png"
+          alt="Support"
+          class="w-16 h-16 sm:w-20 sm:h-20 object-contain block pointer-events-none select-none"
+          onerror="this.onerror=null; this.src='images/—Pngtree—technical support_3767452.png';"
+        />
+      </a>
+      <span id="supportLabel" class="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400 whitespace-nowrap select-none pointer-events-none">
+        الدعم
+      </span>
+    </div>
   </div>
 
-  <!-- FAQ-панель -->
-  <div id="faqPanel"
-       class="fixed left-4 right-4 bottom-24 sm:left-auto sm:right-4 sm:top-1/2 sm:bottom-auto sm:-translate-y-1/2
-              w-auto sm:w-80 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg p-4 hidden text-gray-900 dark:text-white z-20">
-    <button id="faqClose"
-            class="absolute top-2 right-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-xl leading-none">&times;</button>
+  <!-- ===== ИЗМЕНЕНО: FAQ теперь в центре как модалка (та же логика/визуал) ===== -->
+  <div id="faqOverlay" class="hidden fixed inset-0 z-[9997] flex items-center justify-center px-4">
+    <div id="faqOverlayBg" class="absolute inset-0 lang-modal-backdrop"></div>
 
-    <h3 id="faqTitle" class="text-lg font-semibold mb-2">الأسئلة الشائعة – تفاح الحظ</h3>
-    <p id="faqIntro1" class="text-sm mb-2">
-      صفحة «تفاح الحظ» غير متوفرة حالياً بسبب الصيانة التقنية.
-    </p>
-    <p id="faqIntro2" class="text-sm mb-4">
-      يرجى المحاولة لاحقاً. شكراً لتفهمك!
-    </p>
+    <div class="relative w-full max-w-xs sm:max-w-sm glass-menu">
+      <button id="faqBackBtn" class="relative w-full px-3 py-2 font-semibold focus:outline-none">
+        <span class="pp-back-icon absolute left-3 top-1/2 -translate-y-1/2 text-green-700 dark:text-green-400" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span id="faqBackText" class="block w-full text-center">Back</span>
+      </button>
+      <div class="h-px bg-black/10 dark:bg-white/10"></div>
 
-    <h4 id="faqQ1" class="text-md font-semibold mb-1">كيف تعمل التوقعات؟</h4>
-    <p id="faqA1" class="text-sm mb-3">
-      نقوم بتحليل توزيع الأرباح والحالة الحالية للعبة «تفاح الحظ» لاختيار أفضل توقيت للمراهنة.
-    </p>
+      <div id="faqPanel" class="p-4 max-h-[70vh] overflow-auto">
+        <h3 id="faqTitle" class="text-lg font-semibold mb-2">الأسئلة الشائعة – تفاح الحظ</h3>
+        <p id="faqIntro1" class="text-sm mb-2">صفحة «تفاح الحظ» غير متوفرة حالياً بسبب الصيانة التقنية.</p>
+        <p id="faqIntro2" class="text-sm mb-4">يرجى المحاولة لاحقاً. شكراً لتفهمك!</p>
 
-    <h4 id="faqQ2" class="text-md font-semibold mb-1">ما دقة التوقعات؟</h4>
-    <p id="faqA2" class="text-sm">
-      مع إدارة صحيحة لرأس المال، تتجاوز دقة توقعاتنا 80٪.
-    </p>
+        <h4 id="faqQ1" class="text-md font-semibold mb-1">كيف تعمل التوقعات؟</h4>
+        <p id="faqA1" class="text-sm mb-3">نقوم بتحليل توزيع الأرباح والحالة الحالية للعبة «تفاح الحظ» لاختيار أفضل توقيت للمراهنة.</p>
+
+        <h4 id="faqQ2" class="text-md font-semibold mb-1">ما دقة التوقعات؟</h4>
+        <p id="faqA2" class="text-sm">مع إدارة صحيحة لرأس المال، تتجاوز دقة توقعاتنا 80٪.</p>
+      </div>
+    </div>
   </div>
+  <!-- ===== /ИЗМЕНЕНО ===== -->
 
-  <!-- Контент с отступами под фикс. шапку и плавающие элементы -->
-  <main class="flex flex-col items-center pt-28 sm:pt-36 lg:pt-48 pb-44 sm:pb-28 space-y-6 px-4">
-    <div class="p-6 sm:p-8 bg-gray-100 dark:bg-gray-800 rounded-2xl border-2 border-green-700 shadow-lg text-center max-w-md w-full">
-      <img src="images/7c9c9f265eaac08ede2a9b919b795ce2.png" alt="Maintenance" class="w-24 h-24 sm:w-32 sm:h-32 mx-auto filter dark:invert"/>
-      <h2 id="maintTitle" class="mt-4 text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
-        جاري الصيانة التقنية
-      </h2>
-      <p id="maintText" class="mt-1 text-sm sm:text-base text-gray-600 dark:text-gray-300">
-        سنعود قريبًا مع تحديثات وتحسينات.
-      </p>
+  <!-- Контент -->
+  <main class="flex flex-col items-center pt-28 sm:pt-36 lg:pt-48 pb-44 sm:pb-28 space-y-4 px-4">
+    <div class="w-full max-w-2xl">
+      <div id="aofWindow" class="relative lgx-card lgx-blur lgx-sheen p-4 sm:p-6 shadow-lg">
+        <div id="aofGrid" class="grid grid-cols-6 grid-rows-10 gap-1.5 sm:gap-3 select-none"></div>
+
+        <!-- статус -->
+        <div id="aofStatus"
+             class="hidden absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20
+                    lgx-chip lgx-blur px-3 py-1 text-xs sm:text-sm font-semibold pointer-events-none select-none
+                    min-w-[12rem] text-center">
+          <span id="aofStatusText">Analyzing database</span>
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ИЗМЕНЕНО: Кнопки теперь рядом с полем (сразу под ним) ===== -->
+    <div id="aofActionsBar" class="w-full max-w-2xl">
+      <div class="flex justify-center gap-3">
+        <button id="aofBtn" class="lgx-btn lgx-blur text-white solid h-11 w-56 px-4 truncate whitespace-nowrap focus:outline-none">
+          احصل على التنبؤ
+        </button>
+
+        <button id="aofReset"
+                class="lgx-chip lgx-blur inline-flex items-center justify-center rounded-full
+                       h-11 w-11 text-gray-900 dark:text-white text-xs sm:text-sm font-semibold
+                       transition-transform hover:scale-105 focus:outline-none"
+                aria-label="Reset">
+          <img src="images/7646bf17f356f37147352829310cbf50.png" alt="Reset" class="w-4 h-4 sm:w-5 sm:h-5 filter dark:invert"/>
+        </button>
+      </div>
     </div>
   </main>
 
-  <!-- SUPPORT CHAT -->
-  <div class="fixed bottom-4 right-4 z-30 flex flex-col items-center space-y-2 p-3 rounded-2xl border-2 border-green-700/70 bg-white/70 dark:bg-white/10 backdrop-blur-md shadow-xl">
-    <a href="https://t.me/Aymen_PredictorPro_bot"
-       class="bg-gray-200 dark:bg-gray-800 p-2 rounded-full border-4 border-green-700 transition-transform hover:scale-105"
-       target="_blank" rel="noopener noreferrer" aria-label="Support chat">
-      <img src="images/—Pngtree—technical support_3767452.png" alt="Support" class="w-14 h-14 sm:w-16 sm:h-16 filter dark:invert"/>
-    </a>
-    <span id="supportLabel" class="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-400">دردشة الدعم</span>
+  <!-- ===== подтверждение сброса ===== -->
+  <div id="resetConfirm" class="hidden fixed inset-0 z-[9999] flex items-center justify-center px-4">
+    <div class="absolute inset-0 bg-black/35"></div>
+
+    <div class="relative w-full max-w-sm lgx-card lgx-blur lgx-sheen p-4">
+      <div id="resetTitle" class="text-center font-semibold text-sm sm:text-base leading-snug break-words">
+        Сбросить серию сигналов?
+      </div>
+
+      <div class="mt-3 flex gap-3 justify-center w-full">
+        <button id="resetYes"
+                class="lgx-btn lgx-blur text-white solid h-10 px-3 focus:outline-none flex-1 min-w-0 text-[13px] sm:text-sm text-center whitespace-normal leading-snug">
+          Да, сбросить
+        </button>
+
+        <button id="resetNo"
+                class="lgx-chip lgx-blur inline-flex items-center justify-center
+                       h-10 px-3 text-gray-900 dark:text-white text-[13px] sm:text-sm font-semibold
+                       transition-transform hover:scale-105 focus:outline-none flex-1 min-w-0 text-center whitespace-normal leading-snug">
+          Нет, продолжить
+        </button>
+      </div>
+    </div>
   </div>
 
+  <!-- ===== ДОБАВЛЕНО: Нижний бар Copyright ===== -->
+  <div class="fixed left-0 right-0 bottom-[-1px] z-20 lgx-nav lgx-blur">
+    <div class="max-w-[74rem] mx-auto px-4 py-2 text-center text-[12px] sm:text-sm font-semibold text-gray-700 dark:text-gray-300 select-none">
+      Copyright © 2025-2026 "Predictor-Pro". <span id="rightsText">All rights reserved.</span>
+    </div>
+  </div>
+  <!-- ===== /ДОБАВЛЕНО ===== -->
+
   <script>
-    // ===== ТЕМА
-    document.documentElement.classList.add('dark');
-    const themeToggle = document.getElementById('themeToggle');
-    if (themeToggle) themeToggle.textContent = '🌞';
-    function toggleTheme() {
-      document.documentElement.classList.toggle('dark');
-      themeToggle.textContent = document.documentElement.classList.contains('dark') ? '🌞' : '🌙';
-    }
-
-    // ==== Онлайн-индикатор (симуляция)
+    /* ==== Онлайн-индикатор (шаг 1..3) + НЕ сбрасывается при обновлении ==== */
     const usersEl = document.getElementById('activeUsersCount');
+    const MIN_USERS = 20;
+    const MAX_USERS = 80;
+    const LS_KEY = 'pp_online_users_v1';
+    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+    let saved = null;
+    try { saved = parseInt(localStorage.getItem(LS_KEY), 10); } catch(_) {}
+    let currentUsers = Number.isFinite(saved) ? clamp(saved, MIN_USERS, MAX_USERS)
+      : Math.floor(MIN_USERS + Math.random() * (MAX_USERS - MIN_USERS + 1));
+    usersEl.textContent = currentUsers;
+    try { localStorage.setItem(LS_KEY, String(currentUsers)); } catch(_) {}
     function updateUsers() {
-      const min = 120, max = 340;
-      usersEl.textContent = Math.floor(min + Math.random() * (max - min));
+      const step = 1 + Math.floor(Math.random() * 3);
+      const dir  = Math.random() < 0.5 ? -1 : 1;
+      currentUsers = clamp(currentUsers + dir * step, MIN_USERS, MAX_USERS);
+      usersEl.textContent = currentUsers;
+      try { localStorage.setItem(LS_KEY, String(currentUsers)); } catch(_) {}
     }
-    updateUsers(); setInterval(updateUsers, 5000);
+    setInterval(updateUsers, 5000);
 
-    // ===== I18N (apple-of-fortune)
+    /* ===== I18N (оставлено как в твоём коде) ===== */
     const I18N = {
-      ar: {
-        langName:'العربية', langTag:'ar-DZ', dir:'ltr',
-        title:'PredictorPro – تفاح الحظ',
-        online:'متصل',
-        faqBtn:'الأسئلة الشائعة',
+      ar: { langName:'العربية', langTag:'ar-DZ', dir:'rtl', title:'PredictorPro – تفاح الحظ',
+        back:'رجوع',
+        online:'متصل', ariaLang:'اختيار اللغة',
+        langCaption:'اللغة',
+        support:'الدعم',
+        btnGet:'احصل على التنبؤ',
+        analyzing:'يتم تحليل قاعدة البيانات',
+        nextPrompt:'هل تريد الحصول على التنبؤ التالي؟',
+        nextBtn:'احصل على التنبؤ التالي',
+        successRate:'نسبة النجاح',
+        unstable:'تم رصد بيانات غير مستقرة، ننصح بتثبيت الربح!',
         faqTitle:'الأسئلة الشائعة – تفاح الحظ',
         faqIntro1:'صفحة «تفاح الحظ» غير متوفرة حالياً بسبب الصيانة التقنية.',
         faqIntro2:'يرجى المحاولة لاحقاً. شكراً لتفهمك!',
-        q1:'كيف تعمل التوقعات؟',
-        a1:'نقوم بتحليل توزيع الأرباح والحالة الحالية للعبة «تفاح الحظ» لاختيار أفضل توقيت للمراهنة.',
-        q2:'ما دقة التوقعات؟',
-        a2:'مع إدارة صحيحة لرأس المال، تتجاوز دقة توقعاتنا 80٪.',
-        maintTitle:'جاري الصيانة التقنية',
-        maintText:'سنعود قريبًا مع تحديثات وتحسينات.',
-        support:'دردشة الدعم',
-        ariaLang:'اختيار اللغة'
+        q1:'كيف تعمل التوقعات؟', a1:'نقوم بتحليل توزيع الأرباح والحالة الحالية للعبة «تفاح الحظ» لاختيار أفضل توقيت للمراهنة.',
+        q2:'ما دقة التوقعات؟', a2:'مع إدارة صحيحة لرأس المال، تتجاوز دقة توقعاتنا 80٪.',
+        resetTitle:'هل تريد إعادة ضبط سلسلة الإشارات؟',
+        resetYes:'نعم، أعد الضبط',
+        resetNo:'لا، تابع',
+        rights:'جميع الحقوق محفوظة.',
+        usersOnline:'المستخدمون عبر الإنترنت'
       },
-      es: {
-        langName:'Español', langTag:'es-PE', dir:'ltr',
-        title:'PredictorPro – Manzana de la fortuna',
-        online:'En línea',
-        faqBtn:'Preguntas frecuentes',
+      es: { langName:'Español', langTag:'es-PE', dir:'ltr', title:'PredictorPro – Manzana de la fortuna',
+        back:'Atrás',
+        online:'En línea', ariaLang:'Seleccionar idioma',
+        langCaption:'Idioma',
+        support:'Soporte',
+        btnGet:'Obtener predicción',
+        analyzing:'Analizando la base de datos',
+        nextPrompt:'¿Obtener la siguiente predicción?',
+        nextBtn:'Obtener la siguiente predicción',
+        successRate:'Porcentaje de éxito',
+        unstable:'Se detectaron datos inestables, recomendamos asegurar la ganancia.',
         faqTitle:'Preguntas frecuentes – Manzana de la fortuna',
         faqIntro1:'La página «Manzana de la fortuna» está en mantenimiento.',
         faqIntro2:'Vuelve a intentarlo más tarde. ¡Gracias por tu comprensión!',
-        q1:'¿Cómo funcionan las previsiones?',
-        a1:'Analizamos la distribución de pagos y el estado actual del juego para elegir el mejor momento para apostar.',
-        q2:'¿Qué precisión tienen?',
-        a2:'Con una correcta gestión del bankroll, superan el 80%.',
-        maintTitle:'Mantenimiento en curso',
-        maintText:'Volveremos pronto con mejoras.',
-        support:'Chat de soporte',
-        ariaLang:'Seleccionar idioma'
+        q1:'¿Cómo funcionan las previsiones?', a1:'Analizamos la distribución de pagos...',
+        q2:'¿Qué precisión tienen?', a2:'Con una correcta gestión del bankroll...',
+        resetTitle:'¿Restablecer la serie de señales?',
+        resetYes:'Sí, restablecer',
+        resetNo:'No, continuar',
+        rights:'Todos los derechos reservados.',
+        usersOnline:'Usuarios en línea'
       },
-      en: {
-        langName:'English', langTag:'en', dir:'ltr',
-        title:'PredictorPro – Apple of Fortune',
-        online:'Online',
-        faqBtn:'FAQ',
+      en: { langName:'English', langTag:'en', dir:'ltr', title:'PredictorPro – Apple of Fortune',
+        back:'Back',
+        online:'Online', ariaLang:'Select language',
+        langCaption:'Language',
+        support:'Support',
+        btnGet:'Get prediction',
+        analyzing:'Analyzing database',
+        nextPrompt:'Get the next prediction?',
+        nextBtn:'Get the next prediction',
+        successRate:'Success rate',
+        unstable:'Unstable data detected — we recommend securing profit!',
         faqTitle:'FAQ – Apple of Fortune',
         faqIntro1:'The “Apple of Fortune” page is currently under maintenance.',
         faqIntro2:'Please try again later. Thanks for your understanding!',
-        q1:'How do the forecasts work?',
-        a1:'We analyze payout distribution and the game’s current state to pick optimal betting timing.',
-        q2:'How accurate are they?',
-        a2:'With proper bankroll management, our forecasts exceed 80% accuracy.',
-        maintTitle:'Under maintenance',
-        maintText:'We’ll be back soon with updates and improvements.',
-        support:'Support chat',
-        ariaLang:'Select language'
+        q1:'How do the forecasts work?', a1:'We analyze payout distribution...',
+        q2:'How accurate are they?', a2:'With proper bankroll management...',
+        resetTitle:'Reset the signal series?',
+        resetYes:'Yes, reset',
+        resetNo:'No, continue',
+        rights:'All rights reserved.',
+        usersOnline:'Users online'
       },
-      pl: {
-        langName:'Polski', langTag:'pl', dir:'ltr',
-        title:'PredictorPro – Jabłko Fortuny',
-        online:'Online',
-        faqBtn:'FAQ',
+      pl: { langName:'Polski', langTag:'pl', dir:'ltr', title:'PredictorPro – Jabłko Fortuny',
+        back:'Wstecz',
+        online:'Online', ariaLang:'Wybierz język',
+        langCaption:'Język',
+        support:'Wsparcie',
+        btnGet:'Pobierz prognozę',
+        analyzing:'Analiza bazy danych',
+        nextPrompt:'Pobrać następną prognozę?',
+        nextBtn:'Pobierz następną prognozę',
+        successRate:'Skuteczność',
+        unstable:'Wykryto niestabilne dane — zalecamy zabezpieczyć zysk!',
         faqTitle:'FAQ – Jabłko Fortuny',
         faqIntro1:'Strona „Jabłko Fortuny” jest w trakcie prac serwisowych.',
         faqIntro2:'Spróbuj ponownie później. Dziękujemy za wyrozumiałość!',
-        q1:'Jak działają prognozy?',
-        a1:'Analizujemy rozkład wypłat i aktualny stan gry, aby wybrać najlepszy moment na zakład.',
-        q2:'Jaka jest ich skuteczność?',
-        a2:'Przy właściwym zarządzaniu bankrollem skuteczność przekracza 80%.',
-        maintTitle:'Trwa konserwacja',
-        maintText:'Wkrótce wrócimy z ulepszeniami.',
-        support:'Czat wsparcia',
-        ariaLang:'Wybierz język'
+        q1:'Jak działają prognozy?', a1:'Analizujemy rozkład wypłat...',
+        q2:'Jaka jest ich skuteczność?', a2:'Przy właściwym zarządzaniu...',
+        resetTitle:'Zresetować serię sygnałów?',
+        resetYes:'Tak, zresetuj',
+        resetNo:'Nie, kontynuuj',
+        rights:'Wszelkie prawa zastrzeżone.',
+        usersOnline:'Użytkownicy online'
       },
-      fr: {
-        langName:'Français', langTag:'fr', dir:'ltr',
-        title:'PredictorPro – Pomme de la fortune',
-        online:'En ligne',
-        faqBtn:'FAQ',
+      fr: { langName:'Français', langTag:'fr', dir:'ltr', title:'PredictorPro – Pomme de la fortune',
+        back:'Retour',
+        online:'En ligne', ariaLang:'Choisir la langue',
+        langCaption:'Langue',
+        support:'Support',
+        btnGet:'Obtenir la prédiction',
+        analyzing:'Analyse de la base de données',
+        nextPrompt:'Obtenir la prédiction suivante ?',
+        nextBtn:'Obtenir la prédiction suivante',
+        successRate:'Taux de réussite',
+        unstable:'Données instables détectées — nous conseillons de sécuriser le profit !',
         faqTitle:'FAQ – Pomme de la fortune',
         faqIntro1:'La page « Pomme de la fortune » est en maintenance.',
         faqIntro2:'Veuillez réessayer plus tard. Merci de votre compréhension !',
-        q1:'Comment fonctionnent les prévisions ?',
-        a1:'Nous analysons la distribution des gains et l’état du jeu pour choisir le meilleur moment pour miser.',
-        q2:'Quel est leur niveau de précision ?',
-        a2:'Avec une bonne gestion de bankroll, elles dépassent 80 %.',
-        maintTitle:'Maintenance en cours',
-        maintText:'Nous revenons bientôt avec des améliorations.',
-        support:'Chat de support',
-        ariaLang:'Choisir la langue'
+        q1:'Comment fonctionnent les prévisions ?', a1:'Nous analysons la distribution...',
+        q2:'Quel est leur niveau de précision ?', a2:'Avec une bonne gestion...',
+        resetTitle:'Réinitialiser la série de signaux ?',
+        resetYes:'Oui, réinitialiser',
+        resetNo:'Non, continuer',
+        rights:'Tous droits réservés.',
+        usersOnline:'Utilisateurs en ligne'
       }
     };
 
-    // ===== Узлы
     const htmlEl = document.documentElement;
     const titleEl = document.getElementsByTagName('title')[0];
     const langBtn = document.getElementById('langBtn');
     const langLbl = document.getElementById('langBtnLabel');
+    const langCaptionEl = document.getElementById('langCaption');
     const langMenu = document.getElementById('langMenu');
     const onlineLabel = document.getElementById('onlineLabel');
+    const onlineTooltipEl = document.getElementById('onlineTooltip');
     const supportLabel = document.getElementById('supportLabel');
+    const supportLabelTop = document.getElementById('supportLabelTop');
+
+    const aofBtn  = document.getElementById('aofBtn');
+    const statusBar = document.getElementById('aofStatus');
+    const statusText = document.getElementById('aofStatusText');
+    const statusDots = Array.from(statusBar.querySelectorAll('.dot'));
 
     const faqBtnEl = document.getElementById('faqButton');
-    const faqBtnLbl = document.getElementById('faqBtnLabel');
+    const faqBtnTopEl = document.getElementById('faqButtonTop');
     const faqPanel = document.getElementById('faqPanel');
-    const faqClose = document.getElementById('faqClose');
-    const faqTitleEl = document.getElementById('faqTitle');
-    const faqIntro1El = document.getElementById('faqIntro1');
-    const faqIntro2El = document.getElementById('faqIntro2');
-    const faqQ1 = document.getElementById('faqQ1'), faqA1 = document.getElementById('faqA1');
-    const faqQ2 = document.getElementById('faqQ2'), faqA2 = document.getElementById('faqA2');
 
-    const maintTitleEl = document.getElementById('maintTitle');
-    const maintTextEl  = document.getElementById('maintText');
+    const faqTitle = document.getElementById('faqTitle');
+    const faqIntro1 = document.getElementById('faqIntro1');
+    const faqIntro2 = document.getElementById('faqIntro2');
+    const faqQ1 = document.getElementById('faqQ1');
+    const faqA1 = document.getElementById('faqA1');
+    const faqQ2 = document.getElementById('faqQ2');
+    const faqA2 = document.getElementById('faqA2');
 
-    // ===== Применение языка
-    function applyLang(code){
-      const d = I18N[code] || I18N.ar;
-      htmlEl.lang = d.langTag; htmlEl.dir = d.dir;
-      if (titleEl) titleEl.textContent = d.title;
-      if (langLbl) langLbl.textContent = d.langName;
-      if (langBtn) langBtn.setAttribute('aria-label', d.ariaLang);
-      if (onlineLabel) onlineLabel.textContent = d.online;
-      if (supportLabel) supportLabel.textContent = d.support;
+    const resetTitleEl = document.getElementById('resetTitle');
+    const resetYesEl = document.getElementById('resetYes');
+    const resetNoEl  = document.getElementById('resetNo');
 
-      if (faqBtnLbl) faqBtnLbl.textContent = d.faqBtn;
-      if (faqTitleEl) faqTitleEl.textContent = d.faqTitle;
-      if (faqIntro1El) faqIntro1El.textContent = d.faqIntro1;
-      if (faqIntro2El) faqIntro2El.textContent = d.faqIntro2;
-      if (faqQ1) faqQ1.textContent = d.q1; if (faqA1) faqA1.textContent = d.a1;
-      if (faqQ2) faqQ2.textContent = d.q2; if (faqA2) faqA2.textContent = d.a2;
+    /* ===== НОВОЕ: элементы модалки языков ===== */
+    const langOverlay = document.getElementById('langOverlay');
+    const langOverlayBg = document.getElementById('langOverlayBg');
+    const langBackBtn = document.getElementById('langBackBtn');
+    const langBackText = document.getElementById('langBackText');
+    const langModalList = document.getElementById('langModalList');
 
-      if (maintTitleEl) maintTitleEl.textContent = d.maintTitle;
-      if (maintTextEl)  maintTextEl.textContent  = d.maintText;
+    /* ===== НОВОЕ: элементы модалки FAQ ===== */
+    const faqOverlay = document.getElementById('faqOverlay');
+    const faqOverlayBg = document.getElementById('faqOverlayBg');
+    const faqBackBtn = document.getElementById('faqBackBtn');
+    const faqBackText = document.getElementById('faqBackText');
 
-      try { localStorage.setItem('preferredLang', code); } catch(_){}
+    /* ===== ИЗМЕНЕНО: элемент для перевода "All rights reserved." ===== */
+    const rightsTextEl = document.getElementById('rightsText');
+
+    /* ===== ДОБАВЛЕНО: элементы мобильного меню ===== */
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const mobileMenuWrap = document.getElementById('mobileMenuWrap');
+    const mobileMenuBg = document.getElementById('mobileMenuBg');
+    const mobileLangBtn = document.getElementById('mobileLangBtn');
+    const mobileFaqBtn = document.getElementById('mobileFaqBtn');
+    const mobileSupportBtn = document.getElementById('mobileSupportBtn');
+    const mobileLangText = document.getElementById('mobileLangText');
+    const mobileSupportText = document.getElementById('mobileSupportText');
+
+    let currentLang = 'ar';
+    let statusMode = 'hidden'; // 'hidden' | 'analyzing' | 'outcome' | 'done'
+    let lastOutcome = null;    // {type:'rate', value:'97.2'} | {type:'warn'}
+
+    function setDotsVisible(show){
+      statusDots.forEach(d => { d.style.display = show ? 'inline-block' : 'none'; });
+    }
+    function formatSuccess(d, val){
+      return `${d.successRate} ${val}%`;
+    }
+    function renderStatus(){
+      const d = I18N[currentLang] || I18N.ar;
+
+      if (statusMode === 'hidden'){
+        statusBar.classList.add('hidden');
+        return;
+      }
+
+      statusBar.classList.remove('hidden');
+
+      if (statusMode === 'analyzing'){
+        setDotsVisible(true);
+        statusText.textContent = d.analyzing;
+        return;
+      }
+
+      if (statusMode === 'outcome'){
+        setDotsVisible(false);
+        if (lastOutcome && lastOutcome.type === 'warn') statusText.textContent = d.unstable;
+        else if (lastOutcome && lastOutcome.type === 'rate') statusText.textContent = formatSuccess(d, lastOutcome.value);
+        else statusText.textContent = '';
+        return;
+      }
+
+      if (statusMode === 'done'){
+        setDotsVisible(false);
+        statusText.textContent = d.nextPrompt;
+        return;
+      }
     }
 
-    // ===== Меню выбора языка (как на других страницах)
-    langBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isOpen = !langMenu.classList.contains('hidden');
-      langMenu.classList.toggle('hidden', isOpen);
-      langBtn.setAttribute('aria-expanded', String(!isOpen));
-    });
-    document.addEventListener('click', () => {
-      if (!langMenu.classList.contains('hidden')) {
-        langMenu.classList.add('hidden');
-        langBtn.setAttribute('aria-expanded','false');
+    function applyLang(code){
+      currentLang = (I18N[code] ? code : 'ar');
+      const d = I18N[currentLang];
+
+      htmlEl.lang = d.langTag;
+      htmlEl.dir  = d.dir;
+
+      if (titleEl) titleEl.textContent = d.title;
+      if (langLbl) langLbl.textContent = d.langName;
+      if (langCaptionEl) langCaptionEl.textContent = d.langCaption;
+      if (langBtn) langBtn.setAttribute('aria-label', d.ariaLang);
+
+      if (onlineLabel) onlineLabel.textContent = 'Online';
+      if (onlineTooltipEl) onlineTooltipEl.textContent = d.usersOnline || 'Users online';
+      if (supportLabel) supportLabel.textContent = d.support;
+      if (supportLabelTop) supportLabelTop.textContent = d.support;
+
+      if (aofBtn) aofBtn.textContent = (statusMode === 'done') ? d.nextBtn : d.btnGet;
+
+      renderStatus();
+
+      if (faqTitle)  faqTitle.textContent  = d.faqTitle;
+      if (faqIntro1) faqIntro1.textContent = d.faqIntro1;
+      if (faqIntro2) faqIntro2.textContent = d.faqIntro2;
+      if (faqQ1)     faqQ1.textContent     = d.q1;
+      if (faqA1)     faqA1.textContent     = d.a1;
+      if (faqQ2)     faqQ2.textContent     = d.q2;
+      if (faqA2)     faqA2.textContent     = d.a2;
+
+      if (resetTitleEl) resetTitleEl.textContent = d.resetTitle;
+      if (resetYesEl)   resetYesEl.textContent   = d.resetYes;
+      if (resetNoEl)    resetNoEl.textContent    = d.resetNo;
+
+      if (langBackText) langBackText.textContent = d.back;
+      if (faqBackText)  faqBackText.textContent  = d.back;
+
+      /* ===== ИЗМЕНЕНО: перевод "All rights reserved." при смене языка ===== */
+      if (rightsTextEl) rightsTextEl.textContent = d.rights || 'All rights reserved.';
+
+      /* ===== ДОБАВЛЕНО: подписи в мобильном меню ===== */
+      if (mobileLangText) mobileLangText.textContent = d.langCaption || 'Language';
+      if (mobileSupportText) mobileSupportText.textContent = d.support || 'Support';
+
+      try { localStorage.setItem('preferredLang', currentLang); } catch(_){}
+    }
+
+    /* ===== НОВОЕ: Модалка выбора языка (центр + замыливание) ===== */
+    function openLangMenu(){
+      if (!langOverlay) return;
+      langOverlay.classList.remove('hidden');
+      if (langBtn) langBtn.setAttribute('aria-expanded','true');
+    }
+    function closeLangMenu(){
+      if (!langOverlay) return;
+      langOverlay.classList.add('hidden');
+      if (langBtn) langBtn.setAttribute('aria-expanded','false');
+    }
+
+    if (langBtn) {
+      langBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = !langOverlay.classList.contains('hidden');
+        if (isOpen) closeLangMenu(); else openLangMenu();
+      });
+    }
+
+    if (langBackBtn) {
+      langBackBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeLangMenu();
+      });
+    }
+
+    if (langOverlayBg) {
+      langOverlayBg.addEventListener('click', () => closeLangMenu());
+    }
+
+    if (langModalList) {
+      langModalList.addEventListener('click', (e) => e.stopPropagation());
+      langModalList.querySelectorAll('button[data-lang]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const code = btn.getAttribute('data-lang') || 'ar';
+          applyLang(code);
+          closeLangMenu();
+        });
+      });
+    }
+
+    /* ===== FAQ в центре (та же логика: открыть/закрыть/back/outside/esc) ===== */
+    function openFaq(){
+      if (!faqOverlay) return;
+      faqOverlay.classList.remove('hidden');
+    }
+    function closeFaq(){
+      if (!faqOverlay) return;
+      faqOverlay.classList.add('hidden');
+    }
+    function toggleFaq(){
+      const isOpen = faqOverlay && !faqOverlay.classList.contains('hidden');
+      if (isOpen) closeFaq(); else openFaq();
+    }
+    if (faqBtnEl) faqBtnEl.addEventListener('click', (e) => { e.stopPropagation(); toggleFaq(); });
+    if (faqBtnTopEl) faqBtnTopEl.addEventListener('click', (e) => { e.stopPropagation(); toggleFaq(); });
+
+    if (faqBackBtn) faqBackBtn.addEventListener('click', (e) => { e.stopPropagation(); closeFaq(); });
+    if (faqOverlayBg) faqOverlayBg.addEventListener('click', () => closeFaq());
+    if (faqPanel) faqPanel.addEventListener('click', (e) => e.stopPropagation());
+
+    /* ===== ДОБАВЛЕНО: логика мобильного бургер-меню ===== */
+    function openMobileMenu(){
+      if (!mobileMenuWrap || !mobileMenuToggle) return;
+      mobileMenuWrap.classList.add('open');
+      mobileMenuToggle.classList.add('open');
+      mobileMenuToggle.setAttribute('aria-expanded','true');
+    }
+    function closeMobileMenu(){
+      if (!mobileMenuWrap || !mobileMenuToggle) return;
+      mobileMenuWrap.classList.remove('open');
+      mobileMenuToggle.classList.remove('open');
+      mobileMenuToggle.setAttribute('aria-expanded','false');
+    }
+    function toggleMobileMenu(){
+      const isOpen = mobileMenuWrap && mobileMenuWrap.classList.contains('open');
+      if (isOpen) closeMobileMenu(); else openMobileMenu();
+    }
+
+    if (mobileMenuToggle) {
+      mobileMenuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMobileMenu();
+      });
+    }
+    if (mobileMenuBg) mobileMenuBg.addEventListener('click', () => closeMobileMenu());
+
+    if (mobileLangBtn) {
+      mobileLangBtn.addEventListener('click', () => {
+        closeMobileMenu();
+        openLangMenu();
+      });
+    }
+    if (mobileFaqBtn) {
+      mobileFaqBtn.addEventListener('click', () => {
+        closeMobileMenu();
+        toggleFaq();
+      });
+    }
+    if (mobileSupportBtn) {
+      mobileSupportBtn.addEventListener('click', () => {
+        closeMobileMenu();
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape'){
+        closeLangMenu();
+        closeFaq();
+        closeMobileMenu();
       }
     });
-    langMenu.querySelectorAll('button[data-lang]').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const code = btn.getAttribute('data-lang') || 'ar';
-        applyLang(code);
-        langMenu.classList.add('hidden');
-        langBtn.setAttribute('aria-expanded','false');
-      });
-    });
 
-    // ==== FAQ show/hide (кнопка и крестик работают и на мобилках)
-    faqBtnEl.addEventListener('click', () => faqPanel.classList.toggle('hidden'));
-    faqClose.addEventListener('click', () => faqPanel.classList.toggle('hidden'));
-
-    // ===== Инициализация языка
     (function initLang(){
       let code = 'ar';
-      try {
-        const saved = localStorage.getItem('preferredLang');
-        if (saved && I18N[saved]) code = saved;
-      } catch(_){}
+      try { const saved = localStorage.getItem('preferredLang'); if (saved && I18N[saved]) code = saved; } catch(_){}
       applyLang(code);
     })();
+
+    /* ===================== AOF GRID (6×10) ===================== */
+    const aofGrid = document.getElementById('aofGrid');
+    const COLS = 6, ROWS = 10;
+    const PRED_COLS = 5;
+
+    const COEFFS_TOP_TO_BOTTOM = [
+      'x349.68','x69.93','x27.97','x11.28','x6.71',
+      'x4.02','x2.41','x1.93','x1.54','x1.23'
+    ];
+
+    const FRESH_IMG  = 'images/fresh%20apple.png';
+    const ROTTEN_IMG = 'images/rotten%20apple.png';
+
+    const matrix = Array.from({length: COLS}, () => Array(ROWS).fill(null));
+
+    function buildGrid(){
+      aofGrid.innerHTML = '';
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'aof-cell aof-closed';
+          cell.dataset.state = 'closed';
+
+          if (c === PRED_COLS) {
+            const label = COEFFS_TOP_TO_BOTTOM[r] || '';
+            cell.className = 'aof-cell aof-coeff';
+            cell.textContent = label;
+          } else {
+            cell.textContent = '';
+          }
+
+          aofGrid.appendChild(cell);
+          const rowIndexFromBottom = ROWS - 1 - r;
+          matrix[c][rowIndexFromBottom] = cell;
+        }
+      }
+    }
+    buildGrid();
+
+    /* ====== ИЗМЕНЕНО: авто-выравнивание отступов сверху/снизу + высота окна ====== */
+    (function syncAofFixedStack(){
+      const root = document.documentElement;
+      const win  = document.getElementById('aofWindow');
+      const bar  = document.getElementById('aofActionsBar');
+      const headerEl = document.querySelector('header');
+      const bottomBarEl = document.querySelector('.bottom-\\[-1px\\]');
+      if (!win || !bar || !headerEl || !bottomBarEl) return;
+
+      function update(){
+        const rem = parseFloat(getComputedStyle(root).fontSize) || 16;
+
+        const hh = headerEl.getBoundingClientRect().height;
+        const hb = bottomBarEl.getBoundingClientRect().height;
+
+        const hw = win.getBoundingClientRect().height;
+        const ha = bar.getBoundingClientRect().height;
+
+        root.style.setProperty('--aof-window-h', hw + 'px');
+
+        /* ===== ДОБАВЛЕНО: сохраняем высоту шапки для мобильного меню ===== */
+        root.style.setProperty('--pp-header-h', hh + 'px');
+
+        const gWA = rem * 1; // зазор между полем и кнопками (оставляем как есть: 1rem)
+        const free = window.innerHeight - (hh + hb + hw + ha + gWA);
+        const g = Math.max(0, free / 2);
+
+        root.style.setProperty('--aof-stack-top', (hh + g) + 'px');
+      }
+
+      window.addEventListener('resize', update);
+      requestAnimationFrame(update);
+      setTimeout(update, 0);
+    })();
+
+    let currentRow = 0;
+    let busy = false;
+
+    /* ====== тряска длится всё время анализа ====== */
+    let analyzingRow = null;
+
+    function shakeRow(row){
+      for (let c = 0; c < PRED_COLS; c++){
+        const cell = matrix[c][row];
+
+        const onEnd = () => {
+          cell.classList.remove('aof-shake');
+
+          if (statusMode === 'analyzing' && analyzingRow === row) {
+            void cell.offsetWidth;
+            cell.classList.add('aof-shake');
+            cell.addEventListener('animationend', onEnd, { once:true });
+          }
+        };
+
+        cell.classList.add('aof-shake');
+        cell.addEventListener('animationend', onEnd, { once:true });
+      }
+    }
+    function revealRow(row){
+      const goodCol = Math.floor(Math.random() * PRED_COLS);
+      for (let c = 0; c < PRED_COLS; c++){
+        const cell = matrix[c][row];
+        const isGood = (c === goodCol);
+
+        cell.className = 'aof-cell ' + (isGood ? 'aof-fresh' : 'aof-rotten');
+        if (isGood) cell.classList.add('aof-crack');
+
+        cell.innerHTML =
+          `<img src="${isGood ? FRESH_IMG : ROTTEN_IMG}" alt="${isGood ? 'fresh' : 'rotten'}"
+                class="w-[85%] h-[85%] object-contain select-none pointer-events-none">`;
+
+        if (isGood) cell.addEventListener('animationend', () => cell.classList.remove('aof-crack'), { once:true });
+      }
+    }
+
+    function rnd1(min, max){
+      return (min + Math.random() * (max - min)).toFixed(1);
+    }
+    function outcomeForSignal(n){
+      if (n === 1) return { type:'rate', value: rnd1(96.4, 98.6) };
+      if (n === 2) return { type:'rate', value: rnd1(94.2, 96.3) };
+      if (n === 3) return { type:'rate', value: rnd1(91.8, 92.1) };
+      if (n === 4) return (Math.random() < 0.25) ? { type:'warn' } : { type:'rate', value: rnd1(84.1, 92.0) };
+      if (n === 5) return (Math.random() < 0.50) ? { type:'warn' } : { type:'rate', value: rnd1(78.3, 84.0) };
+      if (n === 6) return (Math.random() < 0.75) ? { type:'warn' } : { type:'rate', value: rnd1(73.5, 78.2) };
+      if (n === 7) return (Math.random() < 0.85) ? { type:'warn' } : { type:'rate', value: rnd1(67.5, 73.4) };
+      if (n === 8) return (Math.random() < 0.95) ? { type:'warn' } : { type:'rate', value: rnd1(60.7, 67.4) };
+      if (n === 9) return (Math.random() < 0.98) ? { type:'warn' } : { type:'rate', value: rnd1(52.3, 60.6) };
+      if (n === 10) return (Math.random() < 0.9999) ? { type:'warn' } : { type:'rate', value: rnd1(41.4, 52.2) };
+      return { type:'warn' };
+    }
+
+    function setStatus(mode, outcome){
+      statusMode = mode;
+      if (mode === 'outcome') lastOutcome = outcome || null;
+      renderStatus();
+
+      const d = I18N[currentLang] || I18N.ar;
+      if (aofBtn) aofBtn.textContent = (statusMode === 'done') ? d.nextBtn : d.btnGet;
+    }
+
+    const ANALYZE_MS = 5000;
+    const TEXT_MS    = 5000;
+    let tAnalyze = null;
+    let tText    = null;
+
+    function resetBoard(){
+      if (tAnalyze) { clearTimeout(tAnalyze); tAnalyze = null; }
+      if (tText)    { clearTimeout(tText);    tText = null; }
+
+      analyzingRow = null;
+
+      for (let r = 0; r < ROWS; r++){
+        for (let c = 0; c < PRED_COLS; c++){
+          const cell = matrix[c][r];
+          cell.className = 'aof-cell aof-closed';
+          cell.textContent = '';
+        }
+      }
+      currentRow = 0;
+      busy = false;
+      lastOutcome = null;
+      setStatus('hidden');
+
+      const d = I18N[currentLang] || I18N.ar;
+      aofBtn.disabled = false;
+      aofBtn.classList.remove('opacity-50','cursor-not-allowed');
+      aofBtn.textContent = d.btnGet;
+    }
+
+    aofBtn.addEventListener('click', () => {
+      if (busy) return;
+
+      if (currentRow >= ROWS) {
+        resetBoard();
+      }
+
+      if (tAnalyze) { clearTimeout(tAnalyze); tAnalyze = null; }
+      if (tText)    { clearTimeout(tText);    tText = null; }
+
+      busy = true;
+      aofBtn.disabled = true;
+      aofBtn.classList.add('opacity-50','cursor-not-allowed');
+
+      const stepNo = currentRow + 1;
+
+      setStatus('analyzing');
+      analyzingRow = currentRow;
+      shakeRow(currentRow);
+
+      tAnalyze = setTimeout(() => {
+        analyzingRow = null;
+
+        revealRow(currentRow);
+        currentRow += 1;
+
+        const out = outcomeForSignal(stepNo);
+        setStatus('outcome', out);
+
+        tText = setTimeout(() => {
+          setStatus('hidden');
+
+          busy = false;
+          aofBtn.disabled = false;
+          aofBtn.classList.remove('opacity-50','cursor-not-allowed');
+
+          if (currentRow >= ROWS) {
+            setStatus('done');
+          }
+        }, TEXT_MS);
+
+      }, ANALYZE_MS);
+    });
+
+    /* ===== логика кнопки сброса с подтверждением ===== */
+    const resetBtn = document.getElementById('aofReset');
+    const resetConfirm = document.getElementById('resetConfirm');
+    const resetYes = document.getElementById('resetYes');
+    const resetNo  = document.getElementById('resetNo');
+
+    function openResetConfirm(){ resetConfirm.classList.remove('hidden'); }
+    function closeResetConfirm(){ resetConfirm.classList.add('hidden'); }
+
+    resetBtn.addEventListener('click', openResetConfirm);
+
+    resetYes.addEventListener('click', () => {
+      closeResetConfirm();
+      resetBoard();
+    });
+
+    resetNo.addEventListener('click', () => {
+      closeResetConfirm();
+    });
   </script>
 </body>
 </html>
+
 
